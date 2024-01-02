@@ -17,15 +17,15 @@ export const store = configureStore({
   },
 })
 export const useDispatch = () => useReduxDispatch<AppDispatch>()
-export const useSelector: TypedUseSelectorHook<ReduxState> = useReduxSelector
+export const useSelector: TypedUseSelectorHook<RootState> = useReduxSelector
 
 /* Types */
 export type ReduxStore = typeof store
-export type ReduxState = ReturnType<typeof store.getState>
+export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
 export type ReduxThunkAction<ReturnType = void> = ThunkAction<
   ReturnType,
-  ReduxState,
+  RootState,
   unknown,
   Action
 >
