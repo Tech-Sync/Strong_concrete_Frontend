@@ -12,7 +12,9 @@
     "@reduxjs/toolkit": "^2.0.1",
     "next": "14.0.4",
     "react": "^18",
+    "react-animate-height": "^3.2.3",
     "react-dom": "^18",
+    "react-perfect-scrollbar": "^1.5.8",
     "react-popper": "^2.3.0",
     "react-redux": "^9.0.4",
     "redux-logger": "^3.0.6"

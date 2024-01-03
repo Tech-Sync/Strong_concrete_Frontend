@@ -1,15 +1,19 @@
+'use client'
+
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation'
 
 import Dropdown from './Dropdown';
-import { selectThemeConfig,themeConfigSlice } from '@/lib/redux/slices/themeConfigSlice';
+import { selectThemeConfig, themeConfigSlice } from '@/lib/redux/slices/themeConfigSlice';
+import t from '@/utils/getLanguage';
 
 const Header = () => {
-    const router = useRouter();
+    const pathname = usePathname()
 
     useEffect(() => {
+        console.log(pathname)
         const selector = document.querySelector('ul.horizontal-menu a[href="' + window.location.pathname + '"]');
         if (selector) {
             const all: any = document.querySelectorAll('ul.horizontal-menu .nav-link.active');
@@ -35,14 +39,14 @@ const Header = () => {
                 }
             }
         }
-    }, [router.pathname]);
+    }, [pathname]);
 
     const themeConfig = useSelector(selectThemeConfig)
     const isRtl = themeConfig.rtlClass
 
     const [flag, setFlag] = useState('');
     useEffect(() => {
-        
+
     });
     const dispatch = useDispatch();
 
@@ -231,10 +235,9 @@ const Header = () => {
                         <div>
                             {themeConfig.theme === 'light' ? (
                                 <button
-                                    className={`${
-                                        themeConfig.theme === 'light' &&
+                                    className={`${themeConfig.theme === 'light' &&
                                         'flex items-center rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60'
-                                    }`}
+                                        }`}
                                     onClick={() => dispatch(themeConfigSlice.actions.toggleTheme('dark'))}
                                 >
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -254,10 +257,9 @@ const Header = () => {
                             )}
                             {themeConfig.theme === 'dark' && (
                                 <button
-                                    className={`${
-                                        themeConfig.theme === 'dark' &&
+                                    className={`${themeConfig.theme === 'dark' &&
                                         'flex items-center rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60'
-                                    }`}
+                                        }`}
                                     onClick={() => dispatch(themeConfigSlice.actions.toggleTheme('system'))}
                                 >
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -270,10 +272,9 @@ const Header = () => {
                             )}
                             {themeConfig.theme === 'system' && (
                                 <button
-                                    className={`${
-                                        themeConfig.theme === 'system' &&
+                                    className={`${themeConfig.theme === 'system' &&
                                         'flex items-center rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60'
-                                    }`}
+                                        }`}
                                     onClick={() => dispatch(themeConfigSlice.actions.toggleTheme('light'))}
                                 >
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -296,20 +297,20 @@ const Header = () => {
                                 button={flag && <img className="h-5 w-5 rounded-full object-cover" src={`/assets/images/flags/${flag.toUpperCase()}.svg`} alt="flag" />}
                             >
                                 <ul className="grid w-[280px] grid-cols-2 gap-2 !px-2 font-semibold text-dark dark:text-white-dark dark:text-white-light/90">
-                                   
-                                            <li>
-                                                <button
-                                                    type="button"
-                                                    className='flex w-full hover:text-primary bg-primary/10 text-primary' 
-                                                    onClick={() => {
-                                                       
-                                                    }}
-                                                >
-                                                    <img src={`/assets/images/flags/EN.svg`} alt="flag" className="h-5 w-5 rounded-full object-cover" />
-                                                    <span className="ltr:ml-3 rtl:mr-3">English</span>
-                                                </button>
-                                            </li>
-                                     
+
+                                    <li>
+                                        <button
+                                            type="button"
+                                            className='flex w-full hover:text-primary bg-primary/10 text-primary'
+                                            onClick={() => {
+
+                                            }}
+                                        >
+                                            <img src={`/assets/images/flags/EN.svg`} alt="flag" className="h-5 w-5 rounded-full object-cover" />
+                                            <span className="ltr:ml-3 rtl:mr-3">English</span>
+                                        </button>
+                                    </li>
+
                                 </ul>
                             </Dropdown>
                         </div>

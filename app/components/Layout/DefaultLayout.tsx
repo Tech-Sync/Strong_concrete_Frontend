@@ -1,4 +1,4 @@
-
+"use client"
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -6,13 +6,13 @@ import Footer from './Footer';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Setting from './Setting';
-import Portals from '../../components/Portals';
-import { useRouter } from 'next/router';
+import Portals from './Portals';
+import { usePathname } from 'next/navigation'
 import AppContainer from '@/container/AppContainer';
 import { selectThemeConfig ,themeConfigSlice} from '@/lib/redux/slices/themeConfigSlice';
 
 const DefaultLayout = ({ children }: PropsWithChildren) => {
-    const router = useRouter();
+    const pathname = usePathname()
     const [showLoader, setShowLoader] = useState(true);
     const [showTopButton, setShowTopButton] = useState(false);
     const themeConfig = useSelector(selectThemeConfig)
@@ -41,10 +41,19 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                 setShowLoader(false);
             }, 200);
         }
+        // const handleRouteChange = (url: string, { shallow }: { shallow: boolean }) => {
+        //     console.log(
+        //       `App is changing to ${url} ${
+        //         shallow ? 'with' : 'without'
+        //       } shallow routing`
+        //     )
+        //   }
+       
+        //   router.events.on('routeChangeStart', handleRouteChange)
 
-        router.events.on('beforeHistoryChange', () => {
-            setAnimation(themeConfig.animation);
-        });
+        // router.events.on('beforeHistoryChange', () => {
+        //     setAnimation(themeConfig.animation);
+        // });
         return () => {
             window.removeEventListener('onscroll', onScrollHandler);
         };
@@ -58,7 +67,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
         setTimeout(() => {
             setAnimation('');
         }, 1100);
-    }, [router.asPath]);
+    }, [pathname]);
 
     return (
         <AppContainer>
