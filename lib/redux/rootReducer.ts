@@ -1,8 +1,8 @@
 /* Instruments */
 import { counterSlice } from './slices'
-import { themeSlice } from './slices/themeSlice'
+import { themeConfigSlice } from './slices/themeConfigSlice'
 
 export const reducer = {
   counter: counterSlice.reducer,
-  theme:themeSlice.reducer
+  theme:themeConfigSlice.reducer
 }

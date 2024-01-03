@@ -1,11 +1,20 @@
+import themeConfig from '@/theme.config';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
-const initialState: ThemeSliceState = {
+const initialState:ThemeConfigSliceState = {
   isDarkMode: false,
-  theme: 'light', // light, dark, system
-}
+  sidebar: false,
+  theme: themeConfig.theme, // light | dark | system
+  menu: themeConfig.menu,// vertical, collapsible-vertical, horizontal
+  layout: themeConfig.layout,// full, boxed-layout
+  rtlClass: themeConfig.rtlClass, // rtl, ltr
+  animation: themeConfig.animation,// animate__fadeIn, animate__fadeInDown, animate__fadeInUp, animate__fadeInLeft, animate__fadeInRight, animate__slideInDown, animate__slideInLeft, animate__slideInRight, animate__zoomIn
+  navbar: themeConfig.navbar,// navbar-sticky, navbar-floating, navbar-static
+  semidark: themeConfig.semidark,
+ 
+}; 
 
-export const themeSlice = createSlice({
+export const themeConfigSlice = createSlice({
   name: 'theme',
   initialState,
   reducers: {
@@ -13,7 +22,7 @@ export const themeSlice = createSlice({
         payload = payload || state.theme;
         localStorage.setItem('theme', payload);
         state.theme = payload;
-        if (payload === 'light') {
+        if (payload === 'light') { // light | dark | system
             state.isDarkMode = false;
         } else if (payload === 'dark') {
             state.isDarkMode = true;
@@ -37,7 +46,15 @@ export const themeSlice = createSlice({
 })
 
 /* Types */
-export interface ThemeSliceState {
+export interface ThemeConfigSliceState {
   isDarkMode: boolean
+  sidebar: boolean
   theme: string
+  menu: string
+  layout: string
+  rtlClass: string
+  animation: string
+  navbar: string
+  semidark: boolean
+
 }

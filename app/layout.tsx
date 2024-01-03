@@ -5,7 +5,7 @@ import { Providers } from '@/lib/providers'
 
 
 const inter = Inter({ subsets: ['latin'] })
-
+import '../styles/tailwind.css';
 export const metadata: Metadata = {
   title: 'Strong Concrete Admin Dashboard',
   description: 'Strong Concrete Admin Dashboard',

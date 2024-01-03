@@ -1,3 +1,3 @@
-export * from './themeslice'
+export * from './themeConfigSlice'
 // export * from './thunks'
 export * from './selectors'
