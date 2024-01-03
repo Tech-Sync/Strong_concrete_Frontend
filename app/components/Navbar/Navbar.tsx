@@ -1,7 +1,6 @@
 "use client"
 
 import { counterSlice, selectCount } from '@/lib/redux'
-import { selectTheme } from '@/lib/redux/slices/themeConfigSlice'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ThemeSwitcher from '../ThemeSwitcher/ThemeSwitcher'

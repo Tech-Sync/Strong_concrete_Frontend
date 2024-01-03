@@ -1,13 +1,15 @@
-import { selectTheme, themeConfigSlice } from '@/lib/redux/slices/themeConfigSlice'
+import { selectThemeConfig, themeConfigSlice } from '@/lib/redux/slices/themeConfigSlice'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 const ThemeSwitcher = () => {
   const dispatch = useDispatch()
-  const theme = useSelector(selectTheme)
+  const theme = useSelector(selectThemeConfig)
+  console.log(theme);
+  
   return (
     <div>
-      <div>Theme {theme}</div>
+      <div>Theme {theme.theme}</div>
       <button
 
         type="button"

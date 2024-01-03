@@ -1,20 +1,21 @@
-import { IRootState } from '@/store';
-import { toggleSidebar } from '@/store/themeConfigSlice';
+
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import App from '../../App';
+
 import Footer from './Footer';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Setting from './Setting';
 import Portals from '../../components/Portals';
 import { useRouter } from 'next/router';
+import AppContainer from '@/container/AppContainer';
+import { selectThemeConfig ,themeConfigSlice} from '@/lib/redux/slices/themeConfigSlice';
 
 const DefaultLayout = ({ children }: PropsWithChildren) => {
     const router = useRouter();
     const [showLoader, setShowLoader] = useState(true);
     const [showTopButton, setShowTopButton] = useState(false);
-    const themeConfig = useSelector((state: IRootState) => state.themeConfig);
+    const themeConfig = useSelector(selectThemeConfig)
     const [animation, setAnimation] = useState(themeConfig.animation);
     const dispatch = useDispatch();
 
@@ -60,7 +61,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
     }, [router.asPath]);
 
     return (
-        <App>
+        <AppContainer>
             {/* BEGIN MAIN CONTAINER */}
             <div className="relative">
                 {/* screen loader  */}
@@ -77,7 +78,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                     </div>
                 )}
                 {/* sidebar menu overlay */}
-                <div className={`${(!themeConfig.sidebar && 'hidden') || ''} fixed inset-0 z-50 bg-[black]/60 lg:hidden`} onClick={() => dispatch(toggleSidebar())}></div>
+                <div className={`${(!themeConfig.sidebar && 'hidden') || ''} fixed inset-0 z-50 bg-[black]/60 lg:hidden`} onClick={() => dispatch(themeConfigSlice.actions.toggleSidebar())}></div>
                 <div className="fixed bottom-6 z-50 ltr:right-6 rtl:left-6">
                     {showTopButton && (
                         <button type="button" className="btn btn-outline-primary animate-pulse rounded-full bg-[#fafafa] p-2 dark:bg-[#060818] dark:hover:bg-primary" onClick={goToTop}>
@@ -120,7 +121,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                     {/* END CONTENT AREA */}
                 </div>
             </div>
-        </App>
+        </AppContainer>
     );
 };
 
