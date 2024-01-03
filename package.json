@@ -16,8 +16,8 @@
     "react-dom": "^18",
     "react-perfect-scrollbar": "^1.5.8",
     "react-popper": "^2.3.0",
-    "react-redux": "^9.0.4",
-    "redux-logger": "^3.0.6"
+    "react-redux": "^9.0.4"
+  
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",
