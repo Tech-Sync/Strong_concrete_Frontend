@@ -6,7 +6,6 @@ import { Providers } from '@/lib/providers'
 
 const inter = Inter({ subsets: ['latin'] })
 import '../styles/tailwind.css';
-import DefaultLayout from './components/Layout/DefaultLayout'
 export const metadata: Metadata = {
   title: 'Strong Concrete Admin Dashboard',
   description: 'Strong Concrete Admin Dashboard',
@@ -19,15 +18,14 @@ export default function RootLayout({
 }) {
   return (
     <Providers>
-    <html lang="en">
-      <body className={inter.className}>
-      <DefaultLayout >
+      <html lang="en">
+        <body className={inter.className}>
 
-        {children}
-     
-    </DefaultLayout>
+          {children}
+
         </body>
-    </html>
+      </html>
     </Providers>
   )
 }
+
