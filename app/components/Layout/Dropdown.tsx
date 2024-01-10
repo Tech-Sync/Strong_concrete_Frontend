@@ -8,7 +8,7 @@ const Dropdown = (props: any, forwardedRef: any) => {
     const popperRef = useRef<any>();
 
     const { styles, attributes } = usePopper(referenceRef.current, popperRef.current, {
-        placement: props.placement || 'bottom-end',
+        placement: props.placement || 'bottom-start',
         modifiers: [
             {
                 name: 'offset',

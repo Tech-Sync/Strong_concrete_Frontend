@@ -292,7 +292,7 @@ const Header = () => {
                         <div className="dropdown shrink-0">
                             <Dropdown
                                 offset={[0, 8]}
-                                placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
+                                placement='bottom-start'
                                 btnClassName="block p-2 rounded-full bg-white-light/40 dark:bg-dark/40 hover:text-primary hover:bg-white-light/90 dark:hover:bg-dark/60"
                                 button={flag && <img className="h-5 w-5 rounded-full object-cover" src={`/assets/images/flags/${flag.toUpperCase()}.svg`} alt="flag" />}
                             >
@@ -317,7 +317,7 @@ const Header = () => {
                         <div className="dropdown shrink-0">
                             <Dropdown
                                 offset={[0, 8]}
-                                placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
+                                placement='bottom-start'
                                 btnClassName="block p-2 rounded-full bg-white-light/40 dark:bg-dark/40 hover:text-primary hover:bg-white-light/90 dark:hover:bg-dark/60"
                                 button={
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -513,7 +513,7 @@ const Header = () => {
                         <div className="dropdown flex shrink-0">
                             <Dropdown
                                 offset={[0, 8]}
-                                placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
+                                placement='bottom-start'
                                 btnClassName="relative group block"
                                 button={<img className="h-9 w-9 rounded-full object-cover saturate-50 group-hover:saturate-100" src="/assets/images/user-profile.jpeg" alt="userProfile" />}
                             >
