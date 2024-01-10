@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import Footer from './Footer';
 import Header from './Header';
-import Sidebar from './Sidebar';
+import Sidebar from './Sidebar/Sidebar';
 import Setting from './Setting';
 import Portals from './Portals';
 import { usePathname } from 'next/navigation'
