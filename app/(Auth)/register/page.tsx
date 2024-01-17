@@ -133,7 +133,7 @@ const RegisterCover = () => {
                     </ul>
                     <p className="text-center">
                         Already have an account ?
-                        <Link href="/login" className="font-bold text-primary hover:underline ltr:ml-1 rtl:mr-1">
+                        <Link href="auth-cover/login" className="font-bold text-primary hover:underline ltr:ml-1 rtl:mr-1">
                             Sign In
                         </Link>
                     </p>
