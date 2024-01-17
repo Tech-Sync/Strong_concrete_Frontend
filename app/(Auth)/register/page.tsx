@@ -1,11 +1,12 @@
 "use client"
+
+
+// use client neden kullaılıyor
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import Link from 'next/link';
 import BlankLayout from '@/app/components/Layout/BlankLayout';
 import { useRouter } from 'next/navigation'
-
-
 
 const RegisterCover = () => {
     const dispatch = useDispatch();
@@ -133,7 +134,9 @@ const RegisterCover = () => {
                     </ul>
                     <p className="text-center">
                         Already have an account ?
-                        <Link href="/auth/cover-login" className="font-bold text-primary hover:underline ltr:ml-1 rtl:mr-1">
+
+                        <Link href="/login" className="font-bold text-primary hover:underline ltr:ml-1 rtl:mr-1">
+
                             Sign In
                         </Link>
                     </p>
