@@ -22,6 +22,12 @@ import SearchMobileIcon from '@/app/icons/Header/SearchMobileIcon';
 import ToggleThemeLightIcon from '@/app/icons/Header/ToggleThemeLightIcon';
 import ToggleThemeDarkIcon from '@/app/icons/Header/ToggleThemeDarkIcon';
 import ToggleThemeSystemIcon from '@/app/icons/Header/ToggleThemeSystemIcon';
+import MessagesIcon from '@/app/icons/Header/MessagesIcon';
+import MessagesCloseIcon from '@/app/icons/Header/MessagesCloseIcon';
+import ViewAllActivityIcon from '@/app/icons/Header/ViewAllActivityIcon';
+import MessageNoDataAvaibleIcon from '@/app/icons/Header/MessageNoDataAvaibleIcon';
+import NotificationIcon from '@/app/icons/Header/NotificationIcon';
+import NotificationNoDataAvaibleIcon from '@/app/icons/Header/NotificationNoDataAvaibleIcon';
 
 const Header = () => {
 	const pathname = usePathname()
@@ -107,13 +113,13 @@ const Header = () => {
 		},
 		{
 			id: 2,
-			profile: 'profile-34.jpeg',
+			profile: 'user-profile.jpeg',
 			message: '<strong class="text-sm mr-1">Adam Nolan</strong>mentioned you to <strong>UX Basics</strong>',
 			time: '9h Ago',
 		},
 		{
 			id: 3,
-			profile: 'profile-16.jpeg',
+			profile: 'user-profile.jpeg',
 			message: '<strong class="text-sm mr-1">Anna Morgan</strong>Upload a file',
 			time: '9h Ago',
 		},
@@ -232,21 +238,7 @@ const Header = () => {
 								placement='bottom-end'
 								btnClassName="block p-2 rounded-full bg-white-light/40 dark:bg-dark/40 hover:text-primary hover:bg-white-light/90 dark:hover:bg-dark/60"
 								button={
-									<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-										<path
-											d="M22 10C22.0185 10.7271 22 11.0542 22 12C22 15.7712 22 17.6569 20.8284 18.8284C19.6569 20 17.7712 20 14 20H10C6.22876 20 4.34315 20 3.17157 18.8284C2 17.6569 2 15.7712 2 12C2 8.22876 2 6.34315 3.17157 5.17157C4.34315 4 6.22876 4 10 4H13"
-											stroke="currentColor"
-											strokeWidth="1.5"
-											strokeLinecap="round"
-										/>
-										<path
-											d="M6 8L8.1589 9.79908C9.99553 11.3296 10.9139 12.0949 12 12.0949C13.0861 12.0949 14.0045 11.3296 15.8411 9.79908"
-											stroke="currentColor"
-											strokeWidth="1.5"
-											strokeLinecap="round"
-										/>
-										<circle cx="19" cy="5" r="3" stroke="currentColor" strokeWidth="1.5" />
-									</svg>
+									<MessagesIcon />
 								}
 							>
 								<ul className="w-[300px] !py-0 text-xs text-dark dark:text-white-dark sm:w-[375px]">
@@ -271,10 +263,7 @@ const Header = () => {
 																{message.time}
 															</span>
 															<button type="button" className="text-neutral-300 hover:text-danger" onClick={() => removeMessage(message.id)}>
-																<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-																	<circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
-																	<path d="M14.5 9.50002L9.5 14.5M9.49998 9.5L14.5 14.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-																</svg>
+																<MessagesCloseIcon />
 															</button>
 														</div>
 													);
@@ -283,16 +272,7 @@ const Header = () => {
 											<li className="mt-5 border-t border-white-light text-center dark:border-white/10">
 												<button type="button" className="group !h-[48px] justify-center !py-4 font-semibold text-primary dark:text-gray-400">
 													<span className="group-hover:underline ltr:mr-1 rtl:ml-1">VIEW ALL ACTIVITIES</span>
-													<svg
-														xmlns="http://www.w3.org/2000/svg"
-														className="h-4 w-4 transition duration-300 group-hover:translate-x-1 ltr:ml-1 rtl:mr-1"
-														fill="none"
-														viewBox="0 0 24 24"
-														stroke="currentColor"
-														strokeWidth="1.5"
-													>
-														<path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-													</svg>
+													<ViewAllActivityIcon />
 												</button>
 											</li>
 										</>
@@ -300,21 +280,7 @@ const Header = () => {
 										<li className="mb-5" onClick={(e) => e.stopPropagation()}>
 											<button type="button" className="!grid min-h-[200px] place-content-center text-lg hover:!bg-transparent">
 												<div className="mx-auto mb-4 rounded-full text-white ring-4 ring-primary/30">
-													<svg
-														xmlns="http://www.w3.org/2000/svg"
-														width="40"
-														height="40"
-														viewBox="0 0 24 24"
-														fill="#a9abb6"
-														strokeWidth="1.5"
-														stroke="currentColor"
-														strokeLinecap="round"
-														strokeLinejoin="round"
-														className="feather feather-info rounded-full bg-primary"
-													>
-														<line x1="12" y1="16" x2="12" y2="12"></line>
-														<line x1="12" y1="8" x2="12.01" y2="8"></line>
-													</svg>
+													<MessageNoDataAvaibleIcon />
 												</div>
 												No data available.
 											</button>
@@ -330,15 +296,7 @@ const Header = () => {
 								btnClassName="relative block p-2 rounded-full bg-white-light/40 dark:bg-dark/40 hover:text-primary hover:bg-white-light/90 dark:hover:bg-dark/60"
 								button={
 									<span>
-										<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-											<path
-												d="M19.0001 9.7041V9C19.0001 5.13401 15.8661 2 12.0001 2C8.13407 2 5.00006 5.13401 5.00006 9V9.7041C5.00006 10.5491 4.74995 11.3752 4.28123 12.0783L3.13263 13.8012C2.08349 15.3749 2.88442 17.5139 4.70913 18.0116C9.48258 19.3134 14.5175 19.3134 19.291 18.0116C21.1157 17.5139 21.9166 15.3749 20.8675 13.8012L19.7189 12.0783C19.2502 11.3752 19.0001 10.5491 19.0001 9.7041Z"
-												stroke="currentColor"
-												strokeWidth="1.5"
-											/>
-											<path d="M7.5 19C8.15503 20.7478 9.92246 22 12 22C14.0775 22 15.845 20.7478 16.5 19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-											<path d="M12 6V10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-										</svg>
+										<NotificationIcon />
 										<span className="absolute top-0 flex h-3 w-3 ltr:right-0 rtl:left-0">
 											<span className="absolute -top-[3px] inline-flex h-full w-full animate-ping rounded-full bg-success/50 opacity-75 ltr:-left-[3px] rtl:-right-[3px]"></span>
 											<span className="relative inline-flex h-[6px] w-[6px] rounded-full bg-success"></span>
@@ -379,10 +337,7 @@ const Header = () => {
 																	className="text-neutral-300 opacity-0 hover:text-danger group-hover:opacity-100 ltr:ml-auto rtl:mr-auto"
 																	onClick={() => removeNotification(notification.id)}
 																>
-																	<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-																		<circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
-																		<path d="M14.5 9.50002L9.5 14.5M9.49998 9.5L14.5 14.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-																	</svg>
+																	<MessagesCloseIcon />
 																</button>
 															</div>
 														</div>
@@ -399,21 +354,7 @@ const Header = () => {
 										<li onClick={(e) => e.stopPropagation()}>
 											<button type="button" className="!grid min-h-[200px] place-content-center text-lg hover:!bg-transparent">
 												<div className="mx-auto mb-4 rounded-full ring-4 ring-primary/30">
-													<svg
-														xmlns="http://www.w3.org/2000/svg"
-														width="40"
-														height="40"
-														viewBox="0 0 24 24"
-														fill="#a9abb6"
-														stroke="#ffffff"
-														strokeWidth="1.5"
-														strokeLinecap="round"
-														strokeLinejoin="round"
-														className="feather feather-info rounded-full bg-primary"
-													>
-														<line x1="12" y1="16" x2="12" y2="12"></line>
-														<line x1="12" y1="8" x2="12.01" y2="8"></line>
-													</svg>
+												<NotificationNoDataAvaibleIcon />
 												</div>
 												No data available.
 											</button>
