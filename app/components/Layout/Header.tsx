@@ -8,30 +8,32 @@ import Image from 'next/image'
 import Dropdown from './Dropdown';
 import { selectThemeConfig, themeConfigSlice } from '@/lib/redux/slices/themeConfigSlice';
 import t from '@/utils/getLanguage';
-import NotificationCongratulationsIcon from '@/app/icons/header/NotificationCongratulationsIcon';
-import NotificationInfo from '@/app/icons/header/NotificationInfo';
-import NotificationSomeThingWrong from '@/app/icons/header/NotificationSomeThingWrong';
-import NotificationWarning from '@/app/icons/header/NotificationWarning';
-import ToggleHamburgerHorizontalIcon from '@/app/icons/header/ToggleHamburgerHorizontalIcon';
-import CalenderIcon from '@/app/icons/header/CalenderIcon';
-import TodoListIcon from '@/app/icons/header/TodoListIcon';
-import ChatIcon from './Sidebar/SidebarIcons/ChatIcon';
-import SearchIcon from '@/app/icons/header/SearchIcon';
-import SearchCloseIcon from '@/app/icons/header/SearchCloseIcon';
-import SearchMobileIcon from '@/app/icons/header/SearchMobileIcon';
-import ToggleThemeLightIcon from '@/app/icons/header/ToggleThemeLightIcon';
-import ToggleThemeDarkIcon from '@/app/icons/header/ToggleThemeDarkIcon';
-import ToggleThemeSystemIcon from '@/app/icons/header/ToggleThemeSystemIcon';
-import MessagesIcon from '@/app/icons/header/MessagesIcon';
-import MessagesCloseIcon from '@/app/icons/header/MessagesCloseIcon';
-import ViewAllActivityIcon from '@/app/icons/header/ViewAllActivityIcon';
-import MessageNoDataAvaibleIcon from '@/app/icons/header/MessageNoDataAvaibleIcon';
-import NotificationIcon from '@/app/icons/header/NotificationIcon';
-import NotificationNoDataAvaibleIcon from '@/app/icons/header/NotificationNoDataAvaibleIcon';
-import UserProfileIcon from '@/app/icons/header/UserProfileIcon';
-import ProfileMailBoxIcon from '@/app/icons/header/ProfileMailBoxIcon';
-import ProfileLockScreen from '@/app/icons/header/ProfileLockScreen';
-import ProfileSigninIcon from '@/app/icons/header/ProfileSigninIcon';
+import { 
+	CalenderIcon,
+	ChatIcon,
+	MessagesIcon,
+	MessagesCloseIcon,
+	NotificationIcon,
+	NotificationNoDataAvaibleIcon,
+	NotificationCongratulationsIcon,
+	NotificationInfo,
+	NotificationSomeThingWrong,
+	NotificationWarning,
+	ProfileLockScreen,
+	ProfileMailBoxIcon,
+	ProfileSigninIcon,
+	UserProfileIcon,
+	ViewAllActivityIcon,
+	ToggleHamburgerHorizontalIcon,
+	TodoListIcon,
+	SearchIcon,
+	SearchCloseIcon,
+	SearchMobileIcon,
+	ToggleThemeLightIcon,
+	ToggleThemeDarkIcon,
+	ToggleThemeSystemIcon,
+	MessageNoDataAvaibleIcon,
+} from '@/app/icons';
 
 const Header = () => {
 	const pathname = usePathname()

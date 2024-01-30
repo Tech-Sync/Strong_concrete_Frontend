@@ -1,5 +1,7 @@
 
-const ProfileSigninIcon = () => {
+
+
+export const ProfileSigninIcon = () => {
   return (
    <svg className="rotate-90 ltr:mr-2 rtl:ml-2" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
    <path
@@ -13,5 +15,3 @@ const ProfileSigninIcon = () => {
   </svg>
   )
 }
-
-export default ProfileSigninIcon

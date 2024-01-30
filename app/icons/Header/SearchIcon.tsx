@@ -1,5 +1,7 @@
 
-const SearchIcon = () => {
+
+
+export const SearchIcon = () => {
   return (
    <svg className="mx-auto" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
    <circle cx="11.5" cy="11.5" r="9.5" stroke="currentColor" strokeWidth="1.5" opacity="0.5" />
@@ -7,5 +9,3 @@ const SearchIcon = () => {
   </svg>
   )
 }
-
-export default SearchIcon

@@ -1,5 +1,5 @@
 
-const ChatIcon = () => {
+export const ChatIcon = () => {
   return (
    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
    <circle r="3" transform="matrix(-1 0 0 1 19 5)" stroke="currentColor" strokeWidth="1.5" />
@@ -14,4 +14,3 @@ const ChatIcon = () => {
   )
 }
 
-export default ChatIcon

@@ -1,4 +1,6 @@
-const ViewAllActivityIcon = () => {
+
+
+export const ViewAllActivityIcon = () => {
   return (
    <svg
    xmlns="http://www.w3.org/2000/svg"
@@ -12,5 +14,3 @@ const ViewAllActivityIcon = () => {
   </svg>
   )
 }
-
-export default ViewAllActivityIcon
