@@ -6,14 +6,12 @@ import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import { useState, useEffect } from 'react';
 import { selectThemeConfig, themeConfigSlice } from '@/lib/redux/slices/themeConfigSlice';
-import DashboardIcon from '../../../icons/SidebarIcons/DashboardIcon';
-import DoubleArrowIcon from '../../../icons/SidebarIcons/DoubleArrowIcon';
+import { DashboardIcon,DoubleArrowIcon} from '@/app/icons'
 
 
 const Sidebar = () => {
     const pathname: string = usePathname()
     const [currentMenu, setCurrentMenu] = useState<string>('');
-    const [errorSubMenu, setErrorSubMenu] = useState(false);
     const themeConfig = useSelector(selectThemeConfig)
     const semidark = themeConfig.semidark
     const toggleMenu = (value: string) => {
