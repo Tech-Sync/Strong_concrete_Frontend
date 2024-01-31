@@ -1,2 +1,2 @@
 export * from './headerIcons'
-export * from './sidebarIcon'
+export * from './sidebarIcons'
