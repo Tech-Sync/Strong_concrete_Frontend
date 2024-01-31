@@ -6,9 +6,8 @@ import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import { useState, useEffect } from 'react';
 import { selectThemeConfig, themeConfigSlice } from '@/lib/redux/slices/themeConfigSlice';
-import DashboardIcon from './SidebarIcons/DashboardIcon';
-import ChatIcon from './SidebarIcons/ChatIcon';
-import DoubleArrowIcon from './SidebarIcons/DoubleArrowIcon';
+import DashboardIcon from '../../../icons/SidebarIcons/DashboardIcon';
+import DoubleArrowIcon from '../../../icons/SidebarIcons/DoubleArrowIcon';
 
 
 const Sidebar = () => {
