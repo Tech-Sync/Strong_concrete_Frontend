@@ -3,13 +3,13 @@ import { PropsWithChildren, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Footer from './Footer';
-import Header from './Header';
+import Header from './Header/Header';
 import Sidebar from './Sidebar/Sidebar';
 import Setting from './Setting';
 import Portals from './Portals';
 import { usePathname } from 'next/navigation'
 import AppContainer from '@/container/AppContainer';
-import { selectThemeConfig ,themeConfigSlice} from '@/lib/redux/slices/themeConfigSlice';
+import { selectThemeConfig, themeConfigSlice } from '@/lib/redux/slices/themeConfigSlice';
 
 const DefaultLayout = ({ children }: PropsWithChildren) => {
     const pathname = usePathname()
@@ -48,7 +48,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
         //       } shallow routing`
         //     )
         //   }
-       
+
         //   router.events.on('routeChangeStart', handleRouteChange)
 
         // router.events.on('beforeHistoryChange', () => {
