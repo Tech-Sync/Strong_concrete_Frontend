@@ -4,7 +4,7 @@ import { userInfo } from "@/types/next-auth";
 import { JWT } from "next-auth/jwt";
 import Credentials from "@auth/core/providers/credentials";
 
-const BASE_URL = process.env.API_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
 export const {
   handlers: { GET, POST },
@@ -19,7 +19,7 @@ export const {
         if (!credentials) return null;
 
         const { email, password } = credentials as any;
-        const res = await fetch(`http://localhost:8000/auth/login`, {
+        const res = await fetch(`${BASE_URL}/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
@@ -48,7 +48,7 @@ export const {
         return token;
       } else {
         try {
-          const res = await fetch("http://127.0.0.1:8000/auth/refresh", {
+          const res = await fetch(`${BASE_URL}/auth/refresh`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ refresh: token.refresh }),
@@ -70,7 +70,7 @@ export const {
     },
 
     async session({ session, token }) {
-      const { userInfo, refresh, access, error } = token as JWT;
+      const { userInfo, refresh, access, error } = token
       session.user = userInfo;
       session.accessToken = access;
       session.refreshToken = refresh;
