@@ -68,7 +68,7 @@ export const {
         }
       }
     },
-
+// @ts-ignore
     async session({ session, token }) {
       const { userInfo, refresh, access, error } = token
       session.user = userInfo;
