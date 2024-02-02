@@ -14,7 +14,6 @@ function AppContainer({ children }: PropsWithChildren) {
     // const { i18n } = useTranslation();
 
     useEffect(() => {
-        console.log('app')
         dispatch(themeConfigSlice.actions.toggleTheme(localStorage.getItem('theme') || themeConfig.theme));
         dispatch(themeConfigSlice.actions.toggleMenu(localStorage.getItem('menu') || themeConfig.menu));
         dispatch(themeConfigSlice.actions.toggleLayout(localStorage.getItem('layout') || themeConfig.layout));
