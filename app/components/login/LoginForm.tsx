@@ -1,5 +1,5 @@
 "use client";
-import { login } from "@/actions/login";
+import { login } from "@/actions/authActions";
 import { coloredToast, successToast } from "@/lib/sweetAlerts";
 import { Form, Formik, Field, ErrorMessage } from "formik";
 import Link from "next/link";
