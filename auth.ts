@@ -17,21 +17,19 @@ export const {
       credentials: {},
       async authorize(credentials) {
         if (!credentials) return null;
-
         const { email, password } = credentials as any;
+
         const res = await fetch(`${BASE_URL}/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
         });
 
-        const data = await res.json();
-        const user = data?.Token;
-
+        const user = await res.json();
         if (res.ok && user) {
           return user;
         } else {
-          throw new Error(data.message || "Authentication failed");
+          throw new Error(user.message || "Authentication failed");
         }
       },
     }),
@@ -53,12 +51,11 @@ export const {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ refresh: token.refresh }),
           });
-
           const tokens = await res.json();
 
           if (!res.ok) throw tokens;
 
-          token.access = tokens?.Token?.access;
+          token.access = tokens?.access;
           token.expiresAt = Math.floor(Date.now() / 1000 + 60 * 60 * 24);
 
           return token;
@@ -68,9 +65,9 @@ export const {
         }
       }
     },
-// @ts-ignore
+    // @ts-ignore
     async session({ session, token }) {
-      const { userInfo, refresh, access, error } = token
+      const { userInfo, refresh, access, error } = token;
       session.user = userInfo;
       session.accessToken = access;
       session.refreshToken = refresh;
