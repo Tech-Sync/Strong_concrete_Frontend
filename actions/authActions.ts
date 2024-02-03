@@ -7,6 +7,8 @@ interface valuesType {
   password: string;
 }
 
+const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
+
 export const login = async (values: valuesType) => {
   const { email, password } = values;
 
@@ -29,6 +31,28 @@ export const login = async (values: valuesType) => {
       }
     }
 
+    throw error;
+  }
+};
+
+export const verifyEmail = async (emailToken: string) => {
+  try {
+    const res = await fetch(
+      `${BASE_URL}/auth/verify-email?emailToken=${emailToken}`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(`Server error: ${res.status}`);
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error);
+      return { error: "Something went wrong ! Try again" };
+    }
     throw error;
   }
 };
