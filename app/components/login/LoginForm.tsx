@@ -1,10 +1,13 @@
 "use client";
 import { login } from "@/actions/authActions";
-import { coloredToast, successToast } from "@/lib/sweetAlerts";
+import {
+  coloredToast,
+  forgetPasswordToast,
+  successToast,
+} from "@/lib/sweetAlerts";
 import { Form, Formik, Field, ErrorMessage } from "formik";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { FormEvent, useState } from "react";
+import React from "react";
 import { object, string } from "yup";
 
 const LoginForm = () => {
@@ -64,7 +67,7 @@ const LoginForm = () => {
                 placeholder="Enter Email"
                 className={`form-input ${
                   touched.email && errors.email ? "border-red-500" : ""
-                }`}
+                } placeholder:text-gray-400 `}
               />
               <ErrorMessage
                 name="email"
@@ -78,7 +81,7 @@ const LoginForm = () => {
                 type="password"
                 name="password"
                 placeholder="Enter Password"
-                className={`form-input ${
+                className={`form-input placeholder:text-gray-400 ${
                   touched.password && errors.password ? "border-red-500" : ""
                 }`}
               />
@@ -87,17 +90,16 @@ const LoginForm = () => {
                 component="div"
                 className="text-red-500 text-sm "
               />
-            </div>
-            <div className="flex justify-end">
-              <label className="cursor-pointer p-0">
-                <Link
-                  href="/reset-password"
-                  className="text-sm text-gray-500 font-light"
+              <div className="flex justify-end mt-2">
+                <span
+                  onClick={forgetPasswordToast}
+                  className="text-sm text-gray-500 font-normal cursor-pointer"
                 >
                   Forget Your password ?
-                </Link>
-              </label>
+                </span>
+              </div>
             </div>
+
             <button
               type="submit"
               className="btn btn-primary w-full"

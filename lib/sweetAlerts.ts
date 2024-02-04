@@ -1,3 +1,4 @@
+import { forgetPassword } from "@/actions/authActions";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
@@ -38,4 +39,22 @@ export const coloredToast = (color: string, msg: string) => {
       ? `${msg} <a href="https://mail.google.com/mail/u/0/#advanced-search/from=Strong+Concrete&subset=all&within=1d&sizeoperator=s_sl&sizeunit=s_smb" style="color: black; text-decoration: underline;">Click Here</a>`
       : msg,
   });
+};
+
+export const forgetPasswordToast = async () => {
+  const { value: email } = await Swal.fire({
+    title: "Reset password with Email",
+    input: "email",
+    inputLabel: "A verification code will be send to this mail account.",
+    inputPlaceholder: "Enter your email address",
+    showCancelButton: true,
+  });
+  if (email) {
+    const res = await forgetPassword(email);
+    if (res?.message) {
+      Swal.fire(`${res?.message} Check your emails please.` );
+    } else {
+      Swal.fire(res?.error);
+    }
+  }
 };

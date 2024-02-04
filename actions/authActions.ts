@@ -56,3 +56,23 @@ export const verifyEmail = async (emailToken: string) => {
     throw error;
   }
 };
+
+export const forgetPassword = async (email: string) => {
+  try {
+    const res = await fetch(`${BASE_URL}/users/forget-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message);
+    } else {
+      return data;
+    }
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};
