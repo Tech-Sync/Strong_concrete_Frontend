@@ -34,9 +34,10 @@ export const coloredToast = (color: string, msg: string) => {
       popup: `color-${color}`,
     },
   });
+  
   toast.fire({
     title: openEmail
-      ? `${msg} <a href="https://mail.google.com/mail/u/0/#advanced-search/from=Strong+Concrete&subset=all&within=1d&sizeoperator=s_sl&sizeunit=s_smb" style="color: black; text-decoration: underline;">Click Here</a>`
+      ? `${msg} <a href="https://mail.google.com/mail/u/0/#search/Strong+Concrete" style="color: black; text-decoration: underline;">Check your inbox!</a>`
       : msg,
   });
 };

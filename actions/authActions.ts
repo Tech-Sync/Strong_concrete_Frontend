@@ -2,14 +2,20 @@
 import { AuthError } from "next-auth";
 import { signIn } from "@/auth";
 
-interface valuesType {
+interface loginValuesType {
   email: string;
   password: string;
+}
+interface resetPasswordValuesType {
+  uid: string | null
+  emailToken: string | null;
+  password: string | null;
+  password2: string | null;
 }
 
 const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
-export const login = async (values: valuesType) => {
+export const login = async (values: loginValuesType) => {
   const { email, password } = values;
 
   try {
@@ -60,13 +66,36 @@ export const verifyEmail = async (emailToken: string) => {
 export const forgetPassword = async (email: string) => {
   try {
     const res = await fetch(`${BASE_URL}/users/forget-password`, {
+      cache: "no-store",
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
     });
 
     const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message);
+    } else {
+      return data;
+    }
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};
+export const resetPassword = async (values: resetPasswordValuesType) => {
+  const { uid, emailToken, password, password2 } = values;
+  try {
+    const res = await fetch(
+      `${BASE_URL}/users/reset-password/${uid}/${emailToken}`,
+      {
+        cache: "no-store",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password, password2 }),
+      }
+    );
 
+    const data = await res.json();
     if (!res.ok) {
       throw new Error(data.message);
     } else {

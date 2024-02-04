@@ -10,24 +10,24 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { object, string } from "yup";
 
-const LoginForm = () => {
-  const loginSchema = object({
-    email: string()
-      .email("Please enter a valid email address!")
-      .required("Email is required!"),
-    password: string()
-      .required("This field is required.")
-      .min(8, "At least 8 characters must be entered.")
-      .max(16, "Maximum 16 characters must be entered.")
-      .matches(/\d+/, "It must contain at least one digit.")
-      .matches(/[a-z]/, "It must contain at least one lowercase letter.")
-      .matches(/[A-Z]/, "It must contain at least one uppercase letter.")
-      .matches(
-        /[!,?{}><%&$#£+-.]+/,
-        "It must contain at least one special character."
-      ),
-  });
+const loginSchema = object({
+  email: string()
+    .email("Please enter a valid email address!")
+    .required("Email is required!"),
+  password: string()
+    .required("This field is required.")
+    .min(8, "At least 8 characters must be entered.")
+    .max(16, "Maximum 16 characters must be entered.")
+    .matches(/\d+/, "It must contain at least one digit.")
+    .matches(/[a-z]/, "It must contain at least one lowercase letter.")
+    .matches(/[A-Z]/, "It must contain at least one uppercase letter.")
+    .matches(
+      /[!,?{}><%&$#£+-.]+/,
+      "It must contain at least one special character."
+    ),
+});
 
+const LoginForm = () => {
   const router = useRouter();
 
   return (

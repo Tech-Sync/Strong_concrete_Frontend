@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import BlankLayout from "@/app/components/Layout/BlankLayout";
-import LoginForm from "@/app/components/login/LoginForm";
+import LoginForm from "@/app/components/auth/LoginForm";
 import Image from "next/image";
 import Link from "next/link";
 

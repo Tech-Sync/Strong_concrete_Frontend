@@ -1,4 +1,4 @@
-import AuthLoader from "@/app/components/verifyLoader/AuthLoader";
+import AuthLoader from "@/app/components/auth/AuthLoader";
 import React from "react";
 
 const VerifyEmailPage = () => {
