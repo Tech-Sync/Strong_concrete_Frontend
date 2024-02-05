@@ -15,7 +15,7 @@ export const getMaterials = async()=>{
   throw new Error("Token not found");
   
  }
- if ( role == 1 ||  role == 2 ||  role == 3  ) {
+ if ( role == 1 ||  role == 2 ||  role == 3 ) {
 
   throw new Error("User not authorized");
   
@@ -28,7 +28,7 @@ export const getMaterials = async()=>{
    }
    })
    .then(res => res.json())
-   return materials;
+   return materials.data;
   } catch (error) {
    return error;
   }

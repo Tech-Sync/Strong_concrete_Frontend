@@ -1,18 +1,17 @@
 import { getMaterials } from "@/actions/materials/getMaterials"
 
+import MaterialsTable from "./materialsTable";
 const MaterialsPage = async () => {
   const materials = await getMaterials();
   console.log("materials", materials)
 
-  if (materials) {
-    return (
-      <div>
-        {JSON.stringify(materials)}
-      </div>
-    )
-  }
+
   return (
-    <div>MaterialsPage</div>
+    <div>
+      <div>
+        materials</div>
+      <MaterialsTable materials={materials} />
+    </div>
   )
 }
 
