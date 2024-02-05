@@ -2,12 +2,14 @@
 
 import { verifyEmail } from "@/actions/authActions";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const AuthLoader = () => {
   const searchParams = useSearchParams();
   const emailToken = searchParams.get("emailToken");
+  const router = useRouter();
+
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -39,9 +41,9 @@ const AuthLoader = () => {
           <h4 className="mb-5 text-xl font-semibold text-primary sm:text-5xl">
             Your Email Verified !
           </h4>
-          <Link href="/login" className="btn btn-primary mx-auto mt-10 w-max">
+          <button onClick={()=>router.replace('/login')} className="btn btn-primary mx-auto mt-10 w-max">
             You are authorized to login ! 👏🏻
-          </Link>
+          </button>
         </div>
       )}
     </div>
