@@ -1,9 +1,14 @@
-import React from 'react'
+import AuthLoader from "@/app/components/auth/AuthLoader";
+import React from "react";
 
 const VerifyEmailPage = () => {
   return (
-    <div>VerifyEmailPage</div>
-  )
-}
+    <div className="flex min-h-screen items-center justify-center bg-[url('/assets/images/map.svg')] bg-cover bg-center dark:bg-[url('/assets/images/map-dark.svg')]">
+      <div className="p-5 text-center font-semibold">
+        <AuthLoader />
+      </div>
+    </div>
+  );
+};
 
-export default VerifyEmailPage
+export default VerifyEmailPage;
