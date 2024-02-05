@@ -103,7 +103,11 @@ const Sidebar = () => {
             path: '/settings',
             icon: <DashboardIcon />,
         },
-
+        {
+            name: "Purchases",
+            path: '/purchases',
+            icon: <DashboardIcon />,
+        }
 
 
 
