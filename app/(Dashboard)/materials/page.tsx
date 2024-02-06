@@ -8,8 +8,7 @@ const MaterialsPage = async () => {
 
   return (
     <div>
-      <div>
-        materials</div>
+      
       <MaterialsTable materials={materials} />
     </div>
   )

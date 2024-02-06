@@ -6,9 +6,6 @@ export const getMaterials = async()=>{
  const role = user?.role;
  const token = session?.accessToken;
 
- 
-
- 
  console.log(session);
  if (!user) {
   throw new Error("User not found");
