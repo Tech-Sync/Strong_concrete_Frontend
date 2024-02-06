@@ -162,7 +162,7 @@ console.log(selectedRecords);
                                 accessor: 'action',
                                 title: 'Actions',
                                 sortable: false,
-                                textAlign: 'center',
+                                textAlignment: 'center',
                                 render: ({ id }) => (
                                     <div className="mx-auto flex w-max items-center gap-4">
                                         <Link href="/apps/invoice/edit" className="flex hover:text-info">
