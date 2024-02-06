@@ -3,6 +3,7 @@ import DefaultLayout from "../components/Layout/DefaultLayout";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 
+
 export default async function Layout({
   children,
 }: {
