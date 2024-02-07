@@ -1,12 +1,12 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { Providers } from "@/lib/providers";
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import './globals.css'
+import { Providers } from '@/lib/providers'
 import '../styles/tailwind.css';
 import '../styles/datatables.css';
 
+
 const inter = Inter({ subsets: ["latin"] });
-import "../styles/tailwind.css";
 export const metadata: Metadata = {
   title: "Strong Concrete Admin Dashboard",
   description: "Strong Concrete Admin Dashboard",
