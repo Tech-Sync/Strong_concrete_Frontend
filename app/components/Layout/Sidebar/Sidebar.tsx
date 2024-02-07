@@ -89,8 +89,8 @@ const Sidebar = () => {
             icon: <DashboardIcon />,
         },
         {
-            name: "Materials",
-            path: '/materials',
+            name: "Stocks",
+            path: '/stocks',
             icon: <DashboardIcon />,
         },
         {
