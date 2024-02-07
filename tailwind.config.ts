@@ -95,7 +95,6 @@ const config: Config = {
         strategy: 'class',
     }),
     require('@tailwindcss/typography'),
-    require('@tailwindcss/line-clamp'),
 ],
 }
 export default config
