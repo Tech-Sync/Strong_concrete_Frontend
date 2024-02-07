@@ -7,18 +7,14 @@ import { useSelector } from 'react-redux';
 import { selectThemeConfig } from '@/lib/redux/slices/themeConfigSlice';
 import { Material } from '@/types/types';
 import { formatDate } from '@/utils/formatDate';
-import { MaterialDeleteIcon } from '@/app/icons';
-import MaterialEditIcon from '@/app/icons/materialsIcon/MaterialEditIcon';
-import MaterialPlusIcon from '@/app/icons/materialsIcon/MaterialPlusIcon';
-import MaterialPreviewIcon from '@/app/icons/materialsIcon/MaterialPreviewIcon';
-
+import { MaterialDeleteIcon, MaterialEditIcon, MaterialPlusIcon, MaterialPreviewIcon } from '@/app/icons';
 interface MaterialsTableProps {
     materials: Material[]
 }
 
 const MaterialsTable = ({materials}:MaterialsTableProps) => {
 
-       const isDark = useSelector(selectThemeConfig).isDarkMode ? "dark":"light"
+    const isDark = useSelector(selectThemeConfig).isDarkMode ? "dark":"light"
    
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [5, 10, 15, 20, 25];
@@ -59,7 +55,7 @@ const MaterialsTable = ({materials}:MaterialsTableProps) => {
         setRecords(sortStatus.direction === 'desc' ? data2.reverse() : data2);
         setPage(1);
     }, [sortStatus]);
-console.log(selectedRecords);
+
 
     const deleteRow = (id: any = null) => {
         if (window.confirm('Are you sure want to delete selected row ?')) {
