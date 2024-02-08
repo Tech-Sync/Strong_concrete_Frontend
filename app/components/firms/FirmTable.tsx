@@ -1,64 +1,42 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 import Link from "next/link";
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
 import { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { selectThemeConfig } from "@/lib/redux/slices/themeConfigSlice";
-// import { Material } from '@/types/types';
-// import { formatDate } from '@/utils/formatDate';
+import { getAllFirms } from "@/actions/firmActions";
+import { Firm } from "@/types/types";
+import { DeleteIcon, EditIcon, PlusIcon, PreviewIcon } from "@/app/icons";
+import { formatDate } from "@/utils/formatDate";
+import { rolesAndStatus } from "@/app/constraints/roles&status";
+import { deleteToast } from "@/lib/sweetAlerts";
 
 export default function FirmTable() {
-  const dispatch = useDispatch();
+  const [firms, setFirms] = useState<Firm[]>([]);
+  const [initialRecords, setInitialRecords] = useState(sortBy(firms, "id"));
+
+  useEffect(() => {
+    (async () => {
+      const firmRes = await getAllFirms();
+      setFirms(firmRes.data);
+    })();
+  }, []);
+
+  useEffect(() => {
+    setInitialRecords(sortBy(firms, "id"));
+  }, [firms]);
 
   const isDark = useSelector(selectThemeConfig).isDarkMode;
-
-  const [items, setItems] = useState([
-    {
-      id: 1,
-      invoice: "081451",
-      name: "Laurie Fox",
-      email: "lauriefox@company.com",
-      date: "15 Dec 2020",
-      amount: "2275.45",
-      status: { tooltip: "Paid", color: "success" },
-      profile: "profile-1.jpeg",
-    },
-    {
-      id: 2,
-      invoice: "081452",
-      name: "Alexander Gray",
-      email: "alexGray3188@gmail.com",
-      date: "20 Dec 2020",
-      amount: "1044.00",
-      status: { tooltip: "Paid", color: "success" },
-      profile: "profile-1.jpeg",
-    },
-    {
-      id: 3,
-      invoice: "081681",
-      name: "James Taylor",
-      email: "jamestaylor468@gmail.com",
-      date: "27 Dec 2020",
-      amount: "20.00",
-      status: { tooltip: "Pending", color: "danger" },
-      profile: "profile-1.jpeg",
-    },
-  ]);
 
   const [page, setPage] = useState(1);
   const PAGE_SIZES = [10, 20, 30, 50, 100];
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-  const [initialRecords, setInitialRecords] = useState(
-    sortBy(items, "invoice")
-  );
   const [records, setRecords] = useState(initialRecords);
   const [selectedRecords, setSelectedRecords] = useState<any>([]);
-
   const [search, setSearch] = useState("");
   const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
-    columnAccessor: "firstName",
+    columnAccessor: "id",
     direction: "asc",
   });
 
@@ -74,46 +52,43 @@ export default function FirmTable() {
 
   useEffect(() => {
     setInitialRecords(() => {
-      return items.filter((item) => {
+      return firms.filter((material) => {
         return (
-          item.invoice.toLowerCase().includes(search.toLowerCase()) ||
-          item.name.toLowerCase().includes(search.toLowerCase()) ||
-          item.email.toLowerCase().includes(search.toLowerCase()) ||
-          item.date.toLowerCase().includes(search.toLowerCase()) ||
-          item.amount.toLowerCase().includes(search.toLowerCase()) ||
-          item.status.tooltip.toLowerCase().includes(search.toLowerCase())
+          material.address.toLowerCase().includes(search.toLowerCase()) ||
+          material.email.toLowerCase().includes(search.toLowerCase()) ||
+          material.name.toLowerCase().includes(search.toLowerCase()) ||
+          material.phoneNo.toLowerCase().includes(search.toLowerCase()) ||
+          material.tpinNo.toLowerCase().includes(search.toLowerCase())
         );
       });
     });
-  }, [search]);
+  }, [firms, search]);
 
   useEffect(() => {
     const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
     setRecords(sortStatus.direction === "desc" ? data2.reverse() : data2);
     setPage(1);
-  }, [sortStatus]);
+  }, [initialRecords, sortStatus]);
 
-  const deleteRow = (id: any = null) => {
-    if (window.confirm("Are you sure want to delete selected row ?")) {
-      if (id) {
-        setRecords(items.filter((user) => user.id !== id));
-        setInitialRecords(items.filter((user) => user.id !== id));
-        setItems(items.filter((user) => user.id !== id));
-        setSelectedRecords([]);
-        setSearch("");
-      } else {
-        let selectedRows = selectedRecords || [];
-        const ids = selectedRows.map((d: any) => {
-          return d.id;
-        });
-        const result = items.filter((d) => !ids.includes(d.id as never));
-        setRecords(result);
-        setInitialRecords(result);
-        setItems(result);
-        setSelectedRecords([]);
-        setSearch("");
-        setPage(1);
-      }
+  const deleteRow = async (id: any = null) => {
+    if (id) {
+      deleteToast(id);
+      const firmRes = await getAllFirms();
+      setFirms(firmRes.data);
+      setRecords(firms.filter((firm) => firm.id !== id));
+      setSelectedRecords([]);
+      setSearch("");
+    } else {
+      let selectedRows = selectedRecords || [];
+      const ids = selectedRows.map((d: any) => {
+        return d.id;
+      });
+      const result = firms.filter((d) => !ids.includes(d.id as never));
+      setRecords(result);
+      setInitialRecords(result);
+      setSelectedRecords([]);
+      setSearch("");
+      setPage(1);
     }
   };
 
@@ -127,62 +102,11 @@ export default function FirmTable() {
               className="btn btn-danger gap-2"
               onClick={() => deleteRow()}
             >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-              >
-                <path
-                  d="M20.5001 6H3.5"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                ></path>
-                <path
-                  d="M18.8334 8.5L18.3735 15.3991C18.1965 18.054 18.108 19.3815 17.243 20.1907C16.378 21 15.0476 21 12.3868 21H11.6134C8.9526 21 7.6222 21 6.75719 20.1907C5.89218 19.3815 5.80368 18.054 5.62669 15.3991L5.16675 8.5"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                ></path>
-                <path
-                  opacity="0.5"
-                  d="M9.5 11L10 16"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                ></path>
-                <path
-                  opacity="0.5"
-                  d="M14.5 11L14 16"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                ></path>
-                <path
-                  opacity="0.5"
-                  d="M6.5 6C6.55588 6 6.58382 6 6.60915 5.99936C7.43259 5.97849 8.15902 5.45491 8.43922 4.68032C8.44784 4.65649 8.45667 4.62999 8.47434 4.57697L8.57143 4.28571C8.65431 4.03708 8.69575 3.91276 8.75071 3.8072C8.97001 3.38607 9.37574 3.09364 9.84461 3.01877C9.96213 3 10.0932 3 10.3553 3H13.6447C13.9068 3 14.0379 3 14.1554 3.01877C14.6243 3.09364 15.03 3.38607 15.2493 3.8072C15.3043 3.91276 15.3457 4.03708 15.4286 4.28571L15.5257 4.57697C15.5433 4.62992 15.5522 4.65651 15.5608 4.68032C15.841 5.45491 16.5674 5.97849 17.3909 5.99936C17.4162 6 17.4441 6 17.5 6"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                ></path>
-              </svg>
+              <DeleteIcon />
               Delete
             </button>
-            <Link href="/apps/invoice/add" className="btn btn-primary gap-2">
-              <svg
-                className="h-5 w-5"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
+            <Link href="" className="btn btn-primary gap-2">
+              <PlusIcon />
               Add New
             </Link>
           </div>
@@ -200,15 +124,13 @@ export default function FirmTable() {
         <div className="datatables pagination-padding">
           <DataTable
             className={`${isDark} table-hover whitespace-nowrap`}
-            records={records}
+            records={records.map((material) => ({ ...material }))}
             columns={[
               {
-                accessor: "invoice",
+                accessor: "id",
                 sortable: true,
-                render: ({ invoice }) => (
-                  <Link href="/apps/invoice/preview">
-                    <div className="font-semibold text-primary underline hover:no-underline">{`#${invoice}`}</div>
-                  </Link>
+                render: ({ id }) => (
+                  <div className="font-semibold text-primary underline hover:no-underline">{`#${id}`}</div>
                 ),
               },
               {
@@ -216,14 +138,7 @@ export default function FirmTable() {
                 sortable: true,
                 render: ({ name, id }) => (
                   <div className="flex items-center font-semibold">
-                    <div className="w-max rounded-full bg-white-dark/30 p-0.5 ltr:mr-2 rtl:ml-2">
-                      <img
-                        className="h-8 w-8 rounded-full object-cover"
-                        src={`/assets/images/profile-${id}.jpeg`}
-                        alt=""
-                      />
-                    </div>
-                    <div>{name}</div>
+                    <div>{name as string}</div>
                   </div>
                 ),
               },
@@ -232,23 +147,27 @@ export default function FirmTable() {
                 sortable: true,
               },
               {
-                accessor: "date",
+                accessor: "phoneNo",
                 sortable: true,
               },
               {
-                accessor: "amount",
+                accessor: "tpinNo",
                 sortable: true,
-                titleClassName: "text-right",
-                render: ({ amount, id }) => (
-                  <div className="text-right font-semibold">{`$${amount}`}</div>
+              },
+              {
+                accessor: "createdAt",
+                sortable: true,
+                titleClassName: "text-left",
+                render: ({ createdAt, id }) => (
+                  <div>{formatDate(createdAt)}</div>
                 ),
               },
               {
                 accessor: "status",
                 sortable: true,
                 render: ({ status }) => (
-                  <span className={`badge badge-outline-${status.color} `}>
-                    {status.tooltip}
+                  <span className={`badge badge-outline-secondary`}>
+                    {rolesAndStatus.firmStatuses[String(status)]}
                   </span>
                 ),
               },
@@ -263,110 +182,26 @@ export default function FirmTable() {
                       href="/apps/invoice/edit"
                       className="flex hover:text-info"
                     >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4.5 w-4.5"
-                      >
-                        <path
-                          opacity="0.5"
-                          d="M22 10.5V12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2H13.5"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                        ></path>
-                        <path
-                          d="M17.3009 2.80624L16.652 3.45506L10.6872 9.41993C10.2832 9.82394 10.0812 10.0259 9.90743 10.2487C9.70249 10.5114 9.52679 10.7957 9.38344 11.0965C9.26191 11.3515 9.17157 11.6225 8.99089 12.1646L8.41242 13.9L8.03811 15.0229C7.9492 15.2897 8.01862 15.5837 8.21744 15.7826C8.41626 15.9814 8.71035 16.0508 8.97709 15.9619L10.1 15.5876L11.8354 15.0091C12.3775 14.8284 12.6485 14.7381 12.9035 14.6166C13.2043 14.4732 13.4886 14.2975 13.7513 14.0926C13.9741 13.9188 14.1761 13.7168 14.5801 13.3128L20.5449 7.34795L21.1938 6.69914C22.2687 5.62415 22.2687 3.88124 21.1938 2.80624C20.1188 1.73125 18.3759 1.73125 17.3009 2.80624Z"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                        ></path>
-                        <path
-                          opacity="0.5"
-                          d="M16.6522 3.45508C16.6522 3.45508 16.7333 4.83381 17.9499 6.05034C19.1664 7.26687 20.5451 7.34797 20.5451 7.34797M10.1002 15.5876L8.4126 13.9"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                        ></path>
-                      </svg>
+                      <EditIcon />
                     </Link>
                     <Link
                       href="/apps/invoice/preview"
                       className="flex hover:text-primary"
                     >
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          opacity="0.5"
-                          d="M3.27489 15.2957C2.42496 14.1915 2 13.6394 2 12C2 10.3606 2.42496 9.80853 3.27489 8.70433C4.97196 6.49956 7.81811 4 12 4C16.1819 4 19.028 6.49956 20.7251 8.70433C21.575 9.80853 22 10.3606 22 12C22 13.6394 21.575 14.1915 20.7251 15.2957C19.028 17.5004 16.1819 20 12 20C7.81811 20 4.97196 17.5004 3.27489 15.2957Z"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                        />
-                        <path
-                          d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                        />
-                      </svg>
+                      <PreviewIcon />
                     </Link>
                     <button
                       type="button"
                       className="flex hover:text-danger"
                       onClick={(e) => deleteRow(id)}
                     >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                      >
-                        <path
-                          d="M20.5001 6H3.5"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                        ></path>
-                        <path
-                          d="M18.8334 8.5L18.3735 15.3991C18.1965 18.054 18.108 19.3815 17.243 20.1907C16.378 21 15.0476 21 12.3868 21H11.6134C8.9526 21 7.6222 21 6.75719 20.1907C5.89218 19.3815 5.80368 18.054 5.62669 15.3991L5.16675 8.5"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                        ></path>
-                        <path
-                          opacity="0.5"
-                          d="M9.5 11L10 16"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                        ></path>
-                        <path
-                          opacity="0.5"
-                          d="M14.5 11L14 16"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                        ></path>
-                        <path
-                          opacity="0.5"
-                          d="M6.5 6C6.55588 6 6.58382 6 6.60915 5.99936C7.43259 5.97849 8.15902 5.45491 8.43922 4.68032C8.44784 4.65649 8.45667 4.62999 8.47434 4.57697L8.57143 4.28571C8.65431 4.03708 8.69575 3.91276 8.75071 3.8072C8.97001 3.38607 9.37574 3.09364 9.84461 3.01877C9.96213 3 10.0932 3 10.3553 3H13.6447C13.9068 3 14.0379 3 14.1554 3.01877C14.6243 3.09364 15.03 3.38607 15.2493 3.8072C15.3043 3.91276 15.3457 4.03708 15.4286 4.28571L15.5257 4.57697C15.5433 4.62992 15.5522 4.65651 15.5608 4.68032C15.841 5.45491 16.5674 5.97849 17.3909 5.99936C17.4162 6 17.4441 6 17.5 6"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                        ></path>
-                      </svg>
+                      <DeleteIcon />
                     </button>
                   </div>
                 ),
               },
             ]}
-            highlightOnHover
+            highlightOnHover={true}
             totalRecords={initialRecords.length}
             recordsPerPage={pageSize}
             page={page}

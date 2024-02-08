@@ -1,4 +1,5 @@
 import { forgetPassword } from "@/actions/authActions";
+import { deleteFirm } from "@/actions/firmActions";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
@@ -34,7 +35,7 @@ export const coloredToast = (color: string, msg: string) => {
       popup: `color-${color}`,
     },
   });
-  
+
   toast.fire({
     title: openEmail
       ? `${msg} <a href="https://mail.google.com/mail/u/0/#search/Strong+Concrete" style="color: black; text-decoration: underline;">Check your inbox!</a>`
@@ -53,9 +54,40 @@ export const forgetPasswordToast = async () => {
   if (email) {
     const res = await forgetPassword(email);
     if (res?.message) {
-      Swal.fire(`${res?.message} Check your emails please.` );
+      Swal.fire(`${res?.message} Check your emails please.`);
     } else {
       Swal.fire(res?.error);
     }
   }
+};
+
+export const deleteToast = async (id: any) => {
+  Swal.fire({
+    icon: "warning",
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    showCancelButton: true,
+    confirmButtonText: "Delete",
+    padding: "2em",
+    customClass: "sweet-alerts",
+  }).then(async (result) => {
+    if (result.value) {
+      const res = await deleteFirm(id);
+      if (res?.message) {
+        Swal.fire({
+          title: "Deleted!",
+          text: "It has been deleted.",
+          icon: "success",
+          customClass: "sweet-alerts",
+        });
+      } else {
+        Swal.fire({
+          title: "Not deleted!",
+          text: res?.error,
+          icon: "error",
+          customClass: "sweet-alerts",
+        });
+      }
+    }
+  });
 };
