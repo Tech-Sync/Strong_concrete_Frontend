@@ -8,6 +8,7 @@ import { selectThemeConfig } from '@/lib/redux/slices/themeConfigSlice';
 import { Material } from '@/types/types';
 import { formatDate } from '@/utils/formatDate';
 import { MaterialDeleteIcon, MaterialEditIcon, MaterialPlusIcon, MaterialPreviewIcon } from '@/app/icons';
+import MaterialAddNewModal from './MaterialAddNewModal';
 interface MaterialsTableProps {
     materials: Material[]
 }
@@ -80,18 +81,16 @@ const MaterialsTable = ({materials}:MaterialsTableProps) => {
     };
 
     return (
-        <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
-            <div className="invoice-table">
+        
+            <>
                 <div className="mb-4.5 flex flex-col gap-5 px-5 md:flex-row md:items-center">
                     <div className="flex items-center gap-2">
                         <button type="button" className="btn btn-danger gap-2" onClick={() => deleteRow()}>
                         <MaterialDeleteIcon />
                             Delete
                         </button>
-                        <Link href="/apps/invoice/add" className="btn btn-primary gap-2">
-                           <MaterialPlusIcon />
-                            Add New
-                        </Link>
+                       <MaterialAddNewModal />
+                        
                     </div>
                     <div className="ltr:ml-auto rtl:mr-auto">
                         <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
@@ -173,8 +172,8 @@ const MaterialsTable = ({materials}:MaterialsTableProps) => {
                         paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
                     />
                 </div>
-            </div>
-        </div>
+            </>
+       
     );
 };
 
