@@ -5,28 +5,23 @@ import { Providers } from '@/lib/providers'
 import '../styles/tailwind.css';
 import '../styles/datatables.css';
 
-const inter = Inter({ subsets: ['latin'] })
-import '../styles/tailwind.css';
+
+const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
-  title: 'Strong Concrete Admin Dashboard',
-  description: 'Strong Concrete Admin Dashboard',
-}
+  title: "Strong Concrete Admin Dashboard",
+  description: "Strong Concrete Admin Dashboard",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <Providers>
       <html lang="en">
-        <body className={inter.className}>
-
-          {children}
-
-        </body>
+        <body className={inter.className}>{children}</body>
       </html>
     </Providers>
-  )
+  );
 }
-

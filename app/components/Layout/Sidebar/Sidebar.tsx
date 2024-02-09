@@ -64,18 +64,18 @@ const Sidebar = () => {
             icon: <DashboardIcon />,
         },
         {
-            name: "Order",
-            path: '/order',
+            name: "Orders",
+            path: '/orders',
             icon: <DashboardIcon />,
         },
         {
-            name: "Production",
-            path: '/production',
+            name: "Productions",
+            path: '/productions',
             icon: <DashboardIcon />,
         },
         {
-            name: "Delivery",
-            path: '/delivery',
+            name: "Deliveries",
+            path: '/deliveries',
             icon: <DashboardIcon />,
         },
         {
@@ -91,6 +91,11 @@ const Sidebar = () => {
         {
             name: "Materials",
             path: '/materials',
+            icon: <DashboardIcon />,
+        },
+        {
+            name: "Firms",
+            path: '/firms',
             icon: <DashboardIcon />,
         },
         {

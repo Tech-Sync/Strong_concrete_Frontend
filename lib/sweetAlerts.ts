@@ -1,4 +1,5 @@
 import { forgetPassword } from "@/actions/authActions";
+import { deleteFirm, deleteMultiFirm } from "@/actions/firmActions";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
@@ -34,7 +35,7 @@ export const coloredToast = (color: string, msg: string) => {
       popup: `color-${color}`,
     },
   });
-  
+
   toast.fire({
     title: openEmail
       ? `${msg} <a href="https://mail.google.com/mail/u/0/#search/Strong+Concrete" style="color: black; text-decoration: underline;">Check your inbox!</a>`
@@ -53,9 +54,97 @@ export const forgetPasswordToast = async () => {
   if (email) {
     const res = await forgetPassword(email);
     if (res?.message) {
-      Swal.fire(`${res?.message} Check your emails please.` );
+      Swal.fire(`${res?.message} Check your emails please.`);
     } else {
       Swal.fire(res?.error);
     }
   }
+};
+
+export const deleteToast = async (id: any): Promise<boolean> => {
+  try {
+    const result = await Swal.fire({
+      icon: "warning",
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      padding: "2em",
+      customClass: "sweet-alerts",
+    });
+
+    if (result.isConfirmed) {
+      const res = await deleteFirm(id);
+      if (res?.message) {
+        await Swal.fire({
+          title: "Deleted!",
+          text: "It has been deleted.",
+          icon: "success",
+          customClass: "sweet-alerts",
+        });
+        return true; 
+      } else {
+        await Swal.fire({
+          title: "Error",
+          text: res?.error || "An error occurred while trying to delete.",
+          icon: "error",
+          customClass: "sweet-alerts",
+        });
+        return false; 
+      }
+    }
+  } catch (error) {
+    console.error("Error in deleteToast:", error);
+    Swal.fire({
+      title: "Error",
+      text: "An unexpected error occurred.",
+      icon: "error",
+      customClass: "sweet-alerts",
+    });
+  }
+  return false;
+};
+
+export const multiDeleteToast = async (ids: any): Promise<boolean> => {
+  try {
+    const result = await Swal.fire({
+      icon: "warning",
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      padding: "2em",
+      customClass: "sweet-alerts",
+    });
+
+    if (result.isConfirmed) {
+      const res = await deleteMultiFirm(ids);
+      if (res?.message) {
+        await Swal.fire({
+          title: "Deleted!",
+          text: "It has been deleted.",
+          icon: "success",
+          customClass: "sweet-alerts",
+        });
+        return true; 
+      } else {
+        await Swal.fire({
+          title: "Error",
+          text: res?.error || "An error occurred while trying to delete.",
+          icon: "error",
+          customClass: "sweet-alerts",
+        });
+        return false; 
+      }
+    }
+  } catch (error) {
+    console.error("Error in deleteToast:", error);
+    Swal.fire({
+      title: "Error",
+      text: "An unexpected error occurred.",
+      icon: "error",
+      customClass: "sweet-alerts",
+    });
+  }
+  return false; 
 };
