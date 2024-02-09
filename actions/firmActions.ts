@@ -52,3 +52,23 @@ export const deleteFirm = async (id: any) => {
     return { error: error.message };
   }
 };
+
+export const deleteMultiFirm = async (ids:any) => {
+  const headers = await authConfig();
+  try {
+    const response = await fetch(`${BASE_URL}/firms/multiple-delete`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ids}),
+    });
+
+    if (response.status === 204) {
+      return { message: "Deleted!" };
+    } else {
+      throw new Error("Something went wrong, Please try again!");
+    }
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};
+

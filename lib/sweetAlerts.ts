@@ -1,5 +1,5 @@
 import { forgetPassword } from "@/actions/authActions";
-import { deleteFirm } from "@/actions/firmActions";
+import { deleteFirm, deleteMultiFirm } from "@/actions/firmActions";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
@@ -61,33 +61,90 @@ export const forgetPasswordToast = async () => {
   }
 };
 
-export const deleteToast = async (id: any) => {
-  Swal.fire({
-    icon: "warning",
-    title: "Are you sure?",
-    text: "You won't be able to revert this!",
-    showCancelButton: true,
-    confirmButtonText: "Delete",
-    padding: "2em",
-    customClass: "sweet-alerts",
-  }).then(async (result) => {
-    if (result.value) {
+export const deleteToast = async (id: any): Promise<boolean> => {
+  try {
+    const result = await Swal.fire({
+      icon: "warning",
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      padding: "2em",
+      customClass: "sweet-alerts",
+    });
+
+    if (result.isConfirmed) {
       const res = await deleteFirm(id);
       if (res?.message) {
-        Swal.fire({
+        await Swal.fire({
           title: "Deleted!",
           text: "It has been deleted.",
           icon: "success",
           customClass: "sweet-alerts",
         });
+        return true; 
       } else {
-        Swal.fire({
-          title: "Not deleted!",
-          text: res?.error,
+        await Swal.fire({
+          title: "Error",
+          text: res?.error || "An error occurred while trying to delete.",
           icon: "error",
           customClass: "sweet-alerts",
         });
+        return false; 
       }
     }
-  });
+  } catch (error) {
+    console.error("Error in deleteToast:", error);
+    Swal.fire({
+      title: "Error",
+      text: "An unexpected error occurred.",
+      icon: "error",
+      customClass: "sweet-alerts",
+    });
+  }
+  return false;
+};
+
+export const multiDeleteToast = async (ids: any): Promise<boolean> => {
+  try {
+    const result = await Swal.fire({
+      icon: "warning",
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      padding: "2em",
+      customClass: "sweet-alerts",
+    });
+
+    if (result.isConfirmed) {
+      const res = await deleteMultiFirm(ids);
+      if (res?.message) {
+        await Swal.fire({
+          title: "Deleted!",
+          text: "It has been deleted.",
+          icon: "success",
+          customClass: "sweet-alerts",
+        });
+        return true; 
+      } else {
+        await Swal.fire({
+          title: "Error",
+          text: res?.error || "An error occurred while trying to delete.",
+          icon: "error",
+          customClass: "sweet-alerts",
+        });
+        return false; 
+      }
+    }
+  } catch (error) {
+    console.error("Error in deleteToast:", error);
+    Swal.fire({
+      title: "Error",
+      text: "An unexpected error occurred.",
+      icon: "error",
+      customClass: "sweet-alerts",
+    });
+  }
+  return false; 
 };

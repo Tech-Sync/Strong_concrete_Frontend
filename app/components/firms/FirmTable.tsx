@@ -10,7 +10,7 @@ import { Firm } from "@/types/types";
 import { DeleteIcon, EditIcon, PlusIcon, PreviewIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
 import { rolesAndStatus } from "@/app/constraints/roles&status";
-import { deleteToast } from "@/lib/sweetAlerts";
+import { deleteToast, multiDeleteToast } from "@/lib/sweetAlerts";
 
 export default function FirmTable() {
   const [firms, setFirms] = useState<Firm[]>([]);
@@ -72,23 +72,28 @@ export default function FirmTable() {
 
   const deleteRow = async (id: any = null) => {
     if (id) {
-      deleteToast(id);
-      const firmRes = await getAllFirms();
-      setFirms(firmRes.data);
-      setRecords(firms.filter((firm) => firm.id !== id));
-      setSelectedRecords([]);
-      setSearch("");
+      const deletionSuccess = await deleteToast(id);
+      if (deletionSuccess) {
+        const firmRes = await getAllFirms();
+        setFirms(firmRes.data);
+        setRecords(firmRes.data);
+        setSelectedRecords([]);
+        setSearch("");
+      }
     } else {
       let selectedRows = selectedRecords || [];
       const ids = selectedRows.map((d: any) => {
         return d.id;
       });
-      const result = firms.filter((d) => !ids.includes(d.id as never));
-      setRecords(result);
-      setInitialRecords(result);
-      setSelectedRecords([]);
-      setSearch("");
-      setPage(1);
+      const deletionSuccess = await multiDeleteToast(ids);
+      if (deletionSuccess) {
+        const firmRes = await getAllFirms();
+        setFirms(firmRes.data);
+        setRecords(firmRes.data);
+        setSelectedRecords([]);
+        setSearch("");
+        setPage(1);
+      }
     }
   };
 
@@ -167,6 +172,7 @@ export default function FirmTable() {
                 sortable: true,
                 render: ({ status }) => (
                   <span className={`badge badge-outline-secondary`}>
+                    {/* @ts-ignore */}
                     {rolesAndStatus.firmStatuses[String(status)]}
                   </span>
                 ),
