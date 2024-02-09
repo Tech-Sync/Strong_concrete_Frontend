@@ -11,6 +11,8 @@ import { DeleteIcon, EditIcon, PlusIcon, PreviewIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
 import { rolesAndStatus } from "@/app/constraints/roles&status";
 import { deleteToast, multiDeleteToast } from "@/lib/sweetAlerts";
+import FirmHeaderBtns from "./FirmHeaderBtns";
+import FirmSearch from "./FirmSearch";
 
 export default function FirmTable() {
   const [firms, setFirms] = useState<Firm[]>([]);
@@ -101,28 +103,9 @@ export default function FirmTable() {
     <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
       <div className="invoice-table">
         <div className="mb-4.5 flex flex-col gap-5 px-5 md:flex-row md:items-center">
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              className="btn btn-danger gap-2"
-              onClick={() => deleteRow()}
-            >
-              <DeleteIcon />
-              Delete
-            </button>
-            <Link href="" className="btn btn-primary gap-2">
-              <PlusIcon />
-              Add New
-            </Link>
-          </div>
+          <FirmHeaderBtns deleteRow={deleteRow} />
           <div className="ltr:ml-auto rtl:mr-auto">
-            <input
-              type="text"
-              className="form-input w-auto"
-              placeholder="Search..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+            <FirmSearch search={search} setSearch={setSearch} />
           </div>
         </div>
 
