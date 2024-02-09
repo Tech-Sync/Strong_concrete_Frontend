@@ -10,7 +10,7 @@ import { Firm } from "@/types/types";
 import { DeleteIcon, EditIcon, PlusIcon, PreviewIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
 import { rolesAndStatus } from "@/app/constraints/roles&status";
-import { deleteToast, multiDeleteToast } from "@/lib/sweetAlerts";
+import { coloredToast, deleteToast, multiDeleteToast } from "@/lib/sweetAlerts";
 import FirmHeaderBtns from "./FirmHeaderBtns";
 import FirmSearch from "./FirmSearch";
 
@@ -84,6 +84,10 @@ export default function FirmTable() {
       }
     } else {
       let selectedRows = selectedRecords || [];
+      if (selectedRows.length === 0) {
+        coloredToast('warning','Select items to delete!')
+        return;
+      }
       const ids = selectedRows.map((d: any) => {
         return d.id;
       });
