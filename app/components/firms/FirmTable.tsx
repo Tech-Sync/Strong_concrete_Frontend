@@ -5,21 +5,24 @@ import { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
 import { useSelector } from "react-redux";
 import { selectThemeConfig } from "@/lib/redux/slices/themeConfigSlice";
-import { deleteFirm, deleteMultiFirm, getAllFirms } from "@/actions/firmActions";
+import {
+  deleteFirm,
+  deleteMultiFirm,
+  getAllFirms,
+} from "@/actions/firmActions";
 import { Firm } from "@/types/types";
 import { DeleteIcon, EditIcon, PlusIcon, PreviewIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
 import { rolesAndStatus } from "@/app/constraints/roles&status";
 import { coloredToast, deleteToast, multiDeleteToast } from "@/lib/sweetAlerts";
-import FirmHeaderBtns from "./FirmHeaderBtns";
 import FirmSearch from "./FirmSearch";
+import FirmHeaderBtns from "./FirmHeaderBtns";
 
 interface FirmTableProps {
   firms: Firm[];
 }
 
-export default function FirmTable({firms}:FirmTableProps) {
-
+export default function FirmTable({ firms }: FirmTableProps) {
   const isDark = useSelector(selectThemeConfig).isDarkMode;
 
   const [page, setPage] = useState(1);
@@ -66,7 +69,7 @@ export default function FirmTable({firms}:FirmTableProps) {
 
   const deleteRow = async (id: any = null) => {
     if (id) {
-      const deletionSuccess = await deleteToast(id,deleteFirm);
+      const deletionSuccess = await deleteToast(id, deleteFirm);
       if (deletionSuccess) {
         const firmRes = await getAllFirms();
         setRecords(firmRes.data);
@@ -77,13 +80,13 @@ export default function FirmTable({firms}:FirmTableProps) {
     } else {
       let selectedRows = selectedRecords || [];
       if (selectedRows.length === 0) {
-        coloredToast('warning','Select items to delete!')
+        coloredToast("warning", "Select items to delete!");
         return;
       }
       const ids = selectedRows.map((d: any) => {
         return d.id;
       });
-      const deletionSuccess = await multiDeleteToast(ids,deleteMultiFirm);
+      const deletionSuccess = await multiDeleteToast(ids, deleteMultiFirm);
       if (deletionSuccess) {
         const firmRes = await getAllFirms();
         setRecords(firmRes.data);
@@ -104,7 +107,6 @@ export default function FirmTable({firms}:FirmTableProps) {
             <FirmSearch search={search} setSearch={setSearch} />
           </div>
         </div>
-
         <div className="datatables pagination-padding">
           <DataTable
             className={`${isDark} table-hover whitespace-nowrap`}
