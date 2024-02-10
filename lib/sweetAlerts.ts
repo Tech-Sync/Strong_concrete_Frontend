@@ -1,5 +1,4 @@
 import { forgetPassword } from "@/actions/authActions";
-import { deleteFirm, deleteMultiFirm } from "@/actions/firmActions";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
@@ -61,7 +60,9 @@ export const forgetPasswordToast = async () => {
   }
 };
 
-export const deleteToast = async (id: any): Promise<boolean> => {
+type DeletionFunction = (id: any) => Promise<{ message?: string; error?: string }>;
+
+export const deleteToast = async (id: any, deletionFunction: DeletionFunction): Promise<boolean> => {
   try {
     const result = await Swal.fire({
       icon: "warning",
@@ -74,7 +75,7 @@ export const deleteToast = async (id: any): Promise<boolean> => {
     });
 
     if (result.isConfirmed) {
-      const res = await deleteFirm(id);
+      const res = await deletionFunction(id);
       if (res?.message) {
         await Swal.fire({
           title: "Deleted!",
@@ -105,7 +106,7 @@ export const deleteToast = async (id: any): Promise<boolean> => {
   return false;
 };
 
-export const multiDeleteToast = async (ids: any): Promise<boolean> => {
+export const multiDeleteToast = async (ids: any,deletionFunction: DeletionFunction): Promise<boolean> => {
   try {
     const result = await Swal.fire({
       icon: "warning",
@@ -118,7 +119,7 @@ export const multiDeleteToast = async (ids: any): Promise<boolean> => {
     });
 
     if (result.isConfirmed) {
-      const res = await deleteMultiFirm(ids);
+      const res = await deletionFunction(ids);
       if (res?.message) {
         await Swal.fire({
           title: "Deleted!",

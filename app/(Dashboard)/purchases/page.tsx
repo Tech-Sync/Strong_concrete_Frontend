@@ -1,16 +1,24 @@
-import { getPurchases } from "@/actions/purchases/getPurchases"
-import PurchasesTable from "./PurchasesTable";
+import Link from "next/link";
+import { getAllPurchases } from "@/actions/purchaseActions";
+import PurchaseTable from "./PurchaseTable";
 
 const PurchasesPage = async () => {
-  const purchases = await getPurchases();
+  const purchases = await getAllPurchases();
   return (
-    <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
-            <div className="invoice-table">
-      
-      <PurchasesTable purchases={purchases} />
+    <div>
+      <ul className="flex space-x-2 rtl:space-x-reverse">
+        <li>
+          <Link href="/" className="text-primary hover:underline">
+            Dashboard
+          </Link>
+        </li>
+        <li className="before:content-['/'] ltr:before:mr-2 rtl:before:ml-2">
+          <span>Purchases</span>
+        </li>
+      </ul>
+      <PurchaseTable purchases={purchases.data} />
     </div>
-    </div>
-  )
-}
+  );
+};
 
-export default PurchasesPage
+export default PurchasesPage;
