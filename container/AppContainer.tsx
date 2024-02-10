@@ -1,10 +1,14 @@
-'use client'
-import { selectThemeConfig, themeConfigSlice } from '@/lib/redux/slices/themeConfigSlice';
-import { PropsWithChildren, useEffect } from 'react';
+"use client";
+import {
+  selectThemeConfig,
+  themeConfigSlice,
+} from "@/lib/redux/slices/themeConfigSlice";
+import { PropsWithChildren, useEffect } from "react";
 // import { useTranslation } from 'react-i18next';
- import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 // import { IRootState } from './store';
 // import { toggleRTL, toggleTheme, toggleLocale, toggleMenu, toggleLayout, toggleAnimation, toggleNavbar, toggleSemidark } from './store/themeConfigSlice';
+import { MantineProvider } from '@mantine/core';
 
 function AppContainer({ children }: PropsWithChildren) {
 
