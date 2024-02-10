@@ -15,7 +15,6 @@ import { DeleteIcon, EditIcon, PlusIcon, PreviewIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
 import { rolesAndStatus } from "@/app/constraints/roles&status";
 import { coloredToast, deleteToast, multiDeleteToast } from "@/lib/sweetAlerts";
-import FirmSearch from "./FirmSearch";
 import FirmHeaderBtns from "./FirmHeaderBtns";
 
 interface FirmTableProps {
@@ -104,7 +103,13 @@ export default function FirmTable({ firms }: FirmTableProps) {
         <div className="mb-4.5 flex flex-col gap-5 px-5 md:flex-row md:items-center">
           <FirmHeaderBtns deleteRow={deleteRow} />
           <div className="ltr:ml-auto rtl:mr-auto">
-            <FirmSearch search={search} setSearch={setSearch} />
+            <input
+              type="text"
+              className="form-input w-auto"
+              placeholder="Search..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
         </div>
         <div className="datatables pagination-padding">
