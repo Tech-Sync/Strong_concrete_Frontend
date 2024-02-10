@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
 import { useSelector } from "react-redux";
 import { selectThemeConfig } from "@/lib/redux/slices/themeConfigSlice";
-import { getAllFirms } from "@/actions/firmActions";
+import { deleteFirm, deleteMultiFirm, getAllFirms } from "@/actions/firmActions";
 import { Firm } from "@/types/types";
 import { DeleteIcon, EditIcon, PlusIcon, PreviewIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
@@ -14,26 +14,18 @@ import { coloredToast, deleteToast, multiDeleteToast } from "@/lib/sweetAlerts";
 import FirmHeaderBtns from "./FirmHeaderBtns";
 import FirmSearch from "./FirmSearch";
 
-export default function FirmTable() {
-  const [firms, setFirms] = useState<Firm[]>([]);
-  const [initialRecords, setInitialRecords] = useState(sortBy(firms, "id"));
+interface FirmTableProps {
+  firms: Firm[];
+}
 
-  useEffect(() => {
-    (async () => {
-      const firmRes = await getAllFirms();
-      setFirms(firmRes.data);
-    })();
-  }, []);
-
-  useEffect(() => {
-    setInitialRecords(sortBy(firms, "id"));
-  }, [firms]);
+export default function FirmTable({firms}:FirmTableProps) {
 
   const isDark = useSelector(selectThemeConfig).isDarkMode;
 
   const [page, setPage] = useState(1);
-  const PAGE_SIZES = [10, 20, 30, 50, 100];
+  const PAGE_SIZES = [5, 10, 15, 20, 30];
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
+  const [initialRecords, setInitialRecords] = useState(sortBy(firms, "id"));
   const [records, setRecords] = useState(initialRecords);
   const [selectedRecords, setSelectedRecords] = useState<any>([]);
   const [search, setSearch] = useState("");
@@ -74,11 +66,11 @@ export default function FirmTable() {
 
   const deleteRow = async (id: any = null) => {
     if (id) {
-      const deletionSuccess = await deleteToast(id);
+      const deletionSuccess = await deleteToast(id,deleteFirm);
       if (deletionSuccess) {
         const firmRes = await getAllFirms();
-        setFirms(firmRes.data);
         setRecords(firmRes.data);
+        setInitialRecords(firmRes.data);
         setSelectedRecords([]);
         setSearch("");
       }
@@ -91,11 +83,11 @@ export default function FirmTable() {
       const ids = selectedRows.map((d: any) => {
         return d.id;
       });
-      const deletionSuccess = await multiDeleteToast(ids);
+      const deletionSuccess = await multiDeleteToast(ids,deleteMultiFirm);
       if (deletionSuccess) {
         const firmRes = await getAllFirms();
-        setFirms(firmRes.data);
         setRecords(firmRes.data);
+        setInitialRecords(firmRes.data);
         setSelectedRecords([]);
         setSearch("");
         setPage(1);

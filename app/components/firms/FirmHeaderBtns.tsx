@@ -3,7 +3,7 @@ import Link from "next/link";
 import React from "react";
 
 interface FirmHeaderBtnsProps {
-  deleteRow: (id?: any) => Promise<void>; // Adjust the type as necessary
+  deleteRow: (id?: any) => Promise<void>; 
 }
 
 export default function FirmHeaderBtns({ deleteRow }: FirmHeaderBtnsProps) {
