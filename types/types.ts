@@ -48,3 +48,17 @@ export interface Firm {
 export interface Materials {
   materials: Material[];
 }
+
+export interface Purchase {
+  id: number,
+  MaterialId : number,
+  quantity: number,
+  unitPrice: number,
+  totalPrice: number,
+  FirmId:number,
+  createdAt: string,
+  updatedAt: string,
+  creatorId: number | null,
+  updatorId: number | null
+  deletedAt: string | null,
+}

@@ -13,7 +13,11 @@ export default async function Layout({
 
   return (
     <SessionProvider session={session} refetchInterval={60 * 60 * 24}>
+
+ 
       <DefaultLayout>{children}</DefaultLayout>
+
+    
     </SessionProvider>
   );
 }
