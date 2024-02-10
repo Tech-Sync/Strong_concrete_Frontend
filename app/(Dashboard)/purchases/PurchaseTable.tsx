@@ -45,15 +45,18 @@ console.log('pruchaseTable:',purchases);
   }, [page, pageSize, initialRecords]);
 
   useEffect(() => {
-    setInitialRecords(() => {
-      return purchases.filter((purchase) => {
-        return (
-          // purchase.Material.name.toLowerCase().includes(search.toLowerCase()) ||
-          // purchase.Firm.name.toLowerCase().includes(search.toLowerCase()) ||
-          purchase.createdAt.toLowerCase().includes(search.toLowerCase())
-        );
-      });
-    });
+    if (purchases) {
+
+      setInitialRecords(() => {
+        return purchases.filter((purchase) => {
+          return (
+            // purchase.Material.name.toLowerCase().includes(search.toLowerCase()) ||
+            // purchase.Firm.name.toLowerCase().includes(search.toLowerCase()) ||
+            purchase.createdAt.toLowerCase().includes(search.toLowerCase())
+            );
+          });
+        });
+      }
   }, [purchases, search]);
 
   useEffect(() => {
