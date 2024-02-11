@@ -3,7 +3,7 @@ import Link from "next/link";
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
 import { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { selectThemeConfig } from "@/lib/redux/slices/themeConfigSlice";
 import {
   deleteFirm,
@@ -16,13 +16,29 @@ import { formatDate } from "@/utils/formatDate";
 import { firmStatuses } from "@/app/constraints/roles&status";
 import { coloredToast, deleteToast, multiDeleteToast } from "@/lib/sweetAlerts";
 import FirmHeaderBtns from "./FirmHeaderBtns";
+import {
+  getFrimAsync,
+  selectFirms,
+  selectStatus,
+  useDispatch,
+  useSelector,
+} from "@/lib/redux";
 
 interface FirmTableProps {
   firms: Firm[];
 }
 
-export default function FirmTable({ firms }: FirmTableProps) {
-  const isDark = useSelector(selectThemeConfig).isDarkMode;
+export default function FirmTable({ firmssss }: FirmTableProps) {
+  const dispatch = useDispatch();
+  const firms = useSelector(selectFirms);
+  const status = useSelector(selectStatus);
+
+  useEffect(() => {
+    dispatch(getFrimAsync());
+  }, []);
+
+  // const isDark = useSelector(selectThemeConfig).isDarkMode;
+  const isDark = true;
   const [page, setPage] = useState(1);
   const PAGE_SIZES = [10, 20, 30, 40, 50];
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
@@ -95,6 +111,10 @@ export default function FirmTable({ firms }: FirmTableProps) {
       }
     }
   };
+
+  if (status === "loading") {
+    return <h1>LOADING...</h1>;
+  }
 
   return (
     <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
@@ -174,10 +194,7 @@ export default function FirmTable({ firms }: FirmTableProps) {
                 textAlignment: "center",
                 render: ({ id }) => (
                   <div className="mx-auto flex w-max items-center gap-4">
-                    <Link
-                      href="#"
-                      className="flex hover:text-info"
-                    >
+                    <Link href="#" className="flex hover:text-info">
                       <EditIcon />
                     </Link>
                     {/*     <Link

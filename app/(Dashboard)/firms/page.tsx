@@ -3,7 +3,7 @@ import FirmTable from "@/app/components/firms/FirmTable";
 import Link from "next/link";
 import React from "react";
 
-const page = async () => {
+const FirmPage = async () => {
   const firms = await getAllFirms();
   return (
     <div className="flex flex-col space-y-5">
@@ -22,4 +22,4 @@ const page = async () => {
   );
 };
 
-export default page;
+export default FirmPage;
