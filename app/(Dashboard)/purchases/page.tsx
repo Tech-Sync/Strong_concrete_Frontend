@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getAllPurchases } from "@/actions/purchaseActions";
 import PurchaseTable from "./PurchaseTable";
 
+
 const PurchasesPage = async () => {
   const purchases = await getAllPurchases();
   return (
@@ -17,6 +18,7 @@ const PurchasesPage = async () => {
         </li>
       </ul>
       <PurchaseTable purchases={purchases.data} />
+     
     </div>
   );
 };

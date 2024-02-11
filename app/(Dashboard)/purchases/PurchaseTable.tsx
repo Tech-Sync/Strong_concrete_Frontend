@@ -112,7 +112,7 @@ console.log('pruchaseTable:',purchases);
               <DeleteIcon />
               Delete
             </button>
-            <Link href="/apps/invoice/add" className="btn btn-primary gap-2">
+            <Link href="/purchases/add" className="btn btn-primary gap-2">
               <PlusIcon />
               Add New
             </Link>
