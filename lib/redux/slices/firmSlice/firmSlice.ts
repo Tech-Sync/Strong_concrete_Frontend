@@ -1,11 +1,11 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { getFrimAsync } from "./thunks";
+import { getAllFrimAsync } from "./thunks";
 import { Firm } from "@/types/types";
 
 const initialState: FirmSliceState = {
   firms: [],
   loading: false,
-  error: false,
+  error: null,
   status: "idle",
 };
 
@@ -15,7 +15,7 @@ export const firmSlice = createSlice({
   reducers: {
     fetchStart: (state) => {
       state.loading = true;
-      state.error = false;
+      state.error = null;
     },
     getFirmSuccess: (state, action: PayloadAction<[]>) => {
       state.loading = false;
@@ -23,19 +23,20 @@ export const firmSlice = createSlice({
     },
     fetchFail: (state) => {
       state.loading = false;
-      state.error = true;
+      state.error = "Something went wrong";
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getFrimAsync.pending, (state) => {
+      .addCase(getAllFrimAsync.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(getFrimAsync.rejected, (state) => {
+      .addCase(getAllFrimAsync.rejected, (state, action) => {
         state.status = "failed";
+        state.error = action.payload ?? null;
       })
-      .addCase(getFrimAsync.fulfilled, (state, action) => {
-        state.status = "idle";
+      .addCase(getAllFrimAsync.fulfilled, (state, action) => {
+        state.status = "succeeded";
         state.firms = action.payload;
       });
   },
@@ -45,6 +46,6 @@ export const firmSlice = createSlice({
 export interface FirmSliceState {
   firms: Firm[];
   loading: boolean;
-  error: boolean;
-  status: "idle" | "loading" | "failed" | "success";
+  error: string | null;
+  status: "idle" | "loading" | "failed" | "succeeded";
 }

@@ -17,24 +17,20 @@ import { firmStatuses } from "@/app/constraints/roles&status";
 import { coloredToast, deleteToast, multiDeleteToast } from "@/lib/sweetAlerts";
 import FirmHeaderBtns from "./FirmHeaderBtns";
 import {
-  getFrimAsync,
+  getAllFrimAsync,
   selectFirms,
   selectStatus,
   useDispatch,
   useSelector,
 } from "@/lib/redux";
 
-interface FirmTableProps {
-  firms: Firm[];
-}
-
-export default function FirmTable({ firmssss }: FirmTableProps) {
+export default function FirmTable() {
   const dispatch = useDispatch();
   const firms = useSelector(selectFirms);
-  const status = useSelector(selectStatus);
+  const firmStatus = useSelector(selectStatus);
 
   useEffect(() => {
-    dispatch(getFrimAsync());
+    dispatch(getAllFrimAsync());
   }, []);
 
   // const isDark = useSelector(selectThemeConfig).isDarkMode;
@@ -112,7 +108,7 @@ export default function FirmTable({ firmssss }: FirmTableProps) {
     }
   };
 
-  if (status === "loading") {
+  if (firmStatus === "loading") {
     return <h1>LOADING...</h1>;
   }
 

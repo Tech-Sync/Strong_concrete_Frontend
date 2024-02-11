@@ -4,7 +4,6 @@ import Link from "next/link";
 import React from "react";
 
 const FirmPage = async () => {
-  const firms = await getAllFirms();
   return (
     <div className="flex flex-col space-y-5">
       <ul className="flex space-x-2 rtl:space-x-reverse ">
@@ -17,7 +16,7 @@ const FirmPage = async () => {
           <span>Firms</span>
         </li>
       </ul>
-      <FirmTable firms={firms.data} />
+      <FirmTable />
     </div>
   );
 };
