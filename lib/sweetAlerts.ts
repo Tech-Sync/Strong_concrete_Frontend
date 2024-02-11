@@ -1,5 +1,5 @@
 import { forgetPassword } from "@/actions/authActions";
-import Swal from "sweetalert2";
+import Swal, { SweetAlertPosition } from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
 const MySwal = withReactContent(Swal);
@@ -18,7 +18,11 @@ export const successToast = (msg: string) => {
   });
 };
 
-export const coloredToast = (color: string, msg: string) => {
+export const coloredToast = (
+  color: string,
+  msg: string,
+  position: SweetAlertPosition = "top-end"
+) => {
   let openEmail = false;
   if (msg.startsWith("Please verify")) {
     openEmail = true;
@@ -26,9 +30,9 @@ export const coloredToast = (color: string, msg: string) => {
 
   const toast = Swal.mixin({
     toast: true,
-    position: "top-end",
+    position,
     showConfirmButton: false,
-    timer: openEmail ? 10000 : 3000,
+    timer: openEmail ? 20000 : 5000,
     showCloseButton: false,
     customClass: {
       popup: `color-${color}`,
@@ -60,9 +64,14 @@ export const forgetPasswordToast = async () => {
   }
 };
 
-type DeletionFunction = (id: any) => Promise<{ message?: string; error?: string }>;
+type DeletionFunction = (
+  id: any
+) => Promise<{ message?: string; error?: string }>;
 
-export const deleteToast = async (id: any, deletionFunction: DeletionFunction): Promise<boolean> => {
+export const deleteToast = async (
+  id: any,
+  deletionFunction: DeletionFunction
+): Promise<boolean> => {
   try {
     const result = await Swal.fire({
       icon: "warning",
@@ -83,7 +92,7 @@ export const deleteToast = async (id: any, deletionFunction: DeletionFunction): 
           icon: "success",
           customClass: "sweet-alerts",
         });
-        return true; 
+        return true;
       } else {
         await Swal.fire({
           title: "Error",
@@ -91,7 +100,7 @@ export const deleteToast = async (id: any, deletionFunction: DeletionFunction): 
           icon: "error",
           customClass: "sweet-alerts",
         });
-        return false; 
+        return false;
       }
     }
   } catch (error) {
@@ -106,7 +115,10 @@ export const deleteToast = async (id: any, deletionFunction: DeletionFunction): 
   return false;
 };
 
-export const multiDeleteToast = async (ids: any,deletionFunction: DeletionFunction): Promise<boolean> => {
+export const multiDeleteToast = async (
+  ids: any,
+  deletionFunction: DeletionFunction
+): Promise<boolean> => {
   try {
     const result = await Swal.fire({
       icon: "warning",
@@ -127,7 +139,7 @@ export const multiDeleteToast = async (ids: any,deletionFunction: DeletionFuncti
           icon: "success",
           customClass: "sweet-alerts",
         });
-        return true; 
+        return true;
       } else {
         await Swal.fire({
           title: "Error",
@@ -135,7 +147,7 @@ export const multiDeleteToast = async (ids: any,deletionFunction: DeletionFuncti
           icon: "error",
           customClass: "sweet-alerts",
         });
-        return false; 
+        return false;
       }
     }
   } catch (error) {
@@ -147,5 +159,5 @@ export const multiDeleteToast = async (ids: any,deletionFunction: DeletionFuncti
       customClass: "sweet-alerts",
     });
   }
-  return false; 
+  return false;
 };

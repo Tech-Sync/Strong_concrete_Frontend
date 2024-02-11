@@ -1,9 +1,9 @@
-import { DeleteIcon, PlusIcon } from "@/app/icons";
-import Link from "next/link";
+import { DeleteIcon } from "@/app/icons";
 import React from "react";
+import FirmModal from "./FirmModal";
 
 interface FirmHeaderBtnsProps {
-  deleteRow: (id?: any) => Promise<void>; // Adjust the type as necessary
+  deleteRow: (id?: any) => Promise<void>;
 }
 
 export default function FirmHeaderBtns({ deleteRow }: FirmHeaderBtnsProps) {
@@ -17,10 +17,7 @@ export default function FirmHeaderBtns({ deleteRow }: FirmHeaderBtnsProps) {
         <DeleteIcon />
         Delete
       </button>
-      <Link href="" className="btn btn-primary gap-2">
-        <PlusIcon />
-        Add New
-      </Link>
+      <FirmModal />
     </div>
   );
 }

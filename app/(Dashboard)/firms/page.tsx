@@ -1,11 +1,13 @@
+import { getAllFirms } from "@/actions/firmActions";
 import FirmTable from "@/app/components/firms/FirmTable";
 import Link from "next/link";
 import React from "react";
 
-const page = () => {
+const page = async () => {
+  const firms = await getAllFirms();
   return (
-    <div>
-      <ul className="flex space-x-2 rtl:space-x-reverse">
+    <div className="flex flex-col space-y-5">
+      <ul className="flex space-x-2 rtl:space-x-reverse ">
         <li>
           <Link href="/" className="text-primary hover:underline">
             Dashboard
@@ -15,7 +17,7 @@ const page = () => {
           <span>Firms</span>
         </li>
       </ul>
-      <FirmTable />
+      <FirmTable firms={firms.data} />
     </div>
   );
 };
