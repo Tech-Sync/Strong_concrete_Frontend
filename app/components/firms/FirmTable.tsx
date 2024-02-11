@@ -13,7 +13,7 @@ import {
 import { Firm } from "@/types/types";
 import { DeleteIcon, EditIcon, PlusIcon, PreviewIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
-import { rolesAndStatus } from "@/app/constraints/roles&status";
+import { firmStatuses } from "@/app/constraints/roles&status";
 import { coloredToast, deleteToast, multiDeleteToast } from "@/lib/sweetAlerts";
 import FirmHeaderBtns from "./FirmHeaderBtns";
 
@@ -22,8 +22,8 @@ interface FirmTableProps {
 }
 
 export default function FirmTable({ firms }: FirmTableProps) {
+  
   const isDark = useSelector(selectThemeConfig).isDarkMode;
-
   const [page, setPage] = useState(1);
   const PAGE_SIZES = [5, 10, 15, 20, 30];
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
@@ -159,7 +159,7 @@ export default function FirmTable({ firms }: FirmTableProps) {
                 render: ({ status }) => (
                   <span className={`badge badge-outline-secondary`}>
                     {/* @ts-ignore */}
-                    {rolesAndStatus.firmStatuses[String(status)]}
+                    {firmStatuses[String(status)]}
                   </span>
                 ),
               },
