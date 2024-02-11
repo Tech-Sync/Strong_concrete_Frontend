@@ -1,9 +1,12 @@
 import { PlusIcon } from "@/app/icons";
 import { Dialog, Transition } from "@headlessui/react";
-import { ErrorMessage, Field, Form, Formik } from "formik";
+import { Form, Formik } from "formik";
 import React, { Fragment, useState } from "react";
 import { object, string } from "yup";
 import FirmForm from "./FirmForm";
+import { addFirm } from "@/actions/firmActions";
+import { coloredToast } from "@/lib/sweetAlerts";
+import { useRouter } from "next/navigation";
 
 const firmSchema = object({
   name: string().required("This field is required."),
@@ -17,6 +20,7 @@ const firmSchema = object({
 
 export default function FirmModal() {
   const [modal, setModal] = useState(false);
+  const router = useRouter()
   return (
     <div>
       <button onClick={() => setModal(true)} className="btn btn-primary gap-2">
@@ -91,11 +95,21 @@ export default function FirmModal() {
                         status: "",
                       }}
                       validationSchema={firmSchema}
-                      onSubmit={(values, { setSubmitting, resetForm }) => {
+                      onSubmit={async (
+                        values,
+                        { setSubmitting, resetForm }
+                      ) => {
+                        const firms = await addFirm(values);
                         setTimeout(() => {
-                          console.log(values);
-                          setSubmitting(false)
-                        }, 400);
+                          setSubmitting(false);
+
+                          if (firms.message) {
+                            coloredToast("success", firms.message, 'bottom-start');
+                            setModal(false);
+                          } else {
+                            coloredToast("danger", firms.error, 'bottom-start');
+                          }
+                        }, 500);
                       }}
                       component={(props) => <FirmForm {...props} />}
                     ></Formik>
