@@ -1,12 +1,13 @@
 import { PlusIcon } from "@/app/icons";
 import { Dialog, Transition } from "@headlessui/react";
-import { Form, Formik } from "formik";
+import { Formik } from "formik";
 import React, { Fragment, useState } from "react";
 import { object, string } from "yup";
 import FirmForm from "./FirmForm";
 import { addFirm } from "@/actions/firmActions";
 import { coloredToast } from "@/lib/sweetAlerts";
 import { useRouter } from "next/navigation";
+import { getAllFrimAsync, useDispatch } from "@/lib/redux";
 
 const firmSchema = object({
   name: string().required("This field is required."),
@@ -19,6 +20,7 @@ const firmSchema = object({
 });
 
 export default function FirmModal() {
+  const dispatch = useDispatch();
   const [modal, setModal] = useState(false);
   const router = useRouter()
   return (
@@ -99,15 +101,16 @@ export default function FirmModal() {
                         values,
                         { setSubmitting, resetForm }
                       ) => {
-                        const firms = await addFirm(values);
+                        const res = await addFirm(values);
                         setTimeout(() => {
                           setSubmitting(false);
 
-                          if (firms.message) {
-                            coloredToast("success", firms.message, 'bottom-start');
+                          if (res.message) {
+                            coloredToast("success", res.message, 'bottom-start');
                             setModal(false);
+                            dispatch(getAllFrimAsync());
                           } else {
-                            coloredToast("danger", firms.error, 'bottom-start');
+                            coloredToast("danger", res.error, 'bottom-start');
                           }
                         }, 500);
                       }}
