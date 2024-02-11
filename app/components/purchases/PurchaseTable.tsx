@@ -186,13 +186,13 @@ console.log('pruchaseTable:',purchases);
                 render: ({ id }) => (
                   <div className="mx-auto flex w-max items-center gap-4">
                     <Link
-                      href="/apps/invoice/edit"
+                      href="/purchases/edit"
                       className="flex hover:text-info"
                     >
                       <EditIcon />
                     </Link>
                     <Link
-                      href="/apps/invoice/preview"
+                      href="/purchases/preview"
                       className="flex hover:text-primary"
                     >
                       <PreviewIcon />

@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { getAllPurchases } from "@/actions/purchaseActions";
-import PurchaseTable from "./PurchaseTable";
+import PurchaseTable from "@/app/components/purchases/PurchaseTable";
 
 
 const PurchasesPage = async () => {
   const purchases = await getAllPurchases();
   return (
-    <div>
+    <div className="flex flex-col space-y-5">
       <ul className="flex space-x-2 rtl:space-x-reverse">
         <li>
           <Link href="/" className="text-primary hover:underline">
@@ -18,7 +18,6 @@ const PurchasesPage = async () => {
         </li>
       </ul>
       <PurchaseTable purchases={purchases.data} />
-     
     </div>
   );
 };

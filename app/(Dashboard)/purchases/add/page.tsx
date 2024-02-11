@@ -3,7 +3,7 @@ import Link from 'next/link';
 import {  useState } from 'react';
 
 
-const Add = () => {
+const AddPage = () => {
   
     
     const currencyList = ['USD - US Dollar', 'GBP - British Pound', 'IDR - Indonesian Rupiah', 'INR - Indian Rupee', 'BRL - Brazilian Real', 'EUR - Germany (Euro)', 'TRY - Turkish Lira'];
@@ -61,11 +61,11 @@ const Add = () => {
                             <img src="/assets/images/logo.svg" alt="img" className="w-14"/>
                             
                         </div>
-                        {/* <div className="mt-6 space-y-1 text-gray-500 dark:text-gray-400">
+                        <div className="mt-6 space-y-1 text-gray-500 dark:text-gray-400">
                             <div>13 Tetrick Road, Cypress Gardens, Florida, 33884, US</div>
                             <div>vristo@gmail.com</div>
                             <div>+1 (070) 123-4567</div>
-                        </div> */}
+                        </div>
                     </div>
                     <div className="w-full lg:w-1/2 lg:max-w-fit">
                         <div className="flex items-center">
@@ -558,4 +558,4 @@ const Add = () => {
     );
 };
 
-export default Add;
+export default AddPage;
