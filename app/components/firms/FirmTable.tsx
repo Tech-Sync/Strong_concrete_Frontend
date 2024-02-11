@@ -22,10 +22,9 @@ interface FirmTableProps {
 }
 
 export default function FirmTable({ firms }: FirmTableProps) {
-  
   const isDark = useSelector(selectThemeConfig).isDarkMode;
   const [page, setPage] = useState(1);
-  const PAGE_SIZES = [5, 10, 15, 20, 30];
+  const PAGE_SIZES = [10, 20, 30, 40, 50];
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const [initialRecords, setInitialRecords] = useState(sortBy(firms, "id"));
   const [records, setRecords] = useState(initialRecords);
@@ -115,13 +114,18 @@ export default function FirmTable({ firms }: FirmTableProps) {
         <div className="datatables pagination-padding">
           <DataTable
             className={`${isDark} table-hover whitespace-nowrap`}
-            records={records.map((material) => ({ ...material }))}
+            records={records.map((material, index) => ({
+              ...material,
+              serialNumber: index + 1,
+            }))}
             columns={[
               {
-                accessor: "id",
+                accessor: "Id",
                 sortable: true,
-                render: ({ id }) => (
-                  <div className="font-semibold text-primary underline hover:no-underline">{`#${id}`}</div>
+                render: ({ serialNumber }) => (
+                  <div className="font-semibold text-primary underline hover:no-underline">
+                    {`#${serialNumber}`}
+                  </div>
                 ),
               },
               {
@@ -171,17 +175,17 @@ export default function FirmTable({ firms }: FirmTableProps) {
                 render: ({ id }) => (
                   <div className="mx-auto flex w-max items-center gap-4">
                     <Link
-                      href="/apps/invoice/edit"
+                      href="#"
                       className="flex hover:text-info"
                     >
                       <EditIcon />
                     </Link>
-                    <Link
+                    {/*     <Link
                       href="/apps/invoice/preview"
                       className="flex hover:text-primary"
                     >
                       <PreviewIcon />
-                    </Link>
+                    </Link> */}
                     <button
                       type="button"
                       className="flex hover:text-danger"
