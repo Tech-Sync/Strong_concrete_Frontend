@@ -2,10 +2,10 @@ import FirmTable from "@/app/components/firms/FirmTable";
 import Link from "next/link";
 import React from "react";
 
-const page = () => {
+const FirmPage = async () => {
   return (
-    <div>
-      <ul className="flex space-x-2 rtl:space-x-reverse">
+    <div className="flex flex-col space-y-5">
+      <ul className="flex space-x-2 rtl:space-x-reverse ">
         <li>
           <Link href="/" className="text-primary hover:underline">
             Dashboard
@@ -20,4 +20,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default FirmPage;

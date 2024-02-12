@@ -1,54 +1,37 @@
 "use client";
+import Link from "next/link";
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
 import { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
-import { DeleteIcon, EditIcon } from "@/app/icons";
+import { useSelector } from "react-redux";
+import { selectThemeConfig } from "@/lib/redux/slices/themeConfigSlice";
+import { Purchase } from "@/types/types";
+import { DeleteIcon, EditIcon, PlusIcon, PreviewIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
-import { firmStatuses } from "@/app/constraints/roles&status";
 import { coloredToast, deleteToast, multiDeleteToast } from "@/lib/sweetAlerts";
-import {
-  getAllFrimAsync,
-  selectFirms,
-  selectIsDarkMode,
-  selectStatus,
-  useDispatch,
-  useSelector,
-} from "@/lib/redux";
-import FirmModal from "./FirmModal";
-import { deleteFirm, deleteMultiFirm } from "@/lib/redux/slices/firmSlice/firmActions";
+import { deleteMultiPurchase, deletePurchase, getAllPurchases } from "@/actions/purchaseActions";
 
-export default function FirmTable() {
-  const dispatch = useDispatch();
-  const firms = useSelector(selectFirms);
-  const firmStatus = useSelector(selectStatus);
+interface PurchaseTableProps {
+  purchases: Purchase[];
+}
 
-  useEffect(() => {
-    dispatch(getAllFrimAsync());
-  }, []);
-
-  const isDark = useSelector(selectIsDarkMode);
+export default function PurchaseTable({ purchases }: PurchaseTableProps) {
+  /*   useEffect(() => {
+    setInitialRecords(sortBy(purchases, "id"));
+  }, [purchases]); */
+console.log('pruchaseTable:',purchases);
+  const isDark = useSelector(selectThemeConfig).isDarkMode;
 
   const [page, setPage] = useState(1);
-  const PAGE_SIZES = [10, 20, 30, 40, 50];
+  const PAGE_SIZES = [10, 20, 30, 50, 100];
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-  const [initialRecords, setInitialRecords] = useState(sortBy(firms, "id"));
+  const [initialRecords, setInitialRecords] = useState(sortBy(purchases, "id"));
   const [records, setRecords] = useState(initialRecords);
   const [selectedRecords, setSelectedRecords] = useState<any>([]);
   const [search, setSearch] = useState("");
   const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
     columnAccessor: "id",
     direction: "asc",
-  });
-  const [modal, setModal] = useState(false);
-
-  //@ts-ignore
-  const [firmInitials, setFirmInitials] = useState({
-    name: "",
-    address: "",
-    phoneNo: "",
-    tpinNo: "",
-    email: "",
-    status: "",
   });
 
   useEffect(() => {
@@ -63,17 +46,15 @@ export default function FirmTable() {
 
   useEffect(() => {
     setInitialRecords(() => {
-      return firms.filter((firm) => {
+      return purchases.filter((purchase) => {
         return (
-          firm.address.toLowerCase().includes(search.toLowerCase()) ||
-          firm.email.toLowerCase().includes(search.toLowerCase()) ||
-          firm.name.toLowerCase().includes(search.toLowerCase()) ||
-          firm.phoneNo.toLowerCase().includes(search.toLowerCase()) ||
-          firm.tpinNo.toLowerCase().includes(search.toLowerCase())
+          // purchase.Material.name.toLowerCase().includes(search.toLowerCase()) ||
+          // purchase.Firm.name.toLowerCase().includes(search.toLowerCase()) ||
+          purchase.createdAt.toLowerCase().includes(search.toLowerCase())
         );
       });
     });
-  }, [firms, search]);
+  }, [purchases, search]);
 
   useEffect(() => {
     const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
@@ -83,11 +64,11 @@ export default function FirmTable() {
 
   const deleteRow = async (id: any = null) => {
     if (id) {
-      const deletionSuccess = await deleteToast(id, deleteFirm);
+      const deletionSuccess = await deleteToast(id, deletePurchase );
       if (deletionSuccess) {
-        dispatch(getAllFrimAsync());
-        setRecords(firms);
-        setInitialRecords(firms);
+        const purchaseRes = await getAllPurchases();
+        setRecords(purchaseRes.data);
+        setInitialRecords(purchaseRes.data);
         setSelectedRecords([]);
         setSearch("");
       }
@@ -100,21 +81,20 @@ export default function FirmTable() {
       const ids = selectedRows.map((d: any) => {
         return d.id;
       });
-      const deletionSuccess = await multiDeleteToast(ids, deleteMultiFirm);
+      const deletionSuccess = await multiDeleteToast(
+        ids,
+        deleteMultiPurchase
+      );
       if (deletionSuccess) {
-        dispatch(getAllFrimAsync());
-        setRecords(firms);
-        setInitialRecords(firms);
+        const purchaseRes = await getAllPurchases();
+        setRecords(purchaseRes.data);
+        setInitialRecords(purchaseRes.data);
         setSelectedRecords([]);
         setSearch("");
         setPage(1);
       }
     }
   };
-
-  /*   if (firmStatus === "loading") {
-    return <h1 className="text-lg text-center">LOADING...</h1>;
-  } */
 
   return (
     <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
@@ -129,14 +109,10 @@ export default function FirmTable() {
               <DeleteIcon />
               Delete
             </button>
-            <FirmModal
-              modal={modal}
-              setModal={setModal}
-              //@ts-ignore
-              firmInitials={firmInitials}
-              //@ts-ignore
-              setFirmInitials={setFirmInitials}
-            />
+            <Link href="/apps/invoice/add" className="btn btn-primary gap-2">
+              <PlusIcon />
+              Add New
+            </Link>
           </div>
           <div className="ltr:ml-auto rtl:mr-auto">
             <input
@@ -148,42 +124,47 @@ export default function FirmTable() {
             />
           </div>
         </div>
+
         <div className="datatables pagination-padding">
           <DataTable
             className={`${isDark} table-hover whitespace-nowrap`}
-            records={records.map((material, index) => ({
-              ...material,
-              serialNumber: index + 1,
-            }))}
+            records={records.map((material) => ({ ...material }))}
             columns={[
               {
-                accessor: "Id",
+                accessor: "id",
                 sortable: true,
-                render: ({ serialNumber }) => (
-                  <div className="font-semibold text-primary underline hover:no-underline">
-                    {`#${serialNumber}`}
-                  </div>
+                render: ({ id }) => (
+                  <div className="font-semibold text-primary underline hover:no-underline">{`#${id}`}</div>
                 ),
               },
               {
-                accessor: "name",
+                accessor: "FirmId",
                 sortable: true,
-                render: ({ name, id }) => (
+                render: ({ FirmId, id }) => (
                   <div className="flex items-center font-semibold">
-                    <div>{name as string}</div>
+                    <div>{FirmId}</div>
                   </div>
                 ),
               },
               {
-                accessor: "email",
+                accessor: "MaterialId",
+                sortable: true,
+                render: ({ MaterialId, id }) => (
+                  <div className="flex items-center font-semibold">
+                    <div>{MaterialId}</div>
+                  </div>
+                ),
+              },
+              {
+                accessor: "quantity",
                 sortable: true,
               },
               {
-                accessor: "phoneNo",
+                accessor: "unitPrice",
                 sortable: true,
               },
               {
-                accessor: "tpinNo",
+                accessor: "totalPrice",
                 sortable: true,
               },
               {
@@ -195,41 +176,28 @@ export default function FirmTable() {
                 ),
               },
               {
-                accessor: "status",
-                sortable: true,
-                render: ({ status }) => (
-                  <span className={`badge badge-outline-secondary`}>
-                    {/* @ts-ignore */}
-                    {firmStatuses[String(status)]}
-                  </span>
-                ),
-              },
-              {
                 accessor: "action",
                 title: "Actions",
                 sortable: false,
                 textAlignment: "center",
-                render: (firm) => (
+                render: ({ id }) => (
                   <div className="mx-auto flex w-max items-center gap-4">
-                    <button
-                      onClick={() => {
-                        //@ts-ignore
-                        setFirmInitials(firm), setModal(true);
-                      }}
+                    <Link
+                      href="/apps/invoice/edit"
                       className="flex hover:text-info"
                     >
                       <EditIcon />
-                    </button>
-                    {/*     <Link
+                    </Link>
+                    <Link
                       href="/apps/invoice/preview"
                       className="flex hover:text-primary"
                     >
                       <PreviewIcon />
-                    </Link> */}
+                    </Link>
                     <button
                       type="button"
                       className="flex hover:text-danger"
-                      onClick={(e) => deleteRow(firm.id)}
+                      onClick={(e) => deleteRow(id)}
                     >
                       <DeleteIcon />
                     </button>
