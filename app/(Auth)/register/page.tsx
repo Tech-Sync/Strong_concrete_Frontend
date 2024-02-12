@@ -1,7 +1,7 @@
 "use client"
 
 
-// use client neden kullaılıyor
+
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import Link from 'next/link';

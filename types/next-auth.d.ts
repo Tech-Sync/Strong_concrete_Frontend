@@ -19,7 +19,7 @@ declare module "next-auth" {
       isVerified: Boolean;
       lastName: string;
       nrcNo: string;
-      phoneNO: string;
+      phoneNo: string;
       role: number;
       updatedAt: string;
     };
@@ -43,7 +43,7 @@ declare module "next-auth/jwt" {
       firstName: string;
       lastName: string;
       nrcNo: string;
-      phoneNO: string;
+      phoneNo: string;
       address: string;
       role: number;
       email: string;
@@ -68,7 +68,7 @@ interface userInfo extends JwtPayload {
   firstName: string;
   lastName: string;
   nrcNo: string;
-  phoneNO: string;
+  phoneNo: string;
   address: string;
   role: number;
   email: string;
