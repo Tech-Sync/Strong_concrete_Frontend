@@ -1,23 +1,20 @@
 "use client";
-import Link from "next/link";
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
 import { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
-// import { useSelector } from "react-redux";
-import { selectThemeConfig } from "@/lib/redux/slices/themeConfigSlice";
 import {
   deleteFirm,
   deleteMultiFirm,
   getAllFirms,
 } from "@/actions/firmActions";
-import { Firm } from "@/types/types";
-import { DeleteIcon, EditIcon, PlusIcon, PreviewIcon } from "@/app/icons";
+import { DeleteIcon, EditIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
 import { firmStatuses } from "@/app/constraints/roles&status";
 import { coloredToast, deleteToast, multiDeleteToast } from "@/lib/sweetAlerts";
 import {
   getAllFrimAsync,
   selectFirms,
+  selectIsDarkMode,
   selectStatus,
   useDispatch,
   useSelector,
@@ -33,8 +30,8 @@ export default function FirmTable() {
     dispatch(getAllFrimAsync());
   }, []);
 
-  // const isDark = useSelector(selectThemeConfig).isDarkMode;
-  const isDark = true;
+  const isDark = useSelector(selectIsDarkMode);
+
   const [page, setPage] = useState(1);
   const PAGE_SIZES = [10, 20, 30, 40, 50];
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
@@ -119,7 +116,7 @@ export default function FirmTable() {
     }
   };
 
-/*   if (firmStatus === "loading") {
+  /*   if (firmStatus === "loading") {
     return <h1 className="text-lg text-center">LOADING...</h1>;
   } */
 

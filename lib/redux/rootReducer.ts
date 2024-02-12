@@ -1,6 +1,6 @@
 /* Instruments */
-import { counterSlice, firmSlice } from "./slices";
-import { themeConfigSlice } from "./slices/themeConfigSlice";
+import { counterSlice, firmSlice, themeConfigSlice } from "./slices";
+// import { themeConfigSlice } from "./slices/themeConfigSlice";
 
 export const reducer = {
   counter: counterSlice.reducer,
