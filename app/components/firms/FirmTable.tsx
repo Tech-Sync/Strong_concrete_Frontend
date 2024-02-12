@@ -63,13 +63,13 @@ export default function FirmTable() {
 
   useEffect(() => {
     setInitialRecords(() => {
-      return firms.filter((material) => {
+      return firms.filter((firm) => {
         return (
-          material.address.toLowerCase().includes(search.toLowerCase()) ||
-          material.email.toLowerCase().includes(search.toLowerCase()) ||
-          material.name.toLowerCase().includes(search.toLowerCase()) ||
-          material.phoneNo.toLowerCase().includes(search.toLowerCase()) ||
-          material.tpinNo.toLowerCase().includes(search.toLowerCase())
+          firm.address.toLowerCase().includes(search.toLowerCase()) ||
+          firm.email.toLowerCase().includes(search.toLowerCase()) ||
+          firm.name.toLowerCase().includes(search.toLowerCase()) ||
+          firm.phoneNo.toLowerCase().includes(search.toLowerCase()) ||
+          firm.tpinNo.toLowerCase().includes(search.toLowerCase())
         );
       });
     });
