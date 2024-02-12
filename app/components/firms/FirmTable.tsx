@@ -2,11 +2,6 @@
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
 import { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
-import {
-  deleteFirm,
-  deleteMultiFirm,
-  getAllFirms,
-} from "@/actions/firmActions";
 import { DeleteIcon, EditIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
 import { firmStatuses } from "@/app/constraints/roles&status";
@@ -20,6 +15,7 @@ import {
   useSelector,
 } from "@/lib/redux";
 import FirmModal from "./FirmModal";
+import { deleteFirm, deleteMultiFirm } from "@/lib/redux/slices/firmSlice/firmActions";
 
 export default function FirmTable() {
   const dispatch = useDispatch();
@@ -89,9 +85,9 @@ export default function FirmTable() {
     if (id) {
       const deletionSuccess = await deleteToast(id, deleteFirm);
       if (deletionSuccess) {
-        const firmRes = await getAllFirms();
-        setRecords(firmRes.data);
-        setInitialRecords(firmRes.data);
+        dispatch(getAllFrimAsync());
+        setRecords(firms);
+        setInitialRecords(firms);
         setSelectedRecords([]);
         setSearch("");
       }
@@ -106,9 +102,9 @@ export default function FirmTable() {
       });
       const deletionSuccess = await multiDeleteToast(ids, deleteMultiFirm);
       if (deletionSuccess) {
-        const firmRes = await getAllFirms();
-        setRecords(firmRes.data);
-        setInitialRecords(firmRes.data);
+        dispatch(getAllFrimAsync());
+        setRecords(firms);
+        setInitialRecords(firms);
         setSelectedRecords([]);
         setSearch("");
         setPage(1);

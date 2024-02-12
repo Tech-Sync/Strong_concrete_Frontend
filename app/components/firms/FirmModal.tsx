@@ -4,11 +4,12 @@ import { Formik } from "formik";
 import React, { Fragment, useState } from "react";
 import { object, string } from "yup";
 import FirmForm from "./FirmForm";
-import { addFirm, updateFirm } from "@/actions/firmActions";
+// import { addFirm, updateFirm } from "@/actions/firmActions";
 import { coloredToast } from "@/lib/sweetAlerts";
 import { useRouter } from "next/navigation";
 import { getAllFrimAsync, useDispatch } from "@/lib/redux";
 import { Firm } from "@/types/types";
+import { addFirm, updateFirm } from "@/lib/redux/slices/firmSlice/firmActions";
 
 const firmSchema = object({
   name: string().required("This field is required."),
@@ -120,6 +121,7 @@ export default function FirmModal({
                         { setSubmitting, resetForm }
                       ) => {
                         if ("id" in firmInitials) {
+                          //@ts-ignore
                           const res = await updateFirm(values);
                           if (res.message) {
                             coloredToast(
