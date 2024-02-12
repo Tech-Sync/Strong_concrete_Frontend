@@ -2,8 +2,8 @@ import { ModalCloseIcon, ModalListIcon } from '@/app/icons/modal';
 import React, { useState ,Fragment} from 'react'
 import { Dialog, Transition } from '@headlessui/react';
 import { object, string } from "yup";
-import { PurchasePlusIcon } from '@/app/icons/purchasesIcon/PurchasePlusIcon';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { PlusIcon } from '@/app/icons';
 const addPurchaseSchema = object({
     name: string()
       .required("Material name is required!"),
@@ -18,7 +18,7 @@ const PurchaseAddNewModal = () => {
     return (
         <>
           <button onClick={() => setModal(true)} className="btn btn-primary gap-2">
-            <PurchasePlusIcon />
+            <PlusIcon />
             Add New
           </button>
           <Transition appear show={modal} as={Fragment}>
