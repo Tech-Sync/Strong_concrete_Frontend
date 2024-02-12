@@ -15,7 +15,6 @@ import { DeleteIcon, EditIcon, PlusIcon, PreviewIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
 import { firmStatuses } from "@/app/constraints/roles&status";
 import { coloredToast, deleteToast, multiDeleteToast } from "@/lib/sweetAlerts";
-import FirmHeaderBtns from "./FirmHeaderBtns";
 import {
   getAllFrimAsync,
   selectFirms,
@@ -23,6 +22,7 @@ import {
   useDispatch,
   useSelector,
 } from "@/lib/redux";
+import FirmModal from "./FirmModal";
 
 export default function FirmTable() {
   const dispatch = useDispatch();
@@ -45,6 +45,17 @@ export default function FirmTable() {
   const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
     columnAccessor: "id",
     direction: "asc",
+  });
+  const [modal, setModal] = useState(false);
+
+  //@ts-ignore
+  const [firmInitials, setFirmInitials] = useState({
+    name: "",
+    address: "",
+    phoneNo: "",
+    tpinNo: "",
+    email: "",
+    status: "",
   });
 
   useEffect(() => {
@@ -108,15 +119,32 @@ export default function FirmTable() {
     }
   };
 
-  if (firmStatus === "loading") {
-    return <h1>LOADING...</h1>;
-  }
+/*   if (firmStatus === "loading") {
+    return <h1 className="text-lg text-center">LOADING...</h1>;
+  } */
 
   return (
     <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
       <div className="invoice-table">
         <div className="mb-4.5 flex flex-col gap-5 px-5 md:flex-row md:items-center">
-          <FirmHeaderBtns deleteRow={deleteRow} />
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              className="btn btn-danger gap-2"
+              onClick={() => deleteRow()}
+            >
+              <DeleteIcon />
+              Delete
+            </button>
+            <FirmModal
+              modal={modal}
+              setModal={setModal}
+              //@ts-ignore
+              firmInitials={firmInitials}
+              //@ts-ignore
+              setFirmInitials={setFirmInitials}
+            />
+          </div>
           <div className="ltr:ml-auto rtl:mr-auto">
             <input
               type="text"
@@ -188,11 +216,17 @@ export default function FirmTable() {
                 title: "Actions",
                 sortable: false,
                 textAlignment: "center",
-                render: ({ id }) => (
+                render: (firm) => (
                   <div className="mx-auto flex w-max items-center gap-4">
-                    <Link href="#" className="flex hover:text-info">
+                    <button
+                      onClick={() => {
+                        //@ts-ignore
+                        setFirmInitials(firm), setModal(true);
+                      }}
+                      className="flex hover:text-info"
+                    >
                       <EditIcon />
-                    </Link>
+                    </button>
                     {/*     <Link
                       href="/apps/invoice/preview"
                       className="flex hover:text-primary"
@@ -202,7 +236,7 @@ export default function FirmTable() {
                     <button
                       type="button"
                       className="flex hover:text-danger"
-                      onClick={(e) => deleteRow(id)}
+                      onClick={(e) => deleteRow(firm.id)}
                     >
                       <DeleteIcon />
                     </button>
