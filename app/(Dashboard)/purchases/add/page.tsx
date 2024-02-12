@@ -525,7 +525,7 @@ const AddPage = () => {
                             Send Invoice
                         </button>
 
-                        <Link href="/apps/invoice/preview" className="btn btn-primary w-full gap-2">
+                        <Link href="/purchases/preview" className="btn btn-primary w-full gap-2">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="ltr:mr-2 rtl:ml-2">
                                 <path
                                     opacity="0.5"
