@@ -1,4 +1,3 @@
-import { getAllFirms } from "@/actions/firmActions";
 import FirmTable from "@/app/components/firms/FirmTable";
 import Link from "next/link";
 import React from "react";
