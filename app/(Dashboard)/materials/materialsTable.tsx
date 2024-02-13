@@ -7,18 +7,15 @@ import { useSelector } from 'react-redux';
 import { selectThemeConfig } from '@/lib/redux/slices/themeConfigSlice';
 import { Material } from '@/types/types';
 import { formatDate } from '@/utils/formatDate';
-import { MaterialDeleteIcon } from '@/app/icons';
-import MaterialEditIcon from '@/app/icons/materialsIcon/MaterialEditIcon';
-import MaterialPlusIcon from '@/app/icons/materialsIcon/MaterialPlusIcon';
-import MaterialPreviewIcon from '@/app/icons/materialsIcon/MaterialPreviewIcon';
-
+import { MaterialDeleteIcon, MaterialEditIcon, MaterialPlusIcon, MaterialPreviewIcon } from '@/app/icons';
+import MaterialAddNewModal from './MaterialAddNewModal';
 interface MaterialsTableProps {
     materials: Material[]
 }
 
 const MaterialsTable = ({materials}:MaterialsTableProps) => {
 
-       const isDark = useSelector(selectThemeConfig).isDarkMode ? "dark":"light"
+    const isDark = useSelector(selectThemeConfig).isDarkMode ? "dark":"light"
    
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [5, 10, 15, 20, 25];
@@ -59,7 +56,7 @@ const MaterialsTable = ({materials}:MaterialsTableProps) => {
         setRecords(sortStatus.direction === 'desc' ? data2.reverse() : data2);
         setPage(1);
     }, [sortStatus]);
-console.log(selectedRecords);
+
 
     const deleteRow = (id: any = null) => {
         if (window.confirm('Are you sure want to delete selected row ?')) {
@@ -84,18 +81,16 @@ console.log(selectedRecords);
     };
 
     return (
-        <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
-            <div className="invoice-table">
+        
+            <>
                 <div className="mb-4.5 flex flex-col gap-5 px-5 md:flex-row md:items-center">
                     <div className="flex items-center gap-2">
                         <button type="button" className="btn btn-danger gap-2" onClick={() => deleteRow()}>
                         <MaterialDeleteIcon />
                             Delete
                         </button>
-                        <Link href="/apps/invoice/add" className="btn btn-primary gap-2">
-                           <MaterialPlusIcon />
-                            Add New
-                        </Link>
+                       <MaterialAddNewModal />
+                        
                     </div>
                     <div className="ltr:ml-auto rtl:mr-auto">
                         <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
@@ -177,8 +172,8 @@ console.log(selectedRecords);
                         paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
                     />
                 </div>
-            </div>
-        </div>
+            </>
+       
     );
 };
 
