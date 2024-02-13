@@ -1,4 +1,4 @@
-import { MaterialPlusIcon, ModalCloseIcon, ModalListIcon } from "@/app/icons";
+import { MaterialPlusIcon } from "@/app/icons";
 import React, { useState, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { object, string } from "yup";
@@ -57,7 +57,7 @@ const MaterialAddNewModal = () => {
                       onClick={() => setModal(false)}
                       className="text-white-dark hover:text-dark"
                     >
-                      <ModalCloseIcon />
+                      {/* <ModalCloseIcon /> */}
                     </button>
                   </div>
                   <div className="p-5">
@@ -91,7 +91,7 @@ const MaterialAddNewModal = () => {
                         <Form onSubmit={handleSubmit}>
                           <div className="relative mb-4">
                             <span className="absolute top-1/2 -translate-y-1/2 ltr:left-3 rtl:right-3 dark:text-white-dark">
-                              <ModalListIcon />
+                              {/* <ModalListIcon /> */}
                             </span>
                             <Field
                               type="text"
@@ -112,7 +112,7 @@ const MaterialAddNewModal = () => {
                             />
                           <div className="relative mb-4">
                             <span className="absolute top-1/2 -translate-y-1/2 ltr:left-3 rtl:right-3 dark:text-white-dark">
-                              <ModalListIcon />
+                              {/* <ModalListIcon /> */}
                             </span>
                             <Field
                               type="text"
