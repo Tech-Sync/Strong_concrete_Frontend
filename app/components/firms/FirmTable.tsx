@@ -10,7 +10,7 @@ import {
   getAllFrimAsync,
   selectFirms,
   selectIsDarkMode,
-  selectStatus,
+  selectFirmStatus,
   useDispatch,
   useSelector,
 } from "@/lib/redux";
@@ -20,7 +20,7 @@ import { deleteFirm, deleteMultiFirm } from "@/lib/redux/slices/firmSlice/firmAc
 export default function FirmTable() {
   const dispatch = useDispatch();
   const firms = useSelector(selectFirms);
-  const firmStatus = useSelector(selectStatus);
+  const firmStatus = useSelector(selectFirmStatus);
 
   useEffect(() => {
     dispatch(getAllFrimAsync());
