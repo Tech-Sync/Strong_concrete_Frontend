@@ -47,6 +47,7 @@ export const deleteMaterial = async (id: any) => {
     if (response.status === 204) {
       return { message: "Deleted!" };
     } else {
+      
       throw new Error("Something went wrong, Please try again!");
     }
   } catch (error: any) {
@@ -76,7 +77,6 @@ export const deleteMultiMaterial = async (ids: any) => {
 
 export const addMaterial = async (materialData: Object) => {
   const headers = await authConfig();
-  console.log(materialData, "materialData");
   
   try {
     const response = await fetch(`${BASE_URL}/materials`, {
@@ -95,8 +95,6 @@ export const addMaterial = async (materialData: Object) => {
       );
     }
   } catch (error: any) {
-    console.log(error, "error");
-    
     return { error: error.message };
   }
 };
