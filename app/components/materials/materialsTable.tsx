@@ -3,20 +3,26 @@ import Link from 'next/link';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import { useState, useEffect } from 'react';
 import sortBy from 'lodash/sortBy';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectThemeConfig } from '@/lib/redux/slices/themeConfigSlice';
-import { Material } from '@/types/types';
 import { formatDate } from '@/utils/formatDate';
-import { MaterialDeleteIcon, MaterialEditIcon, MaterialPlusIcon, MaterialPreviewIcon } from '@/app/icons';
-import MaterialAddNewModal from './MaterialAddNewModal';
-interface MaterialsTableProps {
-    materials: Material[]
-}
+import { DeleteIcon, EditIcon, MaterialDeleteIcon, MaterialEditIcon, MaterialPlusIcon, MaterialPreviewIcon, PreviewIcon } from '@/app/icons';
+import { coloredToast, deleteToast, multiDeleteToast } from "@/lib/sweetAlerts";
+import { getAllMaterialAsync, selectMaterialStatus, selectMaterials } from '@/lib/redux';
+import { deleteMaterial, deleteMultiMaterial } from '@/lib/redux/slices/materialSlice/materialActions';
+import MaterialModal from './MaterialModal';
 
-const MaterialsTable = ({materials}:MaterialsTableProps) => {
-
+const MaterialsTable = () => {
+    const dispatch = useDispatch();
+    const materials = useSelector(selectMaterials);
+    const materialStatus = useSelector(selectMaterialStatus);
     const isDark = useSelector(selectThemeConfig).isDarkMode ? "dark":"light"
    
+    useEffect(() => {
+        //@ts-ignore
+        dispatch(getAllMaterialAsync());
+      }, []);
+
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [5, 10, 15, 20, 25];
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
@@ -29,6 +35,14 @@ const MaterialsTable = ({materials}:MaterialsTableProps) => {
         columnAccessor: 'id',
         direction: 'asc',
     });
+    const [modal, setModal] = useState(false);
+
+      //@ts-ignore
+  const [materialInitials, setMaterialInitials] = useState({
+    name: "",
+    unittype: "",
+  });
+
 
     useEffect(() => {
         setPage(1);
@@ -49,7 +63,7 @@ const MaterialsTable = ({materials}:MaterialsTableProps) => {
                 );
             });
         });
-    }, [search]);
+    }, [materials, search]);
 
     useEffect(() => {
         const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
@@ -58,26 +72,36 @@ const MaterialsTable = ({materials}:MaterialsTableProps) => {
     }, [sortStatus]);
 
 
-    const deleteRow = (id: any = null) => {
-        if (window.confirm('Are you sure want to delete selected row ?')) {
-            if (id) {
-                setRecords(materials.filter((material) => material.id !== id));
-                setInitialRecords(materials.filter((material) => material.id !== id));
+    const deleteRow = async (id: any = null) => {
+        const deletionSuccess = await deleteToast(id, deleteMaterial);
+            if (deletionSuccess) {
+               //@ts-ignore
+                dispatch(getAllMaterialAsync());
+                setRecords(materials);
+                setInitialRecords(materials);
                 setSelectedRecords([]);
-                setSearch('');
+                setSearch("");
             } else {
                 let selectedRows = selectedRecords || [];
+                if (selectedRows.length === 0) {
+                  coloredToast("warning", "Select items to delete!");
+                  return;
+                }
                 const ids = selectedRows.map((d: any) => {
-                    return d.id;
+                  return d.id;
                 });
-                const result = materials.filter((d) => !ids.includes(d.id as never));
-                setRecords(result);
-                setInitialRecords(result);
-                setSelectedRecords([]);
-                setSearch('');
-                setPage(1);
+                const deletionSuccess = await multiDeleteToast(ids, deleteMultiMaterial);
+                if (deletionSuccess) {
+                    //@ts-ignore
+                  dispatch(getAllMaterialAsync());
+                  setRecords(materials);
+                  setInitialRecords(materials);
+                  setSelectedRecords([]);
+                  setSearch("");
+                  setPage(1);
+                }
             }
-        }
+      
     };
 
     return (
@@ -86,10 +110,17 @@ const MaterialsTable = ({materials}:MaterialsTableProps) => {
                 <div className="mb-4.5 flex flex-col gap-5 px-5 md:flex-row md:items-center">
                     <div className="flex items-center gap-2">
                         <button type="button" className="btn btn-danger gap-2" onClick={() => deleteRow()}>
-                        <MaterialDeleteIcon />
+                        <DeleteIcon />
                             Delete
                         </button>
-                       <MaterialAddNewModal />
+                       <MaterialModal 
+                          modal={modal}
+                          setModal={setModal}
+                          //@ts-ignore
+                          materialInitials={materialInitials}
+                          //@ts-ignore
+                          setMaterialInitials={setMaterialInitials}
+                       />
                         
                     </div>
                     <div className="ltr:ml-auto rtl:mr-auto">
@@ -135,7 +166,7 @@ const MaterialsTable = ({materials}:MaterialsTableProps) => {
                                 accessor: 'createdAt',
                                 sortable: true,
                                 titleClassName: 'text-right',
-                                render: ({ createdAt, id }) => <div className="text-right">{formatDate(createdAt)}</div>,
+                                render: (materials) => <div className="text-right">{formatDate(materials.createdAt)}</div>,
                             },
                           
                             {
@@ -143,16 +174,24 @@ const MaterialsTable = ({materials}:MaterialsTableProps) => {
                                 title: 'Actions',
                                 sortable: false,
                                 textAlignment: 'center',
-                                render: ({ id }) => (
+                                render: (material) => (
                                     <div className="mx-auto flex w-max items-center gap-4">
-                                        <Link href="/apps/invoice/edit" className="flex hover:text-info">
-                                           <MaterialEditIcon />
-                                        </Link>
+                                        {/* <Link href="/apps/invoice/edit" className="flex hover:text-info"> */}
+                                        <button
+                      onClick={() => {
+                        //@ts-ignore
+                        setMaterialInitials(material), setModal(true);
+                      }}
+                      className="flex hover:text-info"
+                    >
+                                           <EditIcon />
+                                           </button>
+                                        {/* </Link>
                                         <Link href="/apps/invoice/preview" className="flex hover:text-primary">
-                                           <MaterialPreviewIcon />
-                                        </Link>
-                                        <button type="button" className="flex hover:text-danger" onClick={(e) => deleteRow(id)}>
-                                           <MaterialDeleteIcon />
+                                           <PreviewIcon />
+                                        </Link> */}
+                                        <button type="button" className="flex hover:text-danger" onClick={(e) => deleteRow(material.id)}>
+                                           <DeleteIcon />
                                         </button>
                                     </div>
                                 ),
