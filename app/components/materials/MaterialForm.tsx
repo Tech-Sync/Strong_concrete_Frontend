@@ -1,24 +1,7 @@
 import React from "react";
 import { Form, Field, ErrorMessage, FormikProps } from "formik";
-// import { firmStatuses } from "@/app/constraints/roles&status";
-// import {
-//   AddressIcon,
-//   EmailIcon,
-//   NameIcon,
-//   PhoneIcon,
-//   StatusIcon,
-//   TpinIcon,
-// } from "./FirmModalIcons";
 import { Material } from "@/types/types";
-
-interface FormValues {
-  name: string;
-  address: string;
-  phoneNo: string;
-  tpinNo: string;
-  email: string;
-  status: string;
-}
+import { ModalListIcon } from "@/app/icons/modal";
 
 const MaterialForm: React.FC<FormikProps<Material>> = ({
   touched,
@@ -28,32 +11,14 @@ const MaterialForm: React.FC<FormikProps<Material>> = ({
 }) => {
   return (
     <Form onSubmit={handleSubmit}>
-      <div className="relative mb-4">
-        {/* <StatusIcon /> */}
-        <div
-          className={`${touched && errors ? "has-error" : ""}`}
-        >
-          {/* <Field
-            as="select"
-            name="status"
-            id="gridState"
-            className=" form-select ltr:pl-10 rtl:pr-10 text-white-dark "
-          >
-            <option value="" disabled >
-              Describe Firm
-            </option>
-            <option value={1}>{firmStatuses[1]}</option>
-            <option value={2}>{firmStatuses[2]}</option>
-          </Field> */}
-        </div>
-      </div>
+    
       <div className="mb-3">
         <div className="relative">
-          {/* <NameIcon /> */}
+          <ModalListIcon />
           <Field
             type="text"
             name="name"
-            placeholder="Firm Name"
+            placeholder="Material Name"
             className={`form-input ltr:pl-10 rtl:pr-10${
               touched.name && errors.name ? "border-red-500" : ""
             }`}
@@ -68,77 +33,24 @@ const MaterialForm: React.FC<FormikProps<Material>> = ({
 
       <div className="mb-3">
         <div className="relative">
-          {/* <AddressIcon /> */}
+        <ModalListIcon />
           <Field
             type="text"
-            name="address"
-            placeholder="Firm Address"
+            name="unitType"
+            placeholder="Unit type"
             className={`form-input ltr:pl-10 rtl:pr-10${
               touched && errors ? "border-red-500" : ""
             }`}
           />
         </div>
         <ErrorMessage
-          name="address"
+          name="unitType"
           component="div"
           className="text-red-500 text-sm mt-1 "
         />
       </div>
 
-      <div className="mb-3">
-        <div className="relative">
-          {/* <PhoneIcon /> */}
-          <Field
-            type="text"
-            name="phoneNo"
-            placeholder="Firm Phone Number"
-            className={`form-input ltr:pl-10 rtl:pr-10${
-              touched && errors ? "border-red-500" : ""
-            }`}
-          />
-        </div>
-        <ErrorMessage
-          name="phoneNo"
-          component="div"
-          className="text-red-500 text-sm mt-1"
-        />
-      </div>
-      <div className="mb-3">
-        <div className="relative">
-          {/* <EmailIcon /> */}
-          <Field
-            type="email"
-            name="email"
-            placeholder="Firm Email"
-            className={`form-input ltr:pl-10 rtl:pr-10${
-              touched && errors ? "border-red-500" : ""
-            }`}
-          />
-        </div>
-        <ErrorMessage
-          name="email"
-          component="div"
-          className="text-red-500 text-sm mt-1"
-        />
-      </div>
-      <div className="mb-3">
-        <div className="relative">
-          {/* <TpinIcon /> */}
-          <Field
-            type="text"
-            name="tpinNo"
-            placeholder="Firm Tpin Number"
-            className={`form-input ltr:pl-10 rtl:pr-10${
-              touched && errors ? "border-red-500" : ""
-            }`}
-          />
-        </div>
-        <ErrorMessage
-          name="tpinNo"
-          component="div"
-          className="text-red-500 text-sm mt-1"
-        />
-      </div>
+     
 
       <button
         type="submit"

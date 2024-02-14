@@ -73,17 +73,11 @@ export const deleteMultiMaterial = async (ids: any) => {
   }
 };
 
-/* interface firmDataProp {
-  name: string;
-  address: string;
-  phoneNo: string;
-  tpinNo: string;
-  email: string;
-  status: string;
-} */
 
 export const addMaterial = async (materialData: Object) => {
   const headers = await authConfig();
+  console.log(materialData, "materialData");
+  
   try {
     const response = await fetch(`${BASE_URL}/materials`, {
       method: "POST",
@@ -101,6 +95,8 @@ export const addMaterial = async (materialData: Object) => {
       );
     }
   } catch (error: any) {
+    console.log(error, "error");
+    
     return { error: error.message };
   }
 };
