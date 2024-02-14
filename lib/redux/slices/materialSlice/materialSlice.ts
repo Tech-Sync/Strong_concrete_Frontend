@@ -1,25 +1,25 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { getAllFrimAsync } from "./thunks";
-import { Firm } from "@/types/types";
+import { getAllMaterialAsync } from "./thunks";
+import {  Material } from "@/types/types";
 
-const initialState: FirmSliceState = {
-  firms: [],
+const initialState: MaterialSliceState = {
+  materials: [],
   loading: false,
   error: null,
   status: "idle",
 };
 
-export const firmSlice = createSlice({
-  name: "firms",
+export const materiaSlice = createSlice({
+  name: "materials",
   initialState,
   reducers: {
     fetchStart: (state) => {
       state.loading = true;
       state.error = null;
     },
-    getFirmSuccess: (state, action: PayloadAction<[]>) => {
+    getMaterialSuccess: (state, action: PayloadAction<[]>) => {
       state.loading = false;
-      state.firms = action.payload;
+      state.materials = action.payload;
     },
     fetchFail: (state) => {
       state.loading = false;
@@ -28,23 +28,23 @@ export const firmSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getAllFrimAsync.pending, (state) => {
+      .addCase(getAllMaterialAsync.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(getAllFrimAsync.rejected, (state, action) => {
+      .addCase(getAllMaterialAsync.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload ?? null;
       })
-      .addCase(getAllFrimAsync.fulfilled, (state, action) => {
+      .addCase(getAllMaterialAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.firms = action.payload;
+        state.materials = action.payload;
       });
   },
 });
 
 //Types
-export interface FirmSliceState {
-  firms: Firm[];
+export interface MaterialSliceState {
+  materials: Material[];
   loading: boolean;
   error: string | null;
   status: "idle" | "loading" | "failed" | "succeeded";

@@ -3,18 +3,18 @@ import Link from 'next/link';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import { useState, useEffect } from 'react';
 import sortBy from 'lodash/sortBy';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectThemeConfig } from '@/lib/redux/slices/themeConfigSlice';
 import { Material } from '@/types/types';
 import { formatDate } from '@/utils/formatDate';
 import { MaterialDeleteIcon, MaterialEditIcon, MaterialPlusIcon, MaterialPreviewIcon } from '@/app/icons';
-import MaterialAddNewModal from './MaterialAddNewModal';
-interface MaterialsTableProps {
-    materials: Material[]
-}
+import MaterialAddNewModal from '../../(Dashboard)/materials/MaterialAddNewModal';
+import { selectMaterialStatus, selectMaterials } from '@/lib/redux';
 
-const MaterialsTable = ({materials}:MaterialsTableProps) => {
-
+const MaterialsTable = () => {
+    const dispatch = useDispatch();
+    const materials = useSelector(selectMaterials);
+    const materialStatus = useSelector(selectMaterialStatus);
     const isDark = useSelector(selectThemeConfig).isDarkMode ? "dark":"light"
    
     const [page, setPage] = useState(1);
