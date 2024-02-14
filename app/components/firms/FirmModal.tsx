@@ -1,12 +1,15 @@
 import { PlusIcon } from "@/app/icons";
 import { Dialog, Transition } from "@headlessui/react";
-import { Form, Formik } from "formik";
+import { Formik } from "formik";
 import React, { Fragment, useState } from "react";
 import { object, string } from "yup";
 import FirmForm from "./FirmForm";
-import { addFirm } from "@/actions/firmActions";
+// import { addFirm, updateFirm } from "@/actions/firmActions";
 import { coloredToast } from "@/lib/sweetAlerts";
 import { useRouter } from "next/navigation";
+import { getAllFrimAsync, useDispatch } from "@/lib/redux";
+import { Firm } from "@/types/types";
+import { addFirm, updateFirm } from "@/lib/redux/slices/firmSlice/firmActions";
 
 const firmSchema = object({
   name: string().required("This field is required."),
@@ -18,12 +21,37 @@ const firmSchema = object({
     .required("Email is required!"),
 });
 
-export default function FirmModal() {
-  const [modal, setModal] = useState(false);
-  const router = useRouter()
+interface firmModalProps {
+  setModal: (value: boolean) => void;
+  modal: boolean;
+  firmInitials: Firm;
+  setFirmInitials: (value: object) => void;
+}
+
+export default function FirmModal({
+  modal,
+  setModal,
+  firmInitials,
+  setFirmInitials,
+}: firmModalProps) {
+  const emptyFirm = {
+    name: "",
+    address: "",
+    phoneNo: "",
+    tpinNo: "",
+    email: "",
+    status: "",
+  };
+  const dispatch = useDispatch();
+  const router = useRouter();
   return (
     <div>
-      <button onClick={() => setModal(true)} className="btn btn-primary gap-2">
+      <button
+        onClick={() => {
+          setModal(true), setFirmInitials(emptyFirm);
+        }}
+        className="btn btn-primary gap-2"
+      >
         <PlusIcon />
         Add New
       </button>
@@ -86,31 +114,45 @@ export default function FirmModal() {
                   </div>
                   <div className="p-5">
                     <Formik
-                      initialValues={{
-                        name: "",
-                        address: "",
-                        phoneNo: "",
-                        tpinNo: "",
-                        email: "",
-                        status: "",
-                      }}
+                      initialValues={firmInitials.id ? firmInitials : emptyFirm}
                       validationSchema={firmSchema}
                       onSubmit={async (
                         values,
                         { setSubmitting, resetForm }
                       ) => {
-                        const firms = await addFirm(values);
-                        setTimeout(() => {
-                          setSubmitting(false);
-
-                          if (firms.message) {
-                            coloredToast("success", firms.message, 'bottom-start');
+                        if ("id" in firmInitials) {
+                          //@ts-ignore
+                          const res = await updateFirm(values);
+                          if (res.message) {
+                            coloredToast(
+                              "success",
+                              res.message,
+                              "bottom-start"
+                            );
                             setModal(false);
+                            dispatch(getAllFrimAsync());
                           } else {
-                            coloredToast("danger", firms.error, 'bottom-start');
+                            coloredToast("danger", res.error, "bottom-start");
                           }
-                        }, 500);
+                        } else {
+                          const res = await addFirm(values);
+                          setTimeout(() => {
+                            setSubmitting(false);
+                            if (res.message) {
+                              coloredToast(
+                                "success",
+                                res.message,
+                                "bottom-start"
+                              );
+                              setModal(false);
+                              dispatch(getAllFrimAsync());
+                            } else {
+                              coloredToast("danger", res.error, "bottom-start");
+                            }
+                          }, 500);
+                        }
                       }}
+                      //@ts-ignore
                       component={(props) => <FirmForm {...props} />}
                     ></Formik>
                   </div>

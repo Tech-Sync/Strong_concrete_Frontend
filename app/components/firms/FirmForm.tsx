@@ -9,6 +9,7 @@ import {
   StatusIcon,
   TpinIcon,
 } from "./FirmModalIcons";
+import { Firm } from "@/types/types";
 
 interface FormValues {
   name: string;
@@ -19,7 +20,7 @@ interface FormValues {
   status: string;
 }
 
-const FirmForm: React.FC<FormikProps<FormValues>> = ({
+const FirmForm: React.FC<FormikProps<Firm>> = ({
   touched,
   errors,
   isSubmitting,
@@ -38,7 +39,7 @@ const FirmForm: React.FC<FormikProps<FormValues>> = ({
             id="gridState"
             className=" form-select ltr:pl-10 rtl:pr-10 text-white-dark "
           >
-            <option value="" disabled selected>
+            <option value="" disabled >
               Describe Firm
             </option>
             <option value={1}>{firmStatuses[1]}</option>

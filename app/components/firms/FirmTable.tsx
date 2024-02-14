@@ -1,28 +1,33 @@
 "use client";
-import Link from "next/link";
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
 import { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
-import { useSelector } from "react-redux";
-import { selectThemeConfig } from "@/lib/redux/slices/themeConfigSlice";
-import {
-  deleteFirm,
-  deleteMultiFirm,
-  getAllFirms,
-} from "@/actions/firmActions";
-import { Firm } from "@/types/types";
-import { DeleteIcon, EditIcon, PlusIcon, PreviewIcon } from "@/app/icons";
+import { DeleteIcon, EditIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
 import { firmStatuses } from "@/app/constraints/roles&status";
 import { coloredToast, deleteToast, multiDeleteToast } from "@/lib/sweetAlerts";
-import FirmHeaderBtns from "./FirmHeaderBtns";
+import {
+  getAllFrimAsync,
+  selectFirms,
+  selectIsDarkMode,
+  selectStatus,
+  useDispatch,
+  useSelector,
+} from "@/lib/redux";
+import FirmModal from "./FirmModal";
+import { deleteFirm, deleteMultiFirm } from "@/lib/redux/slices/firmSlice/firmActions";
 
-interface FirmTableProps {
-  firms: Firm[];
-}
+export default function FirmTable() {
+  const dispatch = useDispatch();
+  const firms = useSelector(selectFirms);
+  const firmStatus = useSelector(selectStatus);
 
-export default function FirmTable({ firms }: FirmTableProps) {
-  const isDark = useSelector(selectThemeConfig).isDarkMode;
+  useEffect(() => {
+    dispatch(getAllFrimAsync());
+  }, []);
+
+  const isDark = useSelector(selectIsDarkMode);
+
   const [page, setPage] = useState(1);
   const PAGE_SIZES = [10, 20, 30, 40, 50];
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
@@ -33,6 +38,17 @@ export default function FirmTable({ firms }: FirmTableProps) {
   const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
     columnAccessor: "id",
     direction: "asc",
+  });
+  const [modal, setModal] = useState(false);
+
+  //@ts-ignore
+  const [firmInitials, setFirmInitials] = useState({
+    name: "",
+    address: "",
+    phoneNo: "",
+    tpinNo: "",
+    email: "",
+    status: "",
   });
 
   useEffect(() => {
@@ -47,13 +63,13 @@ export default function FirmTable({ firms }: FirmTableProps) {
 
   useEffect(() => {
     setInitialRecords(() => {
-      return firms.filter((material) => {
+      return firms.filter((firm) => {
         return (
-          material.address.toLowerCase().includes(search.toLowerCase()) ||
-          material.email.toLowerCase().includes(search.toLowerCase()) ||
-          material.name.toLowerCase().includes(search.toLowerCase()) ||
-          material.phoneNo.toLowerCase().includes(search.toLowerCase()) ||
-          material.tpinNo.toLowerCase().includes(search.toLowerCase())
+          firm.address.toLowerCase().includes(search.toLowerCase()) ||
+          firm.email.toLowerCase().includes(search.toLowerCase()) ||
+          firm.name.toLowerCase().includes(search.toLowerCase()) ||
+          firm.phoneNo.toLowerCase().includes(search.toLowerCase()) ||
+          firm.tpinNo.toLowerCase().includes(search.toLowerCase())
         );
       });
     });
@@ -69,9 +85,9 @@ export default function FirmTable({ firms }: FirmTableProps) {
     if (id) {
       const deletionSuccess = await deleteToast(id, deleteFirm);
       if (deletionSuccess) {
-        const firmRes = await getAllFirms();
-        setRecords(firmRes.data);
-        setInitialRecords(firmRes.data);
+        dispatch(getAllFrimAsync());
+        setRecords(firms);
+        setInitialRecords(firms);
         setSelectedRecords([]);
         setSearch("");
       }
@@ -86,9 +102,9 @@ export default function FirmTable({ firms }: FirmTableProps) {
       });
       const deletionSuccess = await multiDeleteToast(ids, deleteMultiFirm);
       if (deletionSuccess) {
-        const firmRes = await getAllFirms();
-        setRecords(firmRes.data);
-        setInitialRecords(firmRes.data);
+        dispatch(getAllFrimAsync());
+        setRecords(firms);
+        setInitialRecords(firms);
         setSelectedRecords([]);
         setSearch("");
         setPage(1);
@@ -96,11 +112,32 @@ export default function FirmTable({ firms }: FirmTableProps) {
     }
   };
 
+  /*   if (firmStatus === "loading") {
+    return <h1 className="text-lg text-center">LOADING...</h1>;
+  } */
+
   return (
     <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
       <div className="invoice-table">
         <div className="mb-4.5 flex flex-col gap-5 px-5 md:flex-row md:items-center">
-          <FirmHeaderBtns deleteRow={deleteRow} />
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              className="btn btn-danger gap-2"
+              onClick={() => deleteRow()}
+            >
+              <DeleteIcon />
+              Delete
+            </button>
+            <FirmModal
+              modal={modal}
+              setModal={setModal}
+              //@ts-ignore
+              firmInitials={firmInitials}
+              //@ts-ignore
+              setFirmInitials={setFirmInitials}
+            />
+          </div>
           <div className="ltr:ml-auto rtl:mr-auto">
             <input
               type="text"
@@ -172,14 +209,17 @@ export default function FirmTable({ firms }: FirmTableProps) {
                 title: "Actions",
                 sortable: false,
                 textAlignment: "center",
-                render: ({ id }) => (
+                render: (firm) => (
                   <div className="mx-auto flex w-max items-center gap-4">
-                    <Link
-                      href="#"
+                    <button
+                      onClick={() => {
+                        //@ts-ignore
+                        setFirmInitials(firm), setModal(true);
+                      }}
                       className="flex hover:text-info"
                     >
                       <EditIcon />
-                    </Link>
+                    </button>
                     {/*     <Link
                       href="/apps/invoice/preview"
                       className="flex hover:text-primary"
@@ -189,7 +229,7 @@ export default function FirmTable({ firms }: FirmTableProps) {
                     <button
                       type="button"
                       className="flex hover:text-danger"
-                      onClick={(e) => deleteRow(id)}
+                      onClick={(e) => deleteRow(firm.id)}
                     >
                       <DeleteIcon />
                     </button>

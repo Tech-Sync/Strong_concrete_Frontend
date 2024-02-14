@@ -1,10 +1,8 @@
-import { getAllFirms } from "@/actions/firmActions";
 import FirmTable from "@/app/components/firms/FirmTable";
 import Link from "next/link";
 import React from "react";
 
-const page = async () => {
-  const firms = await getAllFirms();
+const FirmPage = async () => {
   return (
     <div className="flex flex-col space-y-5">
       <ul className="flex space-x-2 rtl:space-x-reverse ">
@@ -17,9 +15,9 @@ const page = async () => {
           <span>Firms</span>
         </li>
       </ul>
-      <FirmTable firms={firms.data} />
+      <FirmTable />
     </div>
   );
 };
 
-export default page;
+export default FirmPage;

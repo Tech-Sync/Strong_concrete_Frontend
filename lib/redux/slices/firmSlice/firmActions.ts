@@ -1,5 +1,6 @@
 "use server";
 import { auth } from "@/auth";
+import { Firm } from "@/types/types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
@@ -72,7 +73,7 @@ export const deleteMultiFirm = async (ids: any) => {
   }
 };
 
-/* interface firmProp {
+/* interface firmDataProp {
   name: string;
   address: string;
   phoneNo: string;
@@ -94,6 +95,27 @@ export const addFirm = async (firmData: Object) => {
 
     if (response.ok) {
       return { message: "Successfully Created!" };
+    } else {
+      throw new Error(
+        data.message || "Something went wrong, Please try again!"
+      );
+    }
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};
+export const updateFirm = async (firmData: Firm) => {
+  const headers = await authConfig();
+  try {
+    const response = await fetch(`${BASE_URL}/firms/${firmData.id}`, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify(firmData),
+    });
+
+    const data = await response.json();
+    if (response.ok && data.isUpdated) {
+      return { message: "Successfully Updated!" };
     } else {
       throw new Error(
         data.message || "Something went wrong, Please try again!"
