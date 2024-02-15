@@ -51,6 +51,7 @@ export const deleteFirm = async (id: any) => {
     } else {
       throw new Error( data.message ?? "Something went wrong, Please try again!");
     }
+
   } catch (error: any) {
     return { error: error.message };
   }
@@ -72,6 +73,7 @@ export const deleteMultiFirm = async (ids: any) => {
     } else {
       throw new Error( data.message ?? "Something went wrong, Please try again!");
     }
+    
   } catch (error: any) {
     return { error: error.message };
   }

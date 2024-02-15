@@ -5,7 +5,6 @@ export const getAllFrimAsync = createAppAsyncThunk(
   "firm/getAllFirms",
   async () => {
     const response = await getAllFirms();
-
     return response.data;
   }
 );

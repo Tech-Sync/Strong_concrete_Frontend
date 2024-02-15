@@ -13,15 +13,18 @@ import {
   selectFirmStatus,
   useDispatch,
   useSelector,
+  updateFirm,
 } from "@/lib/redux";
 import FirmModal from "./FirmModal";
-import { deleteFirm, deleteMultiFirm } from "@/lib/redux/slices/firmSlice/firmActions";
+import {
+  deleteFirm,
+  deleteMultiFirm,
+} from "@/lib/redux/slices/firmSlice/firmActions";
 import useDeleteToasts from "@/hooks/useDeleteToasts";
 
 export default function FirmTable() {
-
   const dispatch = useDispatch();
-  const {deleteToast, multiDeleteToast} = useDeleteToasts() 
+  const { deleteToast, multiDeleteToast } = useDeleteToasts();
   const firms = useSelector(selectFirms);
   const firmStatus = useSelector(selectFirmStatus);
   const isDark = useSelector(selectIsDarkMode);
@@ -56,7 +59,7 @@ export default function FirmTable() {
   useEffect(() => {
     setRecords(firms);
     setInitialRecords(firms);
-  }, [firms])
+  }, [firms]);
 
   useEffect(() => {
     setPage(1);
@@ -90,7 +93,7 @@ export default function FirmTable() {
 
   const deleteRow = async (id: any = null) => {
     if (id) {
-      const deletionSuccess = await deleteToast(id, deleteFirm);
+      const deletionSuccess = await deleteToast(id, deleteFirm, updateFirm);
       if (deletionSuccess) {
         setSelectedRecords([]);
         setSearch("");
@@ -104,7 +107,7 @@ export default function FirmTable() {
       const ids = selectedRows.map((d: any) => {
         return d.id;
       });
-      const deletionSuccess = await multiDeleteToast(ids, deleteMultiFirm);
+      const deletionSuccess = await multiDeleteToast(ids, deleteMultiFirm, updateFirm);
       if (deletionSuccess) {
         setSelectedRecords([]);
         setSearch("");
@@ -125,8 +128,7 @@ export default function FirmTable() {
             <button
               type="button"
               className="btn btn-danger gap-2"
-              onClick={() => deleteRow()}
-            >
+              onClick={() => deleteRow()}>
               <DeleteIcon />
               Delete
             </button>
@@ -217,8 +219,7 @@ export default function FirmTable() {
                         //@ts-ignore
                         setFirmInitials(firm), setModal(true);
                       }}
-                      className="flex hover:text-info"
-                    >
+                      className="flex hover:text-info">
                       <EditIcon />
                     </button>
                     {/*     <Link
@@ -230,8 +231,7 @@ export default function FirmTable() {
                     <button
                       type="button"
                       className="flex hover:text-danger"
-                      onClick={(e) => deleteRow(firm.id)}
-                    >
+                      onClick={(e) => deleteRow(firm.id)}>
                       <DeleteIcon />
                     </button>
                   </div>

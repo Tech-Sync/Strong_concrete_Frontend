@@ -1,25 +1,24 @@
 'use client'
-import Link from 'next/link';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import { useState, useEffect } from 'react';
 import sortBy from 'lodash/sortBy';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectThemeConfig } from '@/lib/redux/slices/themeConfigSlice';
 import { formatDate } from '@/utils/formatDate';
-import { DeleteIcon, EditIcon, MaterialDeleteIcon, MaterialEditIcon, MaterialPlusIcon, MaterialPreviewIcon, PreviewIcon } from '@/app/icons';
-import { coloredToast,  multiDeleteToast } from "@/lib/sweetAlerts";
-import { getAllMaterialAsync, selectMaterialStatus, selectMaterials } from '@/lib/redux';
+import { DeleteIcon, EditIcon } from '@/app/icons';
+import { coloredToast } from "@/lib/sweetAlerts";
+import { getAllMaterialAsync, selectIsDarkMode, selectMaterialStatus, selectMaterials, updateMaterial, useDispatch, useSelector } from '@/lib/redux';
 import { deleteMaterial, deleteMultiMaterial } from '@/lib/redux/slices/materialSlice/materialActions';
 import MaterialModal from './MaterialModal';
+import useDeleteToasts from '@/hooks/useDeleteToasts';
 
 const MaterialsTable = () => {
     const dispatch = useDispatch();
+    const { deleteToast, multiDeleteToast } = useDeleteToasts();
     const materials = useSelector(selectMaterials);
     const materialStatus = useSelector(selectMaterialStatus);
-    const isDark = useSelector(selectThemeConfig).isDarkMode ? "dark":"light"
+    const isDark = useSelector(selectIsDarkMode);
+
    
     useEffect(() => {
-        //@ts-ignore
         dispatch(getAllMaterialAsync());
       }, []);
 
@@ -43,7 +42,11 @@ const MaterialsTable = () => {
     unittype: "",
   });
 
-
+    useEffect(() => {
+    setRecords(materials);
+    setInitialRecords(materials);
+    }, [materials]);
+    
     useEffect(() => {
         setPage(1);
     }, [pageSize]);
@@ -72,13 +75,9 @@ const MaterialsTable = () => {
     }, [sortStatus]);
 
 
-    /* const deleteRow = async (id: any = null) => {
-        const deletionSuccess = await deleteToast(id, deleteMaterial);
+    const deleteRow = async (id: any = null) => {
+        const deletionSuccess = await deleteToast(id, deleteMaterial, updateMaterial);
             if (deletionSuccess) {
-               //@ts-ignore
-                dispatch(getAllMaterialAsync());
-                setRecords(materials);
-                setInitialRecords(materials);
                 setSelectedRecords([]);
                 setSearch("");
             } else {
@@ -90,23 +89,16 @@ const MaterialsTable = () => {
                 const ids = selectedRows.map((d: any) => {
                   return d.id;
                 });
-                const deletionSuccess = await multiDeleteToast(ids, deleteMultiMaterial);
+                const deletionSuccess = await multiDeleteToast(ids, deleteMultiMaterial, updateMaterial);
                 if (deletionSuccess) {
-                    //@ts-ignore
-                  dispatch(getAllMaterialAsync());
-                  setRecords(materials);
-                  setInitialRecords(materials);
                   setSelectedRecords([]);
                   setSearch("");
                   setPage(1);
                 }
             }
       
-    }; */
+    };
 
-    const deleteRow = (id:any = null) => {
-      console.log('object');
-    }
 
     return (
         
