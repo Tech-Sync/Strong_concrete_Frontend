@@ -17,7 +17,7 @@ export const firmSlice = createSlice({
       state.loading = true;
       state.error = null;
     },
-    getFirmSuccess: (state, action: PayloadAction<[]>) => {
+    updateFirm: (state, action: PayloadAction<Firm[]>) => {
       state.loading = false;
       state.firms = action.payload;
     },
@@ -49,3 +49,5 @@ export interface FirmSliceState {
   error: string | null;
   status: "idle" | "loading" | "failed" | "succeeded";
 }
+
+export const { fetchStart, fetchFail, updateFirm } = firmSlice.actions;

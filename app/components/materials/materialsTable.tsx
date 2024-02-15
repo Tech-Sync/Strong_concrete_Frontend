@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectThemeConfig } from '@/lib/redux/slices/themeConfigSlice';
 import { formatDate } from '@/utils/formatDate';
 import { DeleteIcon, EditIcon, MaterialDeleteIcon, MaterialEditIcon, MaterialPlusIcon, MaterialPreviewIcon, PreviewIcon } from '@/app/icons';
-import { coloredToast, deleteToast, multiDeleteToast } from "@/lib/sweetAlerts";
+import { coloredToast,  multiDeleteToast } from "@/lib/sweetAlerts";
 import { getAllMaterialAsync, selectMaterialStatus, selectMaterials } from '@/lib/redux';
 import { deleteMaterial, deleteMultiMaterial } from '@/lib/redux/slices/materialSlice/materialActions';
 import MaterialModal from './MaterialModal';
@@ -72,7 +72,7 @@ const MaterialsTable = () => {
     }, [sortStatus]);
 
 
-    const deleteRow = async (id: any = null) => {
+    /* const deleteRow = async (id: any = null) => {
         const deletionSuccess = await deleteToast(id, deleteMaterial);
             if (deletionSuccess) {
                //@ts-ignore
@@ -102,7 +102,11 @@ const MaterialsTable = () => {
                 }
             }
       
-    };
+    }; */
+
+    const deleteRow = (id:any = null) => {
+      console.log('object');
+    }
 
     return (
         

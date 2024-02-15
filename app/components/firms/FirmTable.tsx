@@ -5,7 +5,7 @@ import sortBy from "lodash/sortBy";
 import { DeleteIcon, EditIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
 import { firmStatuses } from "@/app/constraints/roles&status";
-import { coloredToast, deleteToast, multiDeleteToast } from "@/lib/sweetAlerts";
+import { coloredToast } from "@/lib/sweetAlerts";
 import {
   getAllFrimAsync,
   selectFirms,
@@ -16,17 +16,19 @@ import {
 } from "@/lib/redux";
 import FirmModal from "./FirmModal";
 import { deleteFirm, deleteMultiFirm } from "@/lib/redux/slices/firmSlice/firmActions";
+import useDeleteToasts from "@/hooks/useDeleteToasts";
 
 export default function FirmTable() {
+
   const dispatch = useDispatch();
+  const {deleteToast, multiDeleteToast} = useDeleteToasts() 
   const firms = useSelector(selectFirms);
   const firmStatus = useSelector(selectFirmStatus);
+  const isDark = useSelector(selectIsDarkMode);
 
   useEffect(() => {
     dispatch(getAllFrimAsync());
   }, []);
-
-  const isDark = useSelector(selectIsDarkMode);
 
   const [page, setPage] = useState(1);
   const PAGE_SIZES = [10, 20, 30, 40, 50];
@@ -50,6 +52,11 @@ export default function FirmTable() {
     email: "",
     status: "",
   });
+
+  useEffect(() => {
+    setRecords(firms);
+    setInitialRecords(firms);
+  }, [firms])
 
   useEffect(() => {
     setPage(1);
@@ -85,9 +92,6 @@ export default function FirmTable() {
     if (id) {
       const deletionSuccess = await deleteToast(id, deleteFirm);
       if (deletionSuccess) {
-        dispatch(getAllFrimAsync());
-        setRecords(firms);
-        setInitialRecords(firms);
         setSelectedRecords([]);
         setSearch("");
       }
@@ -102,9 +106,6 @@ export default function FirmTable() {
       });
       const deletionSuccess = await multiDeleteToast(ids, deleteMultiFirm);
       if (deletionSuccess) {
-        dispatch(getAllFrimAsync());
-        setRecords(firms);
-        setInitialRecords(firms);
         setSelectedRecords([]);
         setSearch("");
         setPage(1);
