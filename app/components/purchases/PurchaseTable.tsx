@@ -192,7 +192,7 @@ console.log('pruchaseTable:',purchases);
                       <EditIcon />
                     </Link>
                     <Link
-                      href="/purchases/preview"
+                      href={`/purchases/${id}`}
                       className="flex hover:text-primary"
                     >
                       <PreviewIcon />
