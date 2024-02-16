@@ -45,15 +45,18 @@ console.log('pruchaseTable:',purchases);
   }, [page, pageSize, initialRecords]);
 
   useEffect(() => {
-    setInitialRecords(() => {
-      return purchases.filter((purchase) => {
-        return (
-          // purchase.Material.name.toLowerCase().includes(search.toLowerCase()) ||
-          // purchase.Firm.name.toLowerCase().includes(search.toLowerCase()) ||
-          purchase.createdAt.toLowerCase().includes(search.toLowerCase())
-        );
-      });
-    });
+    if (purchases) {
+
+      setInitialRecords(() => {
+        return purchases.filter((purchase) => {
+          return (
+            // purchase.Material.name.toLowerCase().includes(search.toLowerCase()) ||
+            // purchase.Firm.name.toLowerCase().includes(search.toLowerCase()) ||
+            purchase.createdAt.toLowerCase().includes(search.toLowerCase())
+            );
+          });
+        });
+      }
   }, [purchases, search]);
 
   useEffect(() => {
@@ -109,7 +112,7 @@ console.log('pruchaseTable:',purchases);
               <DeleteIcon />
               Delete
             </button>
-            <Link href="/apps/invoice/add" className="btn btn-primary gap-2">
+            <Link href="/purchases/add" className="btn btn-primary gap-2">
               <PlusIcon />
               Add New
             </Link>
@@ -183,13 +186,13 @@ console.log('pruchaseTable:',purchases);
                 render: ({ id }) => (
                   <div className="mx-auto flex w-max items-center gap-4">
                     <Link
-                      href="/apps/invoice/edit"
+                      href="/purchases/edit"
                       className="flex hover:text-info"
                     >
                       <EditIcon />
                     </Link>
                     <Link
-                      href="/apps/invoice/preview"
+                      href={`/purchases/${id}`}
                       className="flex hover:text-primary"
                     >
                       <PreviewIcon />
