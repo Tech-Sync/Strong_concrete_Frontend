@@ -43,11 +43,14 @@ export const deletePurchase = async (id: any) => {
       headers,
     });
 
-    if (response.status === 204) {
-      return { message: "Deleted!" };
+    const data = await response.json();
+
+    if (!data.error && response.status === 202) {
+      return { message: data.message, remainingData: data.data };
     } else {
-      throw new Error("Something went wrong, Please try again!");
+      throw new Error( data.message ?? "Something went wrong, Please try again!");
     }
+
   } catch (error: any) {
     return { error: error.message };
   }
@@ -55,7 +58,6 @@ export const deletePurchase = async (id: any) => {
 
 export const deleteMultiPurchase = async (ids:any) => {
   const headers = await authConfig();
-  console.log('multidelete purchase calisti');
 
   try {
     const response = await fetch(`${BASE_URL}/purchases/multiple-delete`, {
@@ -64,11 +66,15 @@ export const deleteMultiPurchase = async (ids:any) => {
       body: JSON.stringify({ids}),
     });
 
-    if (response.status === 204) {
-      return { message: "Deleted!" };
+    const data = await response.json();
+    console.log('multidelete purchase calisti',data);
+
+    if (!data.error && response.status === 202) {
+      return { message: data.message, remainingData: data.data };
     } else {
-      throw new Error("Something went wrong, Please try again!");
+      throw new Error( data.message ?? "Something went wrong, Please try again!");
     }
+
   } catch (error: any) {
     return { error: error.message };
   }

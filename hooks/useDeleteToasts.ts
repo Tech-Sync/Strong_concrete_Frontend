@@ -27,9 +27,9 @@ const useDeleteToasts = () => {
       if (result.isConfirmed) {
         const res = await deletionFunction(id);
 
-        dispatch(updateAction(res.remainingData ?? []));
-
         if (res?.message) {
+          dispatch(updateAction(res.remainingData ?? []));
+
           await Swal.fire({
             title: "Deleted!",
             text: res.message,
@@ -49,6 +49,7 @@ const useDeleteToasts = () => {
       }
     } catch (error) {
       console.error("Error in deleteToast:", error);
+      
       Swal.fire({
         title: "Error",
         text: "An unexpected error occurred.",
@@ -74,9 +75,11 @@ const useDeleteToasts = () => {
       if (result.isConfirmed) {
         console.log('onaylandi');
         const res = await deletionFunction(ids);
-        dispatch(updateAction(res.remainingData ?? []));
+
 
         if (res?.message) {
+          dispatch(updateAction(res.remainingData ?? []));
+
           await Swal.fire({
             title: "Deleted!",
             text: res.message,
