@@ -99,6 +99,7 @@ export default function MaterialModal({
                         { setSubmitting, resetForm }
                       ) => {
                         if ("id" in materialInitials) {
+                          console.log('values from form',values?.quantity.toFixed(2));
                           //@ts-ignore
                           const res = await updateMaterial(values);
                           if (res.message) {
