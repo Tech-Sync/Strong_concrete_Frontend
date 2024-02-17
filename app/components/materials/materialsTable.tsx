@@ -72,14 +72,17 @@ const MaterialsTable = () => {
         const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
         setRecords(sortStatus.direction === 'desc' ? data2.reverse() : data2);
         setPage(1);
-    }, [sortStatus]);
+    }, [sortStatus,initialRecords]);
 
 
     const deleteRow = async (id: any = null) => {
-        const deletionSuccess = await deleteToast(id, deleteMaterial, updateMaterial);
-        if (deletionSuccess) {
-            setSelectedRecords([]);
-            setSearch("");
+
+        if (id) {
+            const deletionSuccess = await deleteToast(id, deleteMaterial, updateMaterial);
+            if (deletionSuccess) {
+                setSelectedRecords([]);
+                setSearch("");
+            }
         } else {
             let selectedRows = selectedRecords || [];
             if (selectedRows.length === 0) {
