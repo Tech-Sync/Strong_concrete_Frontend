@@ -6,7 +6,7 @@ import { object, string } from "yup";
 import MaterialForm from "./MaterialForm";
 import { coloredToast } from "@/lib/sweetAlerts";
 import { useRouter } from "next/navigation";
-import {  getAllMaterialAsync, useDispatch } from "@/lib/redux";
+import { getAllMaterialAsync, useDispatch } from "@/lib/redux";
 import { Material } from "@/types/types";
 import { addMaterial, updateMaterial } from "@/lib/redux/slices/materialSlice/materialActions";
 import { ModalCloseIcon } from "@/app/icons/modal";
@@ -23,16 +23,9 @@ interface materialModalProps {
   setMaterialInitials: (value: object) => void;
 }
 
-export default function MaterialModal({
-  modal,
-  setModal,
-  materialInitials,
-  setMaterialInitials,
-}: materialModalProps) {
-  const emptyMaterial = {
-    name: "",
-    unitType: "",
-  };
+export default function MaterialModal({ modal, setModal, materialInitials, setMaterialInitials, }: materialModalProps) {
+
+  const emptyMaterial = { name: "", unitType: "" };
   const dispatch = useDispatch();
   const router = useRouter();
   return (
@@ -47,12 +40,7 @@ export default function MaterialModal({
         Add New
       </button>
       <Transition appear show={modal} as={Fragment}>
-        <Dialog
-          as="div"
-          open={modal}
-          onClose={() => {
-            setModal(false);
-          }}
+        <Dialog as="div" open={modal} onClose={() => { setModal(false); }}
         >
           <Transition.Child
             as={Fragment}
@@ -87,43 +75,31 @@ export default function MaterialModal({
                       onClick={() => setModal(false)}
                       className="text-white-dark hover:text-dark"
                     >
-                     <ModalCloseIcon />
+                      <ModalCloseIcon />
                     </button>
                   </div>
                   <div className="p-5">
                     <Formik
                       initialValues={materialInitials.id ? materialInitials : emptyMaterial}
                       validationSchema={materialSchema}
-                      onSubmit={async (
-                        values,
-                        { setSubmitting, resetForm }
-                      ) => {
+                      onSubmit={async (values, { setSubmitting, resetForm }) => {
                         if ("id" in materialInitials) {
-                          //@ts-ignore
                           const res = await updateMaterial(values);
+
                           if (res.message) {
-                            coloredToast(
-                              "success",
-                              res.message,
-                              "bottom-start"
-                            );
+                            coloredToast("success", res.message, "bottom-start");
                             setModal(false);
                             dispatch(getAllMaterialAsync());
                           } else {
                             coloredToast("danger", res.error, "bottom-start");
                           }
                         } else {
-                          console.log(values);
                           const res = await addMaterial(values);
-                          
+
                           setTimeout(() => {
                             setSubmitting(false);
                             if (res.message) {
-                              coloredToast(
-                                "success",
-                                res.message,
-                                "bottom-start"
-                              );
+                              coloredToast("success", res.message, "bottom-start");
                               setModal(false);
                               dispatch(getAllMaterialAsync());
                             } else {

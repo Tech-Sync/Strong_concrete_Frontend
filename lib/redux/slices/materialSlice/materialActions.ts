@@ -44,12 +44,14 @@ export const deleteMaterial = async (id: any) => {
       headers,
     });
 
-    if (response.status === 204) {
-      return { message: "Deleted!" };
+    const data = await response.json();
+
+    if (!data.error && response.status === 202) {
+      return { message: data.message, remainingData: data.data };
     } else {
-      
-      throw new Error("Something went wrong, Please try again!");
+      throw new Error( data.message ?? "Something went wrong, Please try again!");
     }
+
   } catch (error: any) {
     return { error: error.message };
   }
@@ -64,11 +66,14 @@ export const deleteMultiMaterial = async (ids: any) => {
       body: JSON.stringify({ ids }),
     });
 
-    if (response.status === 204) {
-      return { message: "Deleted!" };
+    const data = await response.json();
+
+    if (!data.error && response.status === 202) {
+      return { message: data.message, remainingData: data.data };
     } else {
-      throw new Error("Something went wrong, Please try again!");
+      throw new Error( data.message ?? "Something went wrong, Please try again!");
     }
+    
   } catch (error: any) {
     return { error: error.message };
   }
@@ -98,7 +103,7 @@ export const addMaterial = async (materialData: Object) => {
     return { error: error.message };
   }
 };
-export const updateMaterial = async (materialData: Material) => {
+export const updateMaterial = async (materialData: any) => {
   const headers = await authConfig();
   try {
     const response = await fetch(`${BASE_URL}/materials/${materialData.id}`, {

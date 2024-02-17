@@ -4,23 +4,26 @@ import { DataTable, DataTableSortStatus } from "mantine-datatable";
 import { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
 import { useSelector } from "react-redux";
-import { selectThemeConfig } from "@/lib/redux/slices/themeConfigSlice";
 import { Purchase } from "@/types/types";
 import { DeleteIcon, EditIcon, PlusIcon, PreviewIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
-import { coloredToast, deleteToast, multiDeleteToast } from "@/lib/sweetAlerts";
-import { deleteMultiPurchase, deletePurchase, getAllPurchases } from "@/actions/purchaseActions";
+import { coloredToast } from "@/lib/sweetAlerts";
+import { getAllPurchaseAsync, selectIsDarkMode, selectPurchases, updatePurchase, useDispatch } from "@/lib/redux";
+import useDeleteToasts from "@/hooks/useDeleteToasts";
+import { deleteMultiPurchase, deletePurchase } from "@/lib/redux/slices/purchaseSlice/purchaseActions";
 
-interface PurchaseTableProps {
-  purchases: Purchase[];
-}
 
-export default function PurchaseTable({ purchases }: PurchaseTableProps) {
-  /*   useEffect(() => {
-    setInitialRecords(sortBy(purchases, "id"));
-  }, [purchases]); */
-console.log('pruchaseTable:',purchases);
-  const isDark = useSelector(selectThemeConfig).isDarkMode;
+
+export default function PurchaseTable() {
+  const dispatch = useDispatch();
+  const { deleteToast, multiDeleteToast } = useDeleteToasts();
+  const purchases = useSelector(selectPurchases);
+  const isDark = useSelector(selectIsDarkMode);
+
+  useEffect(() => {
+    dispatch(getAllPurchaseAsync());
+  }, []);
+
 
   const [page, setPage] = useState(1);
   const PAGE_SIZES = [10, 20, 30, 50, 100];
@@ -34,6 +37,12 @@ console.log('pruchaseTable:',purchases);
     direction: "asc",
   });
 
+
+  useEffect(() => {
+    setRecords(purchases);
+    setInitialRecords(purchases);
+  }, [purchases]);
+
   useEffect(() => {
     setPage(1);
   }, [pageSize]);
@@ -45,15 +54,18 @@ console.log('pruchaseTable:',purchases);
   }, [page, pageSize, initialRecords]);
 
   useEffect(() => {
-    setInitialRecords(() => {
-      return purchases.filter((purchase) => {
-        return (
-          // purchase.Material.name.toLowerCase().includes(search.toLowerCase()) ||
-          // purchase.Firm.name.toLowerCase().includes(search.toLowerCase()) ||
-          purchase.createdAt.toLowerCase().includes(search.toLowerCase())
-        );
+    if (purchases) {
+
+      setInitialRecords(() => {
+        return purchases.filter((purchase) => {
+          return (
+            // purchase.Material.name.toLowerCase().includes(search.toLowerCase()) ||
+            // purchase.Firm.name.toLowerCase().includes(search.toLowerCase()) ||
+            purchase.createdAt.toLowerCase().includes(search.toLowerCase())
+          );
+        });
       });
-    });
+    }
   }, [purchases, search]);
 
   useEffect(() => {
@@ -64,11 +76,8 @@ console.log('pruchaseTable:',purchases);
 
   const deleteRow = async (id: any = null) => {
     if (id) {
-      const deletionSuccess = await deleteToast(id, deletePurchase );
+      const deletionSuccess = await deleteToast(id, deletePurchase, updatePurchase);
       if (deletionSuccess) {
-        const purchaseRes = await getAllPurchases();
-        setRecords(purchaseRes.data);
-        setInitialRecords(purchaseRes.data);
         setSelectedRecords([]);
         setSearch("");
       }
@@ -81,14 +90,8 @@ console.log('pruchaseTable:',purchases);
       const ids = selectedRows.map((d: any) => {
         return d.id;
       });
-      const deletionSuccess = await multiDeleteToast(
-        ids,
-        deleteMultiPurchase
-      );
+      const deletionSuccess = await multiDeleteToast(ids, deleteMultiPurchase, updatePurchase);
       if (deletionSuccess) {
-        const purchaseRes = await getAllPurchases();
-        setRecords(purchaseRes.data);
-        setInitialRecords(purchaseRes.data);
         setSelectedRecords([]);
         setSearch("");
         setPage(1);
@@ -109,7 +112,7 @@ console.log('pruchaseTable:',purchases);
               <DeleteIcon />
               Delete
             </button>
-            <Link href="/apps/invoice/add" className="btn btn-primary gap-2">
+            <Link href="/purchases/add" className="btn btn-primary gap-2">
               <PlusIcon />
               Add New
             </Link>
@@ -138,20 +141,20 @@ console.log('pruchaseTable:',purchases);
                 ),
               },
               {
-                accessor: "FirmId",
+                accessor: "Firm",
                 sortable: true,
-                render: ({ FirmId, id }) => (
+                render: ({ Firm, id }) => (
                   <div className="flex items-center font-semibold">
-                    <div>{FirmId}</div>
+                    <div className={Firm ? "" : "text-red-800"}>{Firm ?? 'Data Deleted'}</div>
                   </div>
                 ),
               },
               {
-                accessor: "MaterialId",
+                accessor: "Material",
                 sortable: true,
-                render: ({ MaterialId, id }) => (
+                render: ({ Material, id }) => (
                   <div className="flex items-center font-semibold">
-                    <div>{MaterialId}</div>
+                    <div className={Material ? "" : "text-red-800"}>{Material ?? 'Data Deleted'}</div>
                   </div>
                 ),
               },
@@ -183,13 +186,13 @@ console.log('pruchaseTable:',purchases);
                 render: ({ id }) => (
                   <div className="mx-auto flex w-max items-center gap-4">
                     <Link
-                      href="/apps/invoice/edit"
+                      href="/purchases/edit"
                       className="flex hover:text-info"
                     >
                       <EditIcon />
                     </Link>
                     <Link
-                      href="/apps/invoice/preview"
+                      href={`/purchases/${id}`}
                       className="flex hover:text-primary"
                     >
                       <PreviewIcon />
