@@ -112,6 +112,11 @@ const Sidebar = () => {
             name: "Purchases",
             path: '/purchases',
             icon: <DashboardIcon />,
+        },
+        {
+            name: "Purchase Accounts",
+            path: '/purchaseAccounts',
+            icon: <DashboardIcon />,
         }
 
 

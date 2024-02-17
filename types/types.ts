@@ -62,3 +62,16 @@ export interface Purchase {
   updatorId: number | null
   deletedAt: string | null,
 }
+export interface PurchaseAccount {
+  id: number,
+  PurchaseId: number,
+  debit: number,
+  credit: number,
+  balance: number,
+  FirmId:number,
+  createdAt: string,
+  updatedAt: string,
+  creatorId: number | null,
+  updaterId: number | null
+  deletedAt: string | null,
+}
