@@ -103,7 +103,7 @@ export const addMaterial = async (materialData: Object) => {
     return { error: error.message };
   }
 };
-export const updateMaterial = async (materialData: Material) => {
+export const updateMaterial = async (materialData: any) => {
   const headers = await authConfig();
   try {
     const response = await fetch(`${BASE_URL}/materials/${materialData.id}`, {
