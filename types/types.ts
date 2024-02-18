@@ -58,9 +58,18 @@ export interface Purchase {
   FirmId:number,
   createdAt: string,
   updatedAt: string,
-  Material: string | null,
-  Firm: string | null,
+  Material: {
+    name: string | null,
+    unitType: string | null,
+  },
+  Firm: {
+    name: string | null,
+    address: string | null,
+    phoneNo: string | null,
+    email: string | null
+  },
   creatorId: number | null,
   updatorId: number | null
   deletedAt: string | null,
 }
+

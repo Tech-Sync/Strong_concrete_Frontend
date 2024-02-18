@@ -55,13 +55,16 @@ export default function PurchaseTable() {
 
   useEffect(() => {
     if (purchases) {
-
       setInitialRecords(() => {
         return purchases.filter((purchase) => {
+          const materialName = purchase?.Material?.name;
+          const firmName = purchase.Firm?.name;
+          const createdAt = purchase.createdAt;
+
           return (
-            // purchase.Material.name.toLowerCase().includes(search.toLowerCase()) ||
-            // purchase.Firm.name.toLowerCase().includes(search.toLowerCase()) ||
-            purchase.createdAt.toLowerCase().includes(search.toLowerCase())
+            (materialName?.toLowerCase().includes(search.toLowerCase()) ?? false) ||
+            (firmName?.toLowerCase().includes(search.toLowerCase()) ?? false) ||
+            createdAt.toLowerCase().includes(search.toLowerCase())
           );
         });
       });
@@ -87,9 +90,7 @@ export default function PurchaseTable() {
         coloredToast("warning", "Select items to delete!");
         return;
       }
-      const ids = selectedRows.map((d: any) => {
-        return d.id;
-      });
+      const ids = selectedRows.map((d: any) => { return d.id; });
       const deletionSuccess = await multiDeleteToast(ids, deleteMultiPurchase, updatePurchase);
       if (deletionSuccess) {
         setSelectedRecords([]);
@@ -131,7 +132,7 @@ export default function PurchaseTable() {
         <div className="datatables pagination-padding">
           <DataTable
             className={`${isDark} table-hover whitespace-nowrap`}
-            records={records.map((material) => ({ ...material }))}
+            records={records.map((purchase) => ({ ...purchase }))}
             columns={[
               {
                 accessor: "id",
@@ -145,16 +146,16 @@ export default function PurchaseTable() {
                 sortable: true,
                 render: ({ Firm, id }) => (
                   <div className="flex items-center font-semibold">
-                    <div className={Firm ? "" : "text-red-800"}>{Firm ?? 'Data Deleted'}</div>
+                    <div className={Firm.name ? "" : "text-red-800"}>{Firm.name ?? 'Data Deleted'}</div>
                   </div>
                 ),
               },
               {
-                accessor: "Material",
+                accessor: "purchase",
                 sortable: true,
                 render: ({ Material, id }) => (
-                  <div className="flex items-center font-semibold">
-                    <div className={Material ? "" : "text-red-800"}>{Material ?? 'Data Deleted'}</div>
+                  <div className="flex items-center">
+                    <div className={Material.name ? "" : "text-red-800"}>{Material.name ?? 'Data Deleted'}</div>
                   </div>
                 ),
               },
@@ -169,6 +170,11 @@ export default function PurchaseTable() {
               {
                 accessor: "totalPrice",
                 sortable: true,
+                render: ({ totalPrice, id }) => (
+                  <div className="flex items-center font-semibold">
+                    <div>{totalPrice}</div>
+                  </div>
+                ),
               },
               {
                 accessor: "createdAt",

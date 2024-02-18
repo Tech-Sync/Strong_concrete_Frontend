@@ -26,9 +26,7 @@ export const getAllPurchases = async () => {
     if (response.ok) {
       return data;
     } else {
-      throw new Error(
-        data.message || "Something went wrong, Please try again!"
-      );
+      throw new Error( data.message || "Something went wrong, Please try again!");
     }
   } catch (error: any) {
     return { error: error.message };
@@ -80,3 +78,24 @@ export const deleteMultiPurchase = async (ids:any) => {
   }
 };
 
+export const readPurchase = async (id:string) => {
+  const headers = await authConfig();
+  
+  try {
+    const response = await fetch(`${BASE_URL}/purchases/${id}`, {
+      headers,
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return data;
+    } else {
+      throw new Error( data.message || "Something went wrong, Please try again!");
+    }
+
+  } catch (error:any) {
+    return { error: error.message };
+  }
+
+}
