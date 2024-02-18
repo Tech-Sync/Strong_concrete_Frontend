@@ -1,32 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
-"use client";
-import { EditIcon, PlusIcon } from "@/app/icons";
-import DownloadIcon from "@/app/icons/tableIcons/DownloadIcon";
-import PrintIcon from "@/app/icons/tableIcons/PrintIcon";
-import SendInvoiceIcon from "@/app/icons/tableIcons/SendInvoiceIcon";
+import ActionBtnGroup from "@/app/components/purchases/preview/ActionBtnGroup";
 import { readPurchase } from "@/lib/redux/slices/purchaseSlice/purchaseActions";
-import { Purchase } from "@/types/types";
 import { formatDate } from "@/utils/formatDate";
-import Link from "next/link";
-import { useEffect, useState } from "react";
 
-const Preview = ({ params }: { params: { purchaseId: string } }) => {
-  const [purchase, setPurchase] = useState<Partial<Purchase>>({})
+const Preview = async ({ params }: { params: { purchaseId: string } }) => {
 
-  useEffect(() => {
-
-    (async () => {
-      const data = await readPurchase(params.purchaseId)
-      setPurchase(data)
-    })()
-
-  }, [])
-
-
-
-  const exportTable = () => {
-    window.print();
-  };
+  const purchase = await readPurchase(params.purchaseId)
 
   const columns = [
     {
@@ -52,65 +31,13 @@ const Preview = ({ params }: { params: { purchaseId: string } }) => {
       class: "ltr:text-right rtl:text-left",
     },
   ];
-  function downloadFile() {
-    const fileUrl = "http://localhost:3000/purchases/preview";
 
-    const link = document.createElement("a");
-    link.href = fileUrl;
-    const fileName = "file.pdf";
-
-    if (fileName) {
-      link.setAttribute("download", fileName);
-    }
-
-    document.body.appendChild(link);
-    link.click();
-
-    document.body.removeChild(link);
-  }
   return (
     <div>
-      <div className="mb-6 flex flex-wrap items-center justify-center gap-4 lg:justify-end">
-        <button
-          type="button"
-          className="btn btn-info gap-2"
-          onClick={() => (window.location.href = "mailto:destek@example.com")}
-        >
-          <SendInvoiceIcon />
-          Send Invoice
-        </button>
-
-        <button
-          type="button"
-          className="btn btn-primary gap-2"
-          onClick={() => exportTable()}
-        >
-          <PrintIcon />
-          Print
-        </button>
-
-        <button
-          type="button"
-          className="btn btn-success gap-2"
-          onClick={downloadFile}
-        >
-          <DownloadIcon />
-          Download
-        </button>
-
-        <Link href="/purchases/add" className="btn btn-secondary gap-2">
-          <PlusIcon />
-          Create
-        </Link>
-
-        <Link href="/purchases/edit" className="btn btn-warning gap-2">
-          <EditIcon />
-          Edit
-        </Link>
-      </div>
+      <ActionBtnGroup />
       <div className="panel">
         <div className="flex flex-wrap justify-between gap-4 px-4">
-          <div className="text-2xl font-semibold uppercase">Invoice</div>
+          <div className="text-2xl font-semibold uppercase">Purchase</div>
           <div className="shrink-0">
             <img
               src="/assets/images/logo.svg"
@@ -141,14 +68,14 @@ const Preview = ({ params }: { params: { purchaseId: string } }) => {
             </div>
           </div>
           <div className="xl:1/3 sm:w-1/2 lg:w-1/5">
-              <div className="mb-2 flex w-full items-center justify-start gap-x-6">
-                <div className="text-white-dark">Issue Date :</div>
-                <div>{formatDate(purchase.createdAt)}</div>
-              </div>
-              <div className="mb-2 flex w-full items-center justify-start gap-x-6">
-                <div className="text-white-dark">Purhcase ID :</div>
-                <div>#SC-{purchase.id}</div>
-              </div>
+            <div className="mb-2 flex w-full items-center justify-start gap-x-6">
+              <div className="text-white-dark">Issue Date :</div>
+              <div>{formatDate(purchase.createdAt)}</div>
+            </div>
+            <div className="mb-2 flex w-full items-center justify-start gap-x-6">
+              <div className="text-white-dark">Purhcase ID :</div>
+              <div>#SC-{purchase.id}</div>
+            </div>
           </div>
         </div>
         <div className="table-responsive mt-6">

@@ -1,4 +1,4 @@
-export default function PrintIcon() {
+export const PrintIcon = () => {
   return (
     <svg
       width="20"
