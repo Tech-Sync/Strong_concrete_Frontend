@@ -44,7 +44,7 @@ export const deleteMaterial = async (id: any) => {
       headers,
     });
 
-    if (response.status === 204) {
+    if (response.status === 204||response.status === 202) {
       return { message: "Deleted!" };
     } else {
       
@@ -64,7 +64,7 @@ export const deleteMultiMaterial = async (ids: any) => {
       body: JSON.stringify({ ids }),
     });
 
-    if (response.status === 204) {
+    if (response.status === 204||response.status === 202) {
       return { message: "Deleted!" };
     } else {
       throw new Error("Something went wrong, Please try again!");
