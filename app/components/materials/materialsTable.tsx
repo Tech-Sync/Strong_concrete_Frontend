@@ -130,7 +130,7 @@ const MaterialsTable = () => {
             <div className="datatables pagination-padding">
                 <DataTable
                     className={`${isDark} table-hover whitespace-nowrap`}
-                    records={records.map((material) => ({ ...material }))}
+                    records={records?.map((material) => ({ ...material }))}
                     columns={[
                         {
                             accessor: 'id',

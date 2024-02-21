@@ -8,20 +8,23 @@ import { Purchase } from "@/types/types";
 import { DeleteIcon, EditIcon, PlusIcon, PreviewIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
 import { coloredToast } from "@/lib/sweetAlerts";
-import { getAllPurchaseAsync, selectIsDarkMode, selectPurchases, updatePurchase, useDispatch } from "@/lib/redux";
+import { getAllPurchaseAsync, updatePurchaseState, selectIsDarkMode, selectPurchases, updatePurchases, useDispatch } from "@/lib/redux";
 import useDeleteToasts from "@/hooks/useDeleteToasts";
 import { deleteMultiPurchase, deletePurchase } from "@/lib/redux/slices/purchaseSlice/purchaseActions";
+import { useRouter } from "next/navigation";
 
 
 
 export default function PurchaseTable() {
   const dispatch = useDispatch();
+  const router = useRouter()
   const { deleteToast, multiDeleteToast } = useDeleteToasts();
   const purchases = useSelector(selectPurchases);
   const isDark = useSelector(selectIsDarkMode);
 
   useEffect(() => {
     dispatch(getAllPurchaseAsync());
+    dispatch(updatePurchaseState(null))
   }, []);
 
 
@@ -79,7 +82,7 @@ export default function PurchaseTable() {
 
   const deleteRow = async (id: any = null) => {
     if (id) {
-      const deletionSuccess = await deleteToast(id, deletePurchase, updatePurchase);
+      const deletionSuccess = await deleteToast(id, deletePurchase, updatePurchases);
       if (deletionSuccess) {
         setSelectedRecords([]);
         setSearch("");
@@ -91,7 +94,7 @@ export default function PurchaseTable() {
         return;
       }
       const ids = selectedRows.map((d: any) => { return d.id; });
-      const deletionSuccess = await multiDeleteToast(ids, deleteMultiPurchase, updatePurchase);
+      const deletionSuccess = await multiDeleteToast(ids, deleteMultiPurchase, updatePurchases);
       if (deletionSuccess) {
         setSelectedRecords([]);
         setSearch("");
@@ -132,7 +135,7 @@ export default function PurchaseTable() {
         <div className="datatables pagination-padding">
           <DataTable
             className={`${isDark} table-hover whitespace-nowrap`}
-            records={records.map((purchase) => ({ ...purchase }))}
+            records={records?.map((purchase) => ({ ...purchase }))}
             columns={[
               {
                 accessor: "id",
@@ -189,16 +192,19 @@ export default function PurchaseTable() {
                 title: "Actions",
                 sortable: false,
                 textAlignment: "center",
-                render: ({ id }) => (
+                render: (purchase) => (
                   <div className="mx-auto flex w-max items-center gap-4">
-                    <Link
-                      href="/purchases/edit"
+                    <button
+                      onClick={() => {
+                        router.push(`/purchases/add`)
+                        dispatch(updatePurchaseState(purchase))
+                      }}
                       className="flex hover:text-info"
                     >
                       <EditIcon />
-                    </Link>
+                    </button>
                     <Link
-                      href={`/purchases/${id}`}
+                      href={`/purchases/${purchase.id}`}
                       className="flex hover:text-primary"
                     >
                       <PreviewIcon />
@@ -206,7 +212,7 @@ export default function PurchaseTable() {
                     <button
                       type="button"
                       className="flex hover:text-danger"
-                      onClick={(e) => deleteRow(id)}
+                      onClick={(e) => deleteRow(purchase.id)}
                     >
                       <DeleteIcon />
                     </button>

@@ -1,11 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 "use server"
 import AddForm from '@/app/components/purchases/add/AddForm';
-import { DownloadIcon, PreviewIcon, SendInvoiceIcon } from '@/app/icons';
+import { DownloadIcon, PreviewIcon, SaveIcon, SendInvoiceIcon } from '@/app/icons';
 import Link from 'next/link';
 
 
-const AddPage = async () => {
+const EditPage = async ({ params }: { params: { id: string } }) => {
+
+    console.log(params.id);
 
     return (
         <div className="flex flex-col gap-2.5 xl:flex-row">
@@ -25,7 +27,7 @@ const AddPage = async () => {
                 <hr className="my-3 border-white-light dark:border-[#1b2e4b]" />
 
                 <div className=" p-5">
-                    <AddForm />
+                    <AddForm  />
                 </div>
 
             </div>
@@ -53,4 +55,4 @@ const AddPage = async () => {
     );
 };
 
-export default AddPage;
+export default EditPage;

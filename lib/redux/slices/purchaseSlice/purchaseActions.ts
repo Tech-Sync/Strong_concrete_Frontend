@@ -99,3 +99,55 @@ export const readPurchase = async (id:string) => {
   }
 
 }
+
+export const addPurchase = async (purchaseData: Object) => {
+  const headers = await authConfig();
+  try {
+    const response = await fetch(`${BASE_URL}/purchases`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(purchaseData),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return { message: "Successfully Created!" };
+    } else {
+      throw new Error(
+        data.message || "Something went wrong, Please try again!"
+      );
+    }
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};
+
+interface updateData{
+  id: string | number,
+  MaterialId: string | number,
+  FirmId: string | number,
+  quantity: string | number,
+  unitPrice: string | number,
+}
+
+export const updatePurchase = async (purchaseData: updateData) => {
+  const headers = await authConfig();
+  try {
+    const response = await fetch(`${BASE_URL}/purchases/${purchaseData.id}`, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify(purchaseData),
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.isUpdated) {
+      return { message: "Successfully Updated!" };
+    } else {
+      throw new Error( data.message || "Something went wrong, Please try again!" );
+    }
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};
