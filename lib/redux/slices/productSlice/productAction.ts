@@ -79,15 +79,6 @@ export const deleteMultiProduct = async (ids: any) => {
   }
 };
 
-/* interface firmDataProp {
-  name: string;
-  address: string;
-  phoneNo: string;
-  tpinNo: string;
-  email: string;
-  status: string;
-} */
-
 export const createProduct = async (firmData: Object) => {
   const headers = await authConfig();
   try {

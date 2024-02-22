@@ -100,7 +100,7 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
     }
   };
 
-  const convertItems = (items: Item[]): { materials: Record<string, number> } | false => {
+  const convertItems = (items: Item[]): Record<string, number> | false => {
     let hasIssues = false;
     const materials = items.reduce((acc: Record<string, number>, item: Item) => {
       if (!item.name || item.quantity === '') {
@@ -114,9 +114,9 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
     }, {});
 
     if (hasIssues) {
-      return false; 
+      return false;
     } else {
-      return { materials };
+      return materials;
     }
   };
 
@@ -192,13 +192,12 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
                           }
                         } else {
                           const materials = convertItems(items)
-                          console.log(materials);
                           if (!materials) {
                             coloredToast("danger", 'Duplicate material name found or Quantity field empty.', "bottom-start");
                           } else {
                             const updatedValues = { ...values, materials }
-                            console.log(updatedValues);
                             const res = await createProduct(updatedValues);
+                            
                             setTimeout(() => {
                               setSubmitting(false);
                               if (res.message) {
