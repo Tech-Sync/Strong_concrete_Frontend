@@ -8,20 +8,23 @@ import { Purchase } from "@/types/types";
 import { DeleteIcon, EditIcon, PlusIcon, PreviewIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
 import { coloredToast } from "@/lib/sweetAlerts";
-import { getAllPurchaseAsync, selectIsDarkMode, selectPurchases, updatePurchase, useDispatch } from "@/lib/redux";
+import { getAllPurchaseAsync, updatePurchaseState, selectIsDarkMode, selectPurchases, updatePurchases, useDispatch } from "@/lib/redux";
 import useDeleteToasts from "@/hooks/useDeleteToasts";
 import { deleteMultiPurchase, deletePurchase } from "@/lib/redux/slices/purchaseSlice/purchaseActions";
+import { useRouter } from "next/navigation";
 
 
 
 export default function PurchaseTable() {
   const dispatch = useDispatch();
+  const router = useRouter()
   const { deleteToast, multiDeleteToast } = useDeleteToasts();
   const purchases = useSelector(selectPurchases);
   const isDark = useSelector(selectIsDarkMode);
 
   useEffect(() => {
     dispatch(getAllPurchaseAsync());
+    dispatch(updatePurchaseState(null))
   }, []);
 
 
@@ -55,13 +58,16 @@ export default function PurchaseTable() {
 
   useEffect(() => {
     if (purchases) {
-
       setInitialRecords(() => {
         return purchases.filter((purchase) => {
+          const materialName = purchase?.Material?.name;
+          const firmName = purchase.Firm?.name;
+          const createdAt = purchase.createdAt;
+
           return (
-            // purchase.Material.name.toLowerCase().includes(search.toLowerCase()) ||
-            // purchase.Firm.name.toLowerCase().includes(search.toLowerCase()) ||
-            purchase.createdAt.toLowerCase().includes(search.toLowerCase())
+            (materialName?.toLowerCase().includes(search.toLowerCase()) ?? false) ||
+            (firmName?.toLowerCase().includes(search.toLowerCase()) ?? false) ||
+            createdAt.toLowerCase().includes(search.toLowerCase())
           );
         });
       });
@@ -76,7 +82,7 @@ export default function PurchaseTable() {
 
   const deleteRow = async (id: any = null) => {
     if (id) {
-      const deletionSuccess = await deleteToast(id, deletePurchase, updatePurchase);
+      const deletionSuccess = await deleteToast(id, deletePurchase, updatePurchases);
       if (deletionSuccess) {
         setSelectedRecords([]);
         setSearch("");
@@ -87,10 +93,8 @@ export default function PurchaseTable() {
         coloredToast("warning", "Select items to delete!");
         return;
       }
-      const ids = selectedRows.map((d: any) => {
-        return d.id;
-      });
-      const deletionSuccess = await multiDeleteToast(ids, deleteMultiPurchase, updatePurchase);
+      const ids = selectedRows.map((d: any) => { return d.id; });
+      const deletionSuccess = await multiDeleteToast(ids, deleteMultiPurchase, updatePurchases);
       if (deletionSuccess) {
         setSelectedRecords([]);
         setSearch("");
@@ -131,7 +135,7 @@ export default function PurchaseTable() {
         <div className="datatables pagination-padding">
           <DataTable
             className={`${isDark} table-hover whitespace-nowrap`}
-            records={records.map((material) => ({ ...material }))}
+            records={records?.map((purchase) => ({ ...purchase }))}
             columns={[
               {
                 accessor: "id",
@@ -145,16 +149,16 @@ export default function PurchaseTable() {
                 sortable: true,
                 render: ({ Firm, id }) => (
                   <div className="flex items-center font-semibold">
-                    <div className={Firm ? "" : "text-red-800"}>{Firm ?? 'Data Deleted'}</div>
+                    <div className={Firm.name ? "" : "text-red-800"}>{Firm.name ?? 'Data Deleted'}</div>
                   </div>
                 ),
               },
               {
-                accessor: "Material",
+                accessor: "purchase",
                 sortable: true,
                 render: ({ Material, id }) => (
-                  <div className="flex items-center font-semibold">
-                    <div className={Material ? "" : "text-red-800"}>{Material ?? 'Data Deleted'}</div>
+                  <div className="flex items-center">
+                    <div className={Material.name ? "" : "text-red-800"}>{Material.name ?? 'Data Deleted'}</div>
                   </div>
                 ),
               },
@@ -169,6 +173,11 @@ export default function PurchaseTable() {
               {
                 accessor: "totalPrice",
                 sortable: true,
+                render: ({ totalPrice, id }) => (
+                  <div className="flex items-center font-semibold">
+                    <div>{totalPrice}</div>
+                  </div>
+                ),
               },
               {
                 accessor: "createdAt",
@@ -183,16 +192,19 @@ export default function PurchaseTable() {
                 title: "Actions",
                 sortable: false,
                 textAlignment: "center",
-                render: ({ id }) => (
+                render: (purchase) => (
                   <div className="mx-auto flex w-max items-center gap-4">
-                    <Link
-                      href="/purchases/edit"
+                    <button
+                      onClick={() => {
+                        router.push(`/purchases/add`)
+                        dispatch(updatePurchaseState(purchase))
+                      }}
                       className="flex hover:text-info"
                     >
                       <EditIcon />
-                    </Link>
+                    </button>
                     <Link
-                      href={`/purchases/${id}`}
+                      href={`/purchases/${purchase.id}`}
                       className="flex hover:text-primary"
                     >
                       <PreviewIcon />
@@ -200,7 +212,7 @@ export default function PurchaseTable() {
                     <button
                       type="button"
                       className="flex hover:text-danger"
-                      onClick={(e) => deleteRow(id)}
+                      onClick={(e) => deleteRow(purchase.id)}
                     >
                       <DeleteIcon />
                     </button>

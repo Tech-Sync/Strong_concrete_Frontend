@@ -154,7 +154,7 @@ export default function FirmTable() {
         <div className="datatables pagination-padding">
           <DataTable
             className={`${isDark} table-hover whitespace-nowrap`}
-            records={records.map((material, index) => ({
+            records={records?.map((material, index) => ({
               ...material,
               serialNumber: index + 1,
             }))}

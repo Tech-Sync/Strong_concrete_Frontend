@@ -7,16 +7,21 @@ const initialState: PurchaseSliceState = {
   loading: false,
   error: null,
   status: "idle",
+  purchase: null
 };
 
 export const purchaseSlice = createSlice({
   name: "purchases",
   initialState,
   reducers: {
-    updatePurchase: (state, action: PayloadAction<Purchase[]>) => {
+    updatePurchases: (state, action: PayloadAction<Purchase[]>) => {
       state.loading = false;
       state.purchases = action.payload;
     },
+    updatePurchaseState:(state, action: PayloadAction<Purchase | null>) => {
+      state.loading = false;
+      state.purchase = action.payload;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -37,9 +42,11 @@ export const purchaseSlice = createSlice({
 //Types
 interface PurchaseSliceState {
   purchases: Purchase[];
+  purchase:  Purchase | null;
   loading: boolean;
   error: string | null;
   status: "idle" | "loading" | "failed" | "succeeded";
 }
 
-export const { updatePurchase } = purchaseSlice.actions;
+
+export const { updatePurchases, updatePurchaseState } = purchaseSlice.actions;
