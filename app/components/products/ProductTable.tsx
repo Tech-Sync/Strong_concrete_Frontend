@@ -4,24 +4,15 @@ import { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
 import { DeleteIcon, EditIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
-import { firmStatuses } from "@/app/constraints/roles&status";
 import { coloredToast } from "@/lib/sweetAlerts";
 import {
-  getAllFrimAsync,
-  selectFirms,
   selectIsDarkMode,
-  selectFirmStatus,
   useDispatch,
   useSelector,
-  updateFirm,
   selectProducts,
   getAllProductAsync,
   updateProductState,
 } from "@/lib/redux";
-import {
-  deleteFirm,
-  deleteMultiFirm,
-} from "@/lib/redux/slices/firmSlice/firmActions";
 import useDeleteToasts from "@/hooks/useDeleteToasts";
 import { deleteMultiProduct, deleteProduct } from "@/lib/redux/slices/productSlice/productAction";
 import ProductModal from "./ProductModal";
@@ -178,11 +169,9 @@ export default function ProductTable() {
                 render: ({ materials, id }) => (
                   <div className="flex flex-col">
                     {Object.entries(materials).map(([key, value]) => {
-                      let unit = "";
-                      if (key === "STONE" || key === "SAND") {
-                        unit = "Ton";
-                      } else if (key === "CEMENT") {
-                        unit = "Kg";
+                      let unit = 'kg';
+                      if (key === 'STONE' || key === 'SAND') {
+                        unit = 'ton';
                       }
                       return <span key={key}>{`${key.toLowerCase()}: ${value} ${unit}`}</span>;
                     })}
