@@ -1,4 +1,4 @@
-export default function SendInvoiceIcon() {
+export const SendInvoiceIcon = () => {
   return (
     <svg
       width="24"
