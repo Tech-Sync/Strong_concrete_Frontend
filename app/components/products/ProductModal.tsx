@@ -44,14 +44,25 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
   const router = useRouter();
   const dispatch = useDispatch()
 
+  // const [items, setItems] = useState<Item[]>([{ id: 1, name: '', quantity: '', }]);
+  const [items, setItems] = useState<Item[]>([]);
+  const emptyProduct = { name: "", price: '' }
+
   useEffect(() => {
     dispatch(getAllMaterialAsync());
-  }, [dispatch]);
+    if (productInitials.materials) {
+      const initialItems: Item[] = Object.entries(productInitials?.materials).map(([name, quantity], index) => ({
+        id: index + 1, 
+        name,
+        quantity: quantity.toString(), 
+      }));
+
+      setItems(initialItems);
+    }
+  }, [dispatch, productInitials]);
 
   const materials = useSelector(selectMaterials);
 
-  const [items, setItems] = useState<Item[]>([{ id: 1, name: '', quantity: '', }]);
-  const emptyProduct = { name: "", price: '' }
   const materialOptions = materials.map(material => ({ value: material.id, label: material.name, }))
 
   const addItem = () => {
@@ -123,7 +134,7 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
   return (
     <div>
       <button
-        onClick={() => { setModal(true), setProductInitials(emptyProduct); }}
+        onClick={() => { setModal(true), setProductInitials(emptyProduct), setItems([]) }}
         className="btn btn-primary gap-2"
       >
         <PlusIcon />
@@ -181,15 +192,16 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
                         values,
                         { setSubmitting, resetForm }
                       ) => {
-                        if ("id" in productInitials) {
-                          //@ts-ignore
+                        if ("id" in values) {
+                          console.log('update');
+                          /* //@ts-ignore
                           const res = await updateFirm(values);
                           if (res.message) {
                             coloredToast("success", res.message, "bottom-start");
                             setModal(false);
                           } else {
                             coloredToast("danger", res.error, "bottom-start");
-                          }
+                          } */
                         } else {
                           const materials = convertItems(items)
                           if (!materials) {
@@ -197,7 +209,7 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
                           } else {
                             const updatedValues = { ...values, materials }
                             const res = await createProduct(updatedValues);
-                            
+
                             setTimeout(() => {
                               setSubmitting(false);
                               if (res.message) {
@@ -217,7 +229,7 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
                       {
                         ({ handleSubmit, touched, errors, isSubmitting }) => (
                           <Form onSubmit={handleSubmit}>
-                            {items.length <= 0 && (<span className="!text-center font-semibold">No Item Available</span>)}
+                            {items.length <= 0 && (<span className="!text-center font-semibold">Items not selected.</span>)}
                             {
                               items.map((item: any, i: any) => {
                                 return (

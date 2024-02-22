@@ -199,8 +199,6 @@ export default function ProductTable() {
                   <div className="mx-auto flex w-max items-center gap-4">
                     <button
                       onClick={() => {
-                        //@ts-ignore
-                        console.log(product);
                         setProductInitials(product), setModal(true);
                       }}
                       className="flex hover:text-info">
