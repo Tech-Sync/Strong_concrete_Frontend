@@ -10,7 +10,7 @@ import Select, { SingleValue } from 'react-select';
 import { getAllMaterialAsync, getAllProductAsync, selectMaterials, useDispatch, useSelector } from "@/lib/redux";
 import { AddressIcon, NameIcon, PhoneIcon } from "./ProductModalIcon";
 import { ModalCloseIcon } from "@/app/icons/modal";
-import { createProduct } from "@/lib/redux/slices/productSlice/productAction";
+import { createProduct, updateProduct } from "@/lib/redux/slices/productSlice/productAction";
 
 const ProductSchema = object({
   name: string().required("This field is required."),
@@ -191,14 +191,14 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
                       onSubmit={async (values, { setSubmitting, resetForm }) => {
                         if ("id" in values) {
                           console.log('update');
-                          /* //@ts-ignore
-                          const res = await updateFirm(values);
+                          const res = await updateProduct(values);
                           if (res.message) {
                             coloredToast("success", res.message, "bottom-start");
                             setModal(false);
+                            dispatch(getAllProductAsync());
                           } else {
                             coloredToast("danger", res.error, "bottom-start");
-                          } */
+                          }
                         } else {
                           const materials = convertItems(items)
                           if (!materials) {
@@ -218,6 +218,7 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
                                 coloredToast("danger", res.error, "bottom-start");
                               }
                             }, 500);
+                            
                           }
 
                         }

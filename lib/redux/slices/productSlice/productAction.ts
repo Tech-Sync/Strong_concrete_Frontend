@@ -79,13 +79,13 @@ export const deleteMultiProduct = async (ids: any) => {
   }
 };
 
-export const createProduct = async (firmData: Object) => {
+export const createProduct = async (productData: Object) => {
   const headers = await authConfig();
   try {
     const response = await fetch(`${BASE_URL}/products`, {
       method: "POST",
       headers,
-      body: JSON.stringify(firmData),
+      body: JSON.stringify(productData),
     });
 
     const data = await response.json();
@@ -101,13 +101,13 @@ export const createProduct = async (firmData: Object) => {
     return { error: error.message };
   }
 };
-export const updateProduct = async (firmData: Product) => {
+export const updateProduct = async (productData: Product) => {
   const headers = await authConfig();
   try {
-    const response = await fetch(`${BASE_URL}/products/${firmData.id}`, {
+    const response = await fetch(`${BASE_URL}/products/${productData.id}`, {
       method: "PUT",
       headers,
-      body: JSON.stringify(firmData),
+      body: JSON.stringify(productData),
     });
 
     const data = await response.json();

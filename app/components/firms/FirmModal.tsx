@@ -116,19 +116,12 @@ export default function FirmModal({
                     <Formik
                       initialValues={firmInitials.id ? firmInitials : emptyFirm}
                       validationSchema={firmSchema}
-                      onSubmit={async (
-                        values,
-                        { setSubmitting, resetForm }
-                      ) => {
+                      onSubmit={async (values, { setSubmitting, resetForm }) => {
                         if ("id" in firmInitials) {
                           //@ts-ignore
                           const res = await updateFirm(values);
                           if (res.message) {
-                            coloredToast(
-                              "success",
-                              res.message,
-                              "bottom-start"
-                            );
+                            coloredToast("success", res.message, "bottom-start");
                             setModal(false);
                             dispatch(getAllFrimAsync());
                           } else {
