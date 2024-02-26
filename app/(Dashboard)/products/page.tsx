@@ -1,23 +1,25 @@
+import FirmTable from "@/app/components/firms/FirmTable";
+import ProductTable from "@/app/components/products/ProductTable";
 import Link from "next/link";
-import PurchaseTable from "@/app/components/purchases/PurchaseTable";
+import React from "react";
 
-
-const PurchasesPage = async () => {
+const ProductPage = async () => {
   return (
     <div className="flex flex-col space-y-5">
-      <ul className="flex space-x-2 rtl:space-x-reverse">
+      <ul className="flex space-x-2 rtl:space-x-reverse ">
         <li>
           <Link href="/" className="text-primary hover:underline">
             Dashboard
           </Link>
         </li>
         <li className="before:content-['/'] ltr:before:mr-2 rtl:before:ml-2">
-          <span>Purchases</span>
+          <span>Products</span>
         </li>
       </ul>
-      <PurchaseTable />
+      <ProductTable/>
     </div>
   );
 };
 
-export default PurchasesPage;
+export default ProductPage
+;

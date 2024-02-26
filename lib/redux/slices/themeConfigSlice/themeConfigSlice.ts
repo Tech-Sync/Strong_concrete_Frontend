@@ -84,6 +84,7 @@ export const themeConfigSlice = createSlice({
   },
 
 })
+export const { toggleTheme, toggleMenu, toggleLayout, toggleRTL, toggleAnimation, toggleNavbar, toggleSemidark, toggleSidebar, setPageTitle } = themeConfigSlice.actions;
 
 /* Types */
 export interface ThemeConfigSliceState {

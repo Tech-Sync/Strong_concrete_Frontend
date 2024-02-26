@@ -4,39 +4,33 @@ import { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
 import { DeleteIcon, EditIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
-import { firmStatuses } from "@/app/constraints/roles&status";
 import { coloredToast } from "@/lib/sweetAlerts";
 import {
-  getAllFrimAsync,
-  selectFirms,
   selectIsDarkMode,
-  selectFirmStatus,
   useDispatch,
   useSelector,
-  updateFirm,
+  selectProducts,
+  getAllProductAsync,
+  updateProductState,
 } from "@/lib/redux";
-import FirmModal from "./FirmModal";
-import {
-  deleteFirm,
-  deleteMultiFirm,
-} from "@/lib/redux/slices/firmSlice/firmActions";
 import useDeleteToasts from "@/hooks/useDeleteToasts";
+import { deleteMultiProduct, deleteProduct } from "@/lib/redux/slices/productSlice/productAction";
+import ProductModal from "./ProductModal";
 
-export default function FirmTable() {
+export default function ProductTable() {
   const dispatch = useDispatch();
   const { deleteToast, multiDeleteToast } = useDeleteToasts();
-  const firms = useSelector(selectFirms);
-  const firmStatus = useSelector(selectFirmStatus);
+  const products = useSelector(selectProducts);
   const isDark = useSelector(selectIsDarkMode);
 
   useEffect(() => {
-    dispatch(getAllFrimAsync());
+    dispatch(getAllProductAsync());
   }, []);
 
   const [page, setPage] = useState(1);
   const PAGE_SIZES = [10, 20, 30, 40, 50];
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-  const [initialRecords, setInitialRecords] = useState(sortBy(firms, "id"));
+  const [initialRecords, setInitialRecords] = useState(sortBy(products, "id"));
   const [records, setRecords] = useState(initialRecords);
   const [selectedRecords, setSelectedRecords] = useState<any>([]);
   const [search, setSearch] = useState("");
@@ -47,19 +41,16 @@ export default function FirmTable() {
   const [modal, setModal] = useState(false);
 
   //@ts-ignore
-  const [firmInitials, setFirmInitials] = useState({
+  const [productInitials, setProductInitials] = useState({
     name: "",
-    address: "",
-    phoneNo: "",
-    tpinNo: "",
-    email: "",
-    status: "",
+    price: 0,
+    materials: {}
   });
 
   useEffect(() => {
-    setRecords(firms);
-    setInitialRecords(firms);
-  }, [firms]);
+    setRecords(products);
+    setInitialRecords(products);
+  }, [products]);
 
   useEffect(() => {
     setPage(1);
@@ -73,17 +64,15 @@ export default function FirmTable() {
 
   useEffect(() => {
     setInitialRecords(() => {
-      return firms.filter((firm) => {
+      return products.filter((product) => {
+        const price = product.price.toString()
         return (
-          firm.address.toLowerCase().includes(search.toLowerCase()) ||
-          firm.email.toLowerCase().includes(search.toLowerCase()) ||
-          firm.name.toLowerCase().includes(search.toLowerCase()) ||
-          firm.phoneNo.toLowerCase().includes(search.toLowerCase()) ||
-          firm.tpinNo.toLowerCase().includes(search.toLowerCase())
+          price.toLowerCase().includes(search.toLowerCase()) ||
+          product.name.toLowerCase().includes(search.toLowerCase())
         );
       });
     });
-  }, [firms, search]);
+  }, [products, search]);
 
   useEffect(() => {
     const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
@@ -93,7 +82,7 @@ export default function FirmTable() {
 
   const deleteRow = async (id: any = null) => {
     if (id) {
-      const deletionSuccess = await deleteToast(id, deleteFirm, updateFirm);
+      const deletionSuccess = await deleteToast(id, deleteProduct, updateProductState);
       if (deletionSuccess) {
         setSelectedRecords([]);
         setSearch("");
@@ -107,7 +96,7 @@ export default function FirmTable() {
       const ids = selectedRows.map((d: any) => {
         return d.id;
       });
-      const deletionSuccess = await multiDeleteToast(ids, deleteMultiFirm, updateFirm);
+      const deletionSuccess = await multiDeleteToast(ids, deleteMultiProduct, updateProductState);
       if (deletionSuccess) {
         setSelectedRecords([]);
         setSearch("");
@@ -116,9 +105,6 @@ export default function FirmTable() {
     }
   };
 
-  /*   if (firmStatus === "loading") {
-    return <h1 className="text-lg text-center">LOADING...</h1>;
-  } */
 
   return (
     <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
@@ -132,13 +118,13 @@ export default function FirmTable() {
               <DeleteIcon />
               Delete
             </button>
-            <FirmModal
+            <ProductModal
               modal={modal}
               setModal={setModal}
               //@ts-ignore
-              firmInitials={firmInitials}
+              productInitials={productInitials}
               //@ts-ignore
-              setFirmInitials={setFirmInitials}
+              setProductInitials={setProductInitials}
             />
           </div>
           <div className="ltr:ml-auto rtl:mr-auto">
@@ -154,8 +140,8 @@ export default function FirmTable() {
         <div className="datatables pagination-padding">
           <DataTable
             className={`${isDark} table-hover whitespace-nowrap`}
-            records={records?.map((material, index) => ({
-              ...material,
+            records={records.map((product, index) => ({
+              ...product,
               serialNumber: index + 1,
             }))}
             columns={[
@@ -178,15 +164,22 @@ export default function FirmTable() {
                 ),
               },
               {
-                accessor: "email",
+                accessor: "materials",
                 sortable: true,
+                render: ({ materials, id }) => (
+                  <div className="flex flex-col">
+                    {Object.entries(materials).map(([key, value]) => {
+                      let unit = 'kg';
+                      if (key === 'STONE' || key === 'SAND') {
+                        unit = 'ton';
+                      }
+                      return <span key={key}>{`${key.toLowerCase()}: ${value} ${unit}`}</span>;
+                    })}
+                  </div>
+                ),
               },
               {
-                accessor: "phoneNo",
-                sortable: true,
-              },
-              {
-                accessor: "tpinNo",
+                accessor: "price",
                 sortable: true,
               },
               {
@@ -198,40 +191,23 @@ export default function FirmTable() {
                 ),
               },
               {
-                accessor: "status",
-                sortable: true,
-                render: ({ status }) => (
-                  <span className={`badge badge-outline-secondary`}>
-                    {/* @ts-ignore */}
-                    {firmStatuses[String(status)]}
-                  </span>
-                ),
-              },
-              {
                 accessor: "action",
                 title: "Actions",
                 sortable: false,
                 textAlignment: "center",
-                render: (firm) => (
+                render: (product) => (
                   <div className="mx-auto flex w-max items-center gap-4">
                     <button
                       onClick={() => {
-                        //@ts-ignore
-                        setFirmInitials(firm), setModal(true);
+                        setProductInitials(product), setModal(true);
                       }}
                       className="flex hover:text-info">
                       <EditIcon />
                     </button>
-                    {/*     <Link
-                      href="/apps/invoice/preview"
-                      className="flex hover:text-primary"
-                    >
-                      <PreviewIcon />
-                    </Link> */}
                     <button
                       type="button"
                       className="flex hover:text-danger"
-                      onClick={(e) => deleteRow(firm.id)}>
+                      onClick={(e) => deleteRow(product.id)}>
                       <DeleteIcon />
                     </button>
                   </div>

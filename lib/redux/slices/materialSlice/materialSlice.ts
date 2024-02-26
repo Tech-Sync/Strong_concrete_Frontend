@@ -17,7 +17,7 @@ export const materiaSlice = createSlice({
       state.loading = true;
       state.error = null;
     },
-    getMaterialSuccess: (state, action: PayloadAction<[]>) => {
+    updateMaterial: (state, action: PayloadAction<[]>) => {
       state.loading = false;
       state.materials = action.payload;
     },
@@ -49,3 +49,5 @@ export interface MaterialSliceState {
   error: string | null;
   status: "idle" | "loading" | "failed" | "succeeded";
 }
+
+export const { updateMaterial } = materiaSlice.actions;

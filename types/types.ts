@@ -8,17 +8,7 @@ export interface Register {
   email: string;
   password: string;
 }
-// {
-//     "id": 1,
-//     "name": "MATERIALNAME",
-//     "unitType": "Testtype",
-//     "quantity": 0,
-//     "createdAt": "2024-02-05T16:55:32.010Z",
-//     "updatedAt": "2024-02-05T16:55:32.010Z",
-//     "deletedAt": null,
-//     "creatorId": null,
-//     "updaterId": null
-// },
+
 export interface Material {
   id: number;
   name: string;
@@ -58,6 +48,16 @@ export interface Purchase {
   FirmId:number,
   createdAt: string,
   updatedAt: string,
+  Material: {
+    name: string | null,
+    unitType: string | null,
+  },
+  Firm: {
+    name: string | null,
+    address: string | null,
+    phoneNo: string | null,
+    email: string | null
+  },
   creatorId: number | null,
   updatorId: number | null
   deletedAt: string | null,
@@ -74,4 +74,21 @@ export interface PurchaseAccount {
   creatorId: number | null,
   updaterId: number | null
   deletedAt: string | null,
+}
+
+
+export interface Product {
+  id: number;
+  name: string;
+  price: number;
+  materials: {
+    STONE: number;
+    SAND: number;
+    CEMENT: number;
+  };
+  createdAt: string;
+  updatedAt: string | null;
+  deletedAt: string | null;
+  creatorId: number;
+  updaterId: number | null;
 }

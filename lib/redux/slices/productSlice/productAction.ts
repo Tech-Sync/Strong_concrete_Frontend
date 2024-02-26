@@ -1,6 +1,6 @@
 "use server";
 import { auth } from "@/auth";
-import { Firm } from "@/types/types";
+import { Product } from "@/types/types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
@@ -14,10 +14,10 @@ const authConfig = async () => {
   };
 };
 
-export const getAllFirms = async () => {
+export const getAllProducts = async () => {
   const headers = await authConfig();
   try {
-    const response = await fetch(`${BASE_URL}/firms`, {
+    const response = await fetch(`${BASE_URL}/products`, {
       cache: "no-cache",
       headers,
     });
@@ -36,10 +36,10 @@ export const getAllFirms = async () => {
   }
 };
 
-export const deleteFirm = async (id: any) => {
+export const deleteProduct = async (id: any) => {
   const headers = await authConfig();
   try {
-    const response = await fetch(`${BASE_URL}/firms/${id}`, {
+    const response = await fetch(`${BASE_URL}/products/${id}`, {
       method: "DELETE",
       headers,
     });
@@ -57,10 +57,10 @@ export const deleteFirm = async (id: any) => {
   }
 };
 
-export const deleteMultiFirm = async (ids: any) => {
+export const deleteMultiProduct = async (ids: any) => {
   const headers = await authConfig();
   try {
-    const response = await fetch(`${BASE_URL}/firms/multiple-delete`, {
+    const response = await fetch(`${BASE_URL}/products/multiple-delete`, {
       method: "POST",
       headers,
       body: JSON.stringify({ ids }),
@@ -79,22 +79,13 @@ export const deleteMultiFirm = async (ids: any) => {
   }
 };
 
-/* interface firmDataProp {
-  name: string;
-  address: string;
-  phoneNo: string;
-  tpinNo: string;
-  email: string;
-  status: string;
-} */
-
-export const addFirm = async (firmData: Object) => {
+export const createProduct = async (productData: Object) => {
   const headers = await authConfig();
   try {
-    const response = await fetch(`${BASE_URL}/firms`, {
+    const response = await fetch(`${BASE_URL}/products`, {
       method: "POST",
       headers,
-      body: JSON.stringify(firmData),
+      body: JSON.stringify(productData),
     });
 
     const data = await response.json();
@@ -110,13 +101,13 @@ export const addFirm = async (firmData: Object) => {
     return { error: error.message };
   }
 };
-export const updateFirm = async (firmData: Firm) => {
+export const updateProduct = async (productData: Product) => {
   const headers = await authConfig();
   try {
-    const response = await fetch(`${BASE_URL}/firms/${firmData.id}`, {
+    const response = await fetch(`${BASE_URL}/products/${productData.id}`, {
       method: "PUT",
       headers,
-      body: JSON.stringify(firmData),
+      body: JSON.stringify(productData),
     });
 
     const data = await response.json();
