@@ -79,3 +79,18 @@ export interface Product {
   creatorId: number;
   updaterId: number | null;
 }
+
+export interface Vehicle {
+  id: number;
+  status: number;
+  isPublic: boolean;
+  DriverId: number,
+  plateNumber: number,
+  model: number,
+  capacity: number,
+  createdAt: string;
+  updatedAt: string | null;
+  deletedAt: string | null;
+  creatorId: number;
+  updaterId: number | null;
+}
