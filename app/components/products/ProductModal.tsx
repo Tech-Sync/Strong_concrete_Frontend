@@ -6,7 +6,6 @@ import { number, object, string } from "yup";
 import { coloredToast } from "@/lib/sweetAlerts";
 import { useRouter } from "next/navigation";
 import { Product } from "@/types/types";
-import { updateFirm } from "@/lib/redux/slices/firmSlice/firmActions";
 import Select, { SingleValue } from 'react-select';
 import { getAllMaterialAsync, getAllProductAsync, selectMaterials, useDispatch, useSelector } from "@/lib/redux";
 import { AddressIcon, NameIcon, PhoneIcon } from "./ProductModalIcon";
@@ -27,12 +26,6 @@ interface firmModalProps {
   setProductInitials: (value: object) => void;
 }
 
-/* interface FormValues {
-  name: string;
-  price: string;
-  materials: Record<string, number>;
-} */
-
 interface Item {
   id: number;
   name: string;
@@ -44,17 +37,24 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
   const router = useRouter();
   const dispatch = useDispatch()
 
-  // const [items, setItems] = useState<Item[]>([{ id: 1, name: '', quantity: '', }]);
+  const defaultItems = [
+    { id: 1, name: 'STONE', quantity: '', },
+    { id: 2, name: 'SAND', quantity: '', },
+    { id: 3, name: 'CEMENT', quantity: '', },
+  ]
+
   const [items, setItems] = useState<Item[]>([]);
   const emptyProduct = { name: "", price: '' }
+
+  console.log(items);
 
   useEffect(() => {
     dispatch(getAllMaterialAsync());
     if (productInitials.materials) {
       const initialItems: Item[] = Object.entries(productInitials?.materials).map(([name, quantity], index) => ({
-        id: index + 1, 
+        id: index + 1,
         name,
-        quantity: quantity.toString(), 
+        quantity: quantity.toString(),
       }));
 
       setItems(initialItems);
@@ -134,7 +134,7 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
   return (
     <div>
       <button
-        onClick={() => { setModal(true), setProductInitials(emptyProduct), setItems([]) }}
+        onClick={() => { setModal(true), setProductInitials(emptyProduct), setItems(defaultItems) }}
         className="btn btn-primary gap-2"
       >
         <PlusIcon />
@@ -175,7 +175,7 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
               >
                 <Dialog.Panel className="panel my-20 w-full max-w-lg overflow-hidden rounded-lg border-0 py-1 px-4 text-black dark:text-white-dark">
                   <div className="flex items-center justify-between p-5 text-lg font-semibold dark:text-white ">
-                    <h5>Add New Product</h5>
+                    <h5> {productInitials.id ? "Update The Product" : "Add New Product"}</h5>
                     <button
                       type="button"
                       onClick={() => setModal(false)}
@@ -188,10 +188,7 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
                     <Formik
                       initialValues={productInitials.id ? productInitials : emptyProduct}
                       validationSchema={ProductSchema}
-                      onSubmit={async (
-                        values,
-                        { setSubmitting, resetForm }
-                      ) => {
+                      onSubmit={async (values, { setSubmitting, resetForm }) => {
                         if ("id" in values) {
                           console.log('update');
                           /* //@ts-ignore

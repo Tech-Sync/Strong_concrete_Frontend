@@ -90,7 +90,7 @@ export default function FirmModal({
               >
                 <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg border-0 py-1 px-4 text-black dark:text-white-dark">
                   <div className="flex items-center justify-between p-5 text-lg font-semibold dark:text-white ">
-                    <h5>Add New Firm</h5>
+                    <h5>{firmInitials.id ? "Update The Firm" : "Add New Firm"}</h5>
                     <button
                       type="button"
                       onClick={() => setModal(false)}
