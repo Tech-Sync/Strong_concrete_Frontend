@@ -66,138 +66,138 @@ export const forgetPasswordToast = async () => {
 };
 
 // eugurlu feature
-// type DeletionFunction = (
-//   id: any
-// ) => Promise<{ message?: string; error?: string }>;
+type DeletionFunction = (
+  id: any
+) => Promise<{ message?: string; error?: string }>;
 
-// export const deleteToast = async (
-//   id: any,
-//   deletionFunction: DeletionFunction
-// ): Promise<boolean> => {
-//   try {
-//     const result = await Swal.fire({
-//       icon: "warning",
-//       title: "Are you sure?",
-//       text: "You won't be able to revert this!",
-//       showCancelButton: true,
-//       confirmButtonText: "Delete",
-//       padding: "2em",
-//       customClass: "sweet-alerts",
-//     });
+export const deleteToast = async (
+  id: any,
+  deletionFunction: DeletionFunction
+): Promise<boolean> => {
+  try {
+    const result = await Swal.fire({
+      icon: "warning",
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      padding: "2em",
+      customClass: "sweet-alerts",
+    });
 
-//     if (result.isConfirmed) {
-//       const res = await deletionFunction(id);
-//       if (res?.message) {
-//         await Swal.fire({
-//           title: "Deleted!",
-//           text: "It has been deleted.",
-//           icon: "success",
-//           customClass: "sweet-alerts",
-//         });
-//         return true;
-//       } else {
-//         await Swal.fire({
-//           title: "Error",
-//           text: res?.error || "An error occurred while trying to delete.",
-//           icon: "error",
-//           customClass: "sweet-alerts",
-//         });
-//         return false;
-//       }
-//     }
-//   } catch (error) {
-//     console.error("Error in deleteToast:", error);
-//     Swal.fire({
-//       title: "Error",
-//       text: "An unexpected error occurred.",
-//       icon: "error",
-//       customClass: "sweet-alerts",
-//     });
-//   }
-//   return false;
-// };
+    if (result.isConfirmed) {
+      const res = await deletionFunction(id);
+      if (res?.message) {
+        await Swal.fire({
+          title: "Deleted!",
+          text: "It has been deleted.",
+          icon: "success",
+          customClass: "sweet-alerts",
+        });
+        return true;
+      } else {
+        await Swal.fire({
+          title: "Error",
+          text: res?.error || "An error occurred while trying to delete.",
+          icon: "error",
+          customClass: "sweet-alerts",
+        });
+        return false;
+      }
+    }
+  } catch (error) {
+    console.error("Error in deleteToast:", error);
+    Swal.fire({
+      title: "Error",
+      text: "An unexpected error occurred.",
+      icon: "error",
+      customClass: "sweet-alerts",
+    });
+  }
+  return false;
+};
 
-// export const multiDeleteToast = async (
-//   ids: any,
-//   deletionFunction: DeletionFunction
-// ): Promise<boolean> => {
-//   try {
-//     const result = await Swal.fire({
-//       icon: "warning",
-//       title: "Are you sure?",
-//       text: "You won't be able to revert this!",
-//       showCancelButton: true,
-//       confirmButtonText: "Delete",
-//       padding: "2em",
-//       customClass: "sweet-alerts",
-//     });
+export const multiDeleteToast = async (
+  ids: any,
+  deletionFunction: DeletionFunction
+): Promise<boolean> => {
+  try {
+    const result = await Swal.fire({
+      icon: "warning",
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      padding: "2em",
+      customClass: "sweet-alerts",
+    });
 
-//     if (result.isConfirmed) {
-//       const res = await deletionFunction(ids);
-//       if (res?.message) {
-//         await Swal.fire({
-//           title: "Deleted!",
-//           text: "It has been deleted.",
-//           icon: "success",
-//           customClass: "sweet-alerts",
-//         });
-//         return true;
-//       } else {
-//         await Swal.fire({
-//           title: "Error",
-//           text: res?.error || "An error occurred while trying to delete.",
-//           icon: "error",
-//           customClass: "sweet-alerts",
-//         });
-//         return false;
-//       }
-//     }
-//   } catch (error) {
-//     console.error("Error in deleteToast:", error);
-//     Swal.fire({
-//       title: "Error",
-//       text: "An unexpected error occurred.",
-//       icon: "error",
-//       customClass: "sweet-alerts",
-//     });
-//   }
-//   return false;
-// };
+    if (result.isConfirmed) {
+      const res = await deletionFunction(ids);
+      if (res?.message) {
+        await Swal.fire({
+          title: "Deleted!",
+          text: "It has been deleted.",
+          icon: "success",
+          customClass: "sweet-alerts",
+        });
+        return true;
+      } else {
+        await Swal.fire({
+          title: "Error",
+          text: res?.error || "An error occurred while trying to delete.",
+          icon: "error",
+          customClass: "sweet-alerts",
+        });
+        return false;
+      }
+    }
+  } catch (error) {
+    console.error("Error in deleteToast:", error);
+    Swal.fire({
+      title: "Error",
+      text: "An unexpected error occurred.",
+      icon: "error",
+      customClass: "sweet-alerts",
+    });
+  }
+  return false;
+};
 
-// export const updateToast = async (
-//   id: any,
-//   data: any,
-//   updateFunction: (id: any, data: any) => Promise<{ message?: string; error?: string }>
-// ): Promise<boolean> => {
-//   try {
-//     const result = await updateFunction(id, data); // Call the update function
+export const updateToast = async (
+  id: any,
+  data: any,
+  updateFunction: (id: any, data: any) => Promise<{ message?: string; error?: string }>
+): Promise<boolean> => {
+  try {
+    const result = await updateFunction(id, data); // Call the update function
     
-//     if (result?.message) {
-//       await Swal.fire({
-//         title: "Updated!",
-//         text: result.message,
-//         icon: "success",
-//         customClass: "sweet-alerts",
-//       });
-//       return true;
-//     } else {
-//       await Swal.fire({
-//         title: "Error",
-//         text: result?.error || "An error occurred while trying to update.",
-//         icon: "error",
-//         customClass: "sweet-alerts",
-//       });
-//       return false;
-//     }
-//   } catch (error) {
-//     console.error("Error in updateToast:", error);
-//     await Swal.fire({
-//       title: "Error",
-//       text: "An unexpected error occurred.",
-//       icon: "error",
-//       customClass: "sweet-alerts",
-//     });
-//     return false;
-//   }
-// };
+    if (result?.message) {
+      await Swal.fire({
+        title: "Updated!",
+        text: result.message,
+        icon: "success",
+        customClass: "sweet-alerts",
+      });
+      return true;
+    } else {
+      await Swal.fire({
+        title: "Error",
+        text: result?.error || "An error occurred while trying to update.",
+        icon: "error",
+        customClass: "sweet-alerts",
+      });
+      return false;
+    }
+  } catch (error) {
+    console.error("Error in updateToast:", error);
+    await Swal.fire({
+      title: "Error",
+      text: "An unexpected error occurred.",
+      icon: "error",
+      customClass: "sweet-alerts",
+    });
+    return false;
+  }
+};
 

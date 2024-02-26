@@ -35,27 +35,7 @@ export const getAllPurchaseAccounts = async () => {
     return { error: error.message };
   }
 };
-export const updatePurchaseAccount = async (id: any, data: any) => {
-  const headers = await authConfig();
-  try {
-    const response = await fetch(`${BASE_URL}/purchase_accounts/${id}`, {
-      method: "PUT",
-      headers,
-      body: JSON.stringify(data),
-    });
 
-    // if (response.status === 204 || response.status === 202) {
-    //   return { message: "Updated!" };
-    // } else {
-    //   throw new Error("Something went wrong, Please try again!");
-    // }
-    return { message: "Updated successfully" };
-  } catch (error) {
-    console.error("Error in updatePurchaseAccount:", error);
-    // If an error occurs, return an object with an error property
-    return { error: "An error occurred while updating" }; // ***
-  }
-};
 
 export const deletePurchaseAccount = async (id: any) => {
   const headers = await authConfig();
@@ -99,3 +79,25 @@ export const deleteMultiPurchaseAccount = async (ids:any) => {
   }
 };
 
+
+export const updatePurchaseAccount = async (id: any, data: PurchaseAccount) => {
+  const headers = await authConfig();
+  try {
+    const response = await fetch(`${BASE_URL}/purchase_accounts/${id}`, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify(data),
+    });
+
+    // if (response.status === 204 || response.status === 202) {
+    //   return { message: "Updated!" };
+    // } else {
+    //   throw new Error("Something went wrong, Please try again!");
+    // }
+    return { message: "Updated successfully" };
+  } catch (error) {
+    console.error("Error in updatePurchaseAccount:", error);
+    // If an error occurs, return an object with an error property
+    return { error: "An error occurred while updating" }; // ***
+  }
+};

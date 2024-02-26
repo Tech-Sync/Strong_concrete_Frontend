@@ -1,47 +1,46 @@
 "use client";
-import Link from "next/link";
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
-import { useState, useEffect, SetStateAction } from "react";
+import { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectThemeConfig } from "@/lib/redux/slices/themeConfigSlice";
 import { PurchaseAccount } from "@/types/types";
 import { DeleteIcon, EditIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
 import { coloredToast, deleteToast, updateToast, multiDeleteToast } from "@/lib/sweetAlerts";
-import { deleteMultiPurchaseAccount, deletePurchaseAccount, updatePurchaseAccount, getAllPurchaseAccounts } from "@/actions/purchaseAccountActions";
 
-interface PurchaseAccountsTableProps {
-  purchaseAccounts: PurchaseAccount[];
+import { getAllAccountsAsync, selectAccounts } from "@/lib/redux";
+import { deleteMultiPurchaseAccount, deletePurchaseAccount, getAllPurchaseAccounts } from "@/lib/redux/slices/accountsSlice/accountsAction";
+import AccountModal from "./AccountModal";
+
+
+
+const AccountsTable = ()=> {
+  const dispatch = useDispatch();
+  const accounts = useSelector(selectAccounts);
+  const [modal, setModal] = useState(false);
+
+  useEffect(() => {
+    //@ts-ignore
+    dispatch(getAllAccountsAsync());
+}, []);
+
+
+const handleEdit = (id: any) => {
+   console.log('id:',id);
+  // setModal(true);
+  // const account = accounts.find((account: any) => account.id === id);
+  // console.log('account:',account);
+  // setAccountsInitials(account);
 }
 
-export default function PurchaseAccountsTable({ purchaseAccounts }: PurchaseAccountsTableProps) {
-  /*   useEffect(() => {
-    setInitialRecords(sortBy(purchases, "id"));
-  }, [purchases]); */
-  const [editingRowId, setEditingRowId] = useState<number | null>(null); // Specify the type as 'number | null'
-  const [editedData, setEditedData] = useState<PurchaseAccount | {}>({}); // Specify the type as 'PurchaseAccount | {}'
-
-  // Function to handle entering edit mode for a row
-  const handleEdit = (id: number) => { // Explicitly specify the type as 'number'
-    setEditingRowId(id);
-    const editedRow = purchaseAccounts.find(row => row.id === id);
-    if (editedRow) {
-      setEditedData(editedRow);
-    } else {
-      setEditedData({}); // Provide an initial empty object as a fallback value
-    }
-  };
-
-
-
-console.log('purchaseAccountTable:',purchaseAccounts);
+console.log('purchaseAccountTable:',accounts);
   const isDark = useSelector(selectThemeConfig).isDarkMode;
 
   const [page, setPage] = useState(1);
   const PAGE_SIZES = [10, 20, 30, 50, 100];
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-  const [initialRecords, setInitialRecords] = useState(sortBy(purchaseAccounts, "id"));
+  const [initialRecords, setInitialRecords] = useState(sortBy(accounts, "id"));
   const [records, setRecords] = useState(initialRecords);
   const [selectedRecords, setSelectedRecords] = useState<any>([]);
   const [search, setSearch] = useState("");
@@ -49,6 +48,17 @@ console.log('purchaseAccountTable:',purchaseAccounts);
     columnAccessor: "id",
     direction: "asc",
   });
+
+  const [accountsInitials, setAccountsInitials] = useState({
+    Firm: "",
+    unittype: "",
+});
+
+useEffect(() => {
+  setRecords(accounts);
+  setInitialRecords(accounts);
+}, [accounts]);
+
 
   useEffect(() => {
     setPage(1);
@@ -62,15 +72,17 @@ console.log('purchaseAccountTable:',purchaseAccounts);
 
   useEffect(() => {
     setInitialRecords(() => {
-      return purchaseAccounts.filter((purchaseAccount) => {
+      return accounts.filter((account) => {
         return (
-          // purchase.Material.name.toLowerCase().includes(search.toLowerCase()) ||
-          // purchase.Firm.name.toLowerCase().includes(search.toLowerCase()) ||
-          purchaseAccount.createdAt.toLowerCase().includes(search.toLowerCase())
+
+          //@ts-ignore
+          account.Firm.name.toLowerCase().includes(search.toLowerCase()) ||
+         
+          account.createdAt.toLowerCase().includes(search.toLowerCase())
         );
       });
     });
-  }, [purchaseAccounts, search]);
+  }, [accounts, search]);
 
   useEffect(() => {
     const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
@@ -111,36 +123,8 @@ console.log('purchaseAccountTable:',purchaseAccounts);
       }
     }
   };
-  const handleUpdate = async (id: any = null) => {
-    try {
-      console.log(id, editedData)
-      // const updatingSuccess = await updateToast(id, editedData, updatePurchaseAccount);
-      const updatingSuccess = await updateToast(id, editedData, updatePurchaseAccount);
-      
-      if (updatingSuccess) {
-        const purchaseAccountRes = await getAllPurchaseAccounts();
-        setRecords(purchaseAccountRes.data);
-        setInitialRecords(purchaseAccountRes.data);
-        setSelectedRecords([]);
-        setSearch("");
-      }
-      
-      // Reset edit mode
-      setEditingRowId(null);
-      setEditedData({});
-    } catch (error) {
-      console.error('Error updating row:', error);
-    }
-  };
-  const handleCancel = async () => {
-    try {
-      // Reset edit mode
-      setEditingRowId(null);
-      setEditedData({});
-    } catch (error) {
-      console.error('Error cancelling updating row:', error);
-    }
-  };
+
+
 
   return (
     <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
@@ -155,10 +139,14 @@ console.log('purchaseAccountTable:',purchaseAccounts);
               <DeleteIcon />
               Delete
             </button>
-            {/* <Link href="/apps/invoice/add" className="btn btn-primary gap-2">
-              <PlusIcon />
-              Add New
-            </Link> */}
+            <AccountModal
+                        modal={modal}
+                        setModal={setModal}
+                        //@ts-ignore
+                        accountsInitials={accountsInitials}
+                        //@ts-ignore
+                        setAccountsInitials={setAccountsInitials}
+                    />
           </div>
           <div className="ltr:ml-auto rtl:mr-auto">
             <input
@@ -174,7 +162,7 @@ console.log('purchaseAccountTable:',purchaseAccounts);
         <div className="datatables pagination-padding">
           <DataTable
             className={`${isDark} table-hover whitespace-nowrap`}
-            records={records.map((material) => ({ ...material }))}
+            records={records.map((account) => ({ ...account }))}
             columns={[
               {
                 accessor: "id",
@@ -184,44 +172,26 @@ console.log('purchaseAccountTable:',purchaseAccounts);
                 ),
               },
               {
-                accessor: "FirmId",
+                accessor: "Firm",
                 sortable: true,
-                render: ({ FirmId, id }) => (
+                render: ({ Firm, id }) => (
                   <div className="flex items-center font-semibold">
                     {/* Show original field if row is not being edited */}
-                    {!editingRowId || editingRowId !== id ? (
-                      <div>{FirmId}</div>
-                    ) : (
-                      // Show input field if row is being edited
-                      <input
-                          type="text"
-                          value={(editedData as PurchaseAccount).FirmId || ''}
-                          onChange={(e) => setEditedData({ ...(editedData as PurchaseAccount), FirmId: e.target.value })}
-                          placeholder="FirmId"
-                          style={{ backgroundColor: editingRowId === id ? '#f0f0f0' : 'inherit' }}
-                        />
-                    )}
+               
+                      <div>{Firm?.name}</div>
+                
                   </div>
                 ),
               },
               {
-                accessor: "PurchaseId",
+                accessor: "Material",
                 sortable: true,
-                render: ({ PurchaseId, id }) => (
+                render: ({ Purchase, id }) => (
                   <div className="flex items-center font-semibold">
                     {/* Show original field if row is not being edited */}
-                    {!editingRowId || editingRowId !== id ? (
-                      <div>{PurchaseId}</div>
-                    ) : (
-                      // Show input field if row is being edited
-                      <input
-                          type="text"
-                          value={(editedData as PurchaseAccount).PurchaseId || ''}
-                          onChange={(e) => setEditedData({ ...(editedData as PurchaseAccount), PurchaseId: e.target.value })}
-                          placeholder="PurchaseId"
-                          style={{ backgroundColor: editingRowId === id ? '#f0f0f0' : 'inherit' }}
-                        />
-                    )}
+                 
+                      <div>{Purchase?.Material?.name}</div>
+                
                   </div>
                 ),
               },
@@ -231,18 +201,9 @@ console.log('purchaseAccountTable:',purchaseAccounts);
                 render: ({ debit, id }) => (
                   <div className="flex items-center font-semibold">
                     {/* Show original field if row is not being edited */}
-                    {!editingRowId || editingRowId !== id ? (
+                  
                       <div>{debit}</div>
-                    ) : (
-                      // Show input field if row is being edited
-                      <input
-                          type="text"
-                          value={(editedData as PurchaseAccount).debit || ''}
-                          onChange={(e) => setEditedData({ ...(editedData as PurchaseAccount), debit: e.target.value })}
-                          placeholder="debit"
-                          style={{ backgroundColor: editingRowId === id ? '#f0f0f0' : 'inherit' }}
-                        />
-                    )}
+           
                   </div>
                 ),
               },
@@ -252,18 +213,9 @@ console.log('purchaseAccountTable:',purchaseAccounts);
                 render: ({ credit, id }) => (
                   <div className="flex items-center font-semibold">
                     {/* Show original field if row is not being edited */}
-                    {!editingRowId || editingRowId !== id ? (
+                  
                       <div>{credit}</div>
-                    ) : (
-                      // Show input field if row is being edited
-                      <input
-                          type="text"
-                          value={(editedData as PurchaseAccount).credit || ''}
-                          onChange={(e) => setEditedData({ ...(editedData as PurchaseAccount), credit: e.target.value })}
-                          placeholder="credit"
-                          style={{ backgroundColor: editingRowId === id ? '#f0f0f0' : 'inherit' }}
-                        />
-                    )}
+             
                   </div>
                 ),
               },
@@ -273,18 +225,9 @@ console.log('purchaseAccountTable:',purchaseAccounts);
                 render: ({ balance, id }) => (
                   <div className="flex items-center font-semibold">
                     {/* Show original field if row is not being edited */}
-                    {!editingRowId || editingRowId !== id ? (
+                
                       <div>{balance}</div>
-                    ) : (
-                      // Show input field if row is being edited
-                      <input
-                          type="text"
-                          value={(editedData as PurchaseAccount).balance || ''}
-                          onChange={(e) => setEditedData({ ...(editedData as PurchaseAccount), balance: e.target.value })}
-                          placeholder="balance"
-                          style={{ backgroundColor: editingRowId === id ? '#f0f0f0' : 'inherit' }}
-                        />
-                    )}
+             
                   </div>
                 ),
               },
@@ -318,45 +261,30 @@ console.log('purchaseAccountTable:',purchaseAccounts);
                 title: "Actions",
                 sortable: false,
                 textAlignment: "center",
-                render: ({ id }) => (
+                render: (account) => (
                   <div className="mx-auto flex w-max items-center gap-4">
                     {/* Show edit button if row is not being edited */}
-                    {!editingRowId || editingRowId !== id ? (
+                 
                       <>
                           <button
                             type="button"
                             className="flex hover:text-danger"
-                            onClick={() => handleEdit(id)} // Call handleEdit function on click
+                            onClick={() => {
+                              //@ts-ignore
+                              setAccountsInitials(account), setModal(true);
+                          }}
                           >
                             <EditIcon />
                           </button>
                           <button
                           type="button"
                           className="flex hover:text-danger"
-                          onClick={(e) => deleteRow(id)}
+                          onClick={(e) => deleteRow(account.id)}
                         >
                           <DeleteIcon />
                         </button>
                     </>
-                    ) : (
-                      // Show update and cancel buttons if row is being edited
-                      <>
-                          <button
-                            type="button"
-                            className="flex hover:text-danger"
-                            onClick={(e) => handleUpdate(id)} // Call handleUpdate function on click
-                          >
-                            Update
-                          </button>
-                          <button
-                            type="button"
-                            className="flex hover:text-danger"
-                            onClick={handleCancel} // Call handleUpdate function on click
-                          >
-                            Cancel
-                          </button>
-                      </>
-                    )}
+          
 
                   </div>
                   
@@ -394,3 +322,4 @@ console.log('purchaseAccountTable:',purchaseAccounts);
     </div>
   );
 }
+export default AccountsTable;
