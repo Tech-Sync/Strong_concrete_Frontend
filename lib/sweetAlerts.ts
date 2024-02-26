@@ -161,3 +161,40 @@ export const multiDeleteToast = async (
   }
   return false;
 };
+
+export const updateToast = async (
+  id: any,
+  data: any,
+  updateFunction: (id: any, data: any) => Promise<{ message?: string; error?: string }>
+): Promise<boolean> => {
+  try {
+    const result = await updateFunction(id, data); // Call the update function
+    
+    if (result?.message) {
+      await Swal.fire({
+        title: "Updated!",
+        text: result.message,
+        icon: "success",
+        customClass: "sweet-alerts",
+      });
+      return true;
+    } else {
+      await Swal.fire({
+        title: "Error",
+        text: result?.error || "An error occurred while trying to update.",
+        icon: "error",
+        customClass: "sweet-alerts",
+      });
+      return false;
+    }
+  } catch (error) {
+    console.error("Error in updateToast:", error);
+    await Swal.fire({
+      title: "Error",
+      text: "An unexpected error occurred.",
+      icon: "error",
+      customClass: "sweet-alerts",
+    });
+    return false;
+  }
+};

@@ -1,15 +1,15 @@
 "use client";
 import Link from "next/link";
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction } from "react";
 import sortBy from "lodash/sortBy";
 import { useSelector } from "react-redux";
 import { selectThemeConfig } from "@/lib/redux/slices/themeConfigSlice";
 import { PurchaseAccount } from "@/types/types";
-import { DeleteIcon, EditIcon, PlusIcon, PreviewIcon } from "@/app/icons";
+import { DeleteIcon, EditIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
-import { coloredToast, deleteToast, multiDeleteToast } from "@/lib/sweetAlerts";
-import { deleteMultiPurchaseAccount, deletePurchaseAccount, getAllPurchaseAccounts } from "@/actions/purchaseAccountActions";
+import { coloredToast, deleteToast, updateToast, multiDeleteToast } from "@/lib/sweetAlerts";
+import { deleteMultiPurchaseAccount, deletePurchaseAccount, updatePurchaseAccount, getAllPurchaseAccounts } from "@/actions/purchaseAccountActions";
 
 interface PurchaseAccountsTableProps {
   purchaseAccounts: PurchaseAccount[];
@@ -19,6 +19,22 @@ export default function PurchaseAccountsTable({ purchaseAccounts }: PurchaseAcco
   /*   useEffect(() => {
     setInitialRecords(sortBy(purchases, "id"));
   }, [purchases]); */
+  const [editingRowId, setEditingRowId] = useState<number | null>(null); // Specify the type as 'number | null'
+  const [editedData, setEditedData] = useState<PurchaseAccount | {}>({}); // Specify the type as 'PurchaseAccount | {}'
+
+  // Function to handle entering edit mode for a row
+  const handleEdit = (id: number) => { // Explicitly specify the type as 'number'
+    setEditingRowId(id);
+    const editedRow = purchaseAccounts.find(row => row.id === id);
+    if (editedRow) {
+      setEditedData(editedRow);
+    } else {
+      setEditedData({}); // Provide an initial empty object as a fallback value
+    }
+  };
+
+
+
 console.log('purchaseAccountTable:',purchaseAccounts);
   const isDark = useSelector(selectThemeConfig).isDarkMode;
 
@@ -95,6 +111,36 @@ console.log('purchaseAccountTable:',purchaseAccounts);
       }
     }
   };
+  const handleUpdate = async (id: any = null) => {
+    try {
+      console.log(id, editedData)
+      // const updatingSuccess = await updateToast(id, editedData, updatePurchaseAccount);
+      const updatingSuccess = await updateToast(id, editedData, updatePurchaseAccount);
+      
+      if (updatingSuccess) {
+        const purchaseAccountRes = await getAllPurchaseAccounts();
+        setRecords(purchaseAccountRes.data);
+        setInitialRecords(purchaseAccountRes.data);
+        setSelectedRecords([]);
+        setSearch("");
+      }
+      
+      // Reset edit mode
+      setEditingRowId(null);
+      setEditedData({});
+    } catch (error) {
+      console.error('Error updating row:', error);
+    }
+  };
+  const handleCancel = async () => {
+    try {
+      // Reset edit mode
+      setEditingRowId(null);
+      setEditedData({});
+    } catch (error) {
+      console.error('Error cancelling updating row:', error);
+    }
+  };
 
   return (
     <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
@@ -142,7 +188,19 @@ console.log('purchaseAccountTable:',purchaseAccounts);
                 sortable: true,
                 render: ({ FirmId, id }) => (
                   <div className="flex items-center font-semibold">
-                    <div>{FirmId}</div>
+                    {/* Show original field if row is not being edited */}
+                    {!editingRowId || editingRowId !== id ? (
+                      <div>{FirmId}</div>
+                    ) : (
+                      // Show input field if row is being edited
+                      <input
+                          type="text"
+                          value={(editedData as PurchaseAccount).FirmId || ''}
+                          onChange={(e) => setEditedData({ ...(editedData as PurchaseAccount), FirmId: e.target.value })}
+                          placeholder="FirmId"
+                          style={{ backgroundColor: editingRowId === id ? '#f0f0f0' : 'inherit' }}
+                        />
+                    )}
                   </div>
                 ),
               },
@@ -151,21 +209,84 @@ console.log('purchaseAccountTable:',purchaseAccounts);
                 sortable: true,
                 render: ({ PurchaseId, id }) => (
                   <div className="flex items-center font-semibold">
-                    <div>{PurchaseId}</div>
+                    {/* Show original field if row is not being edited */}
+                    {!editingRowId || editingRowId !== id ? (
+                      <div>{PurchaseId}</div>
+                    ) : (
+                      // Show input field if row is being edited
+                      <input
+                          type="text"
+                          value={(editedData as PurchaseAccount).PurchaseId || ''}
+                          onChange={(e) => setEditedData({ ...(editedData as PurchaseAccount), PurchaseId: e.target.value })}
+                          placeholder="PurchaseId"
+                          style={{ backgroundColor: editingRowId === id ? '#f0f0f0' : 'inherit' }}
+                        />
+                    )}
                   </div>
                 ),
               },
               {
                 accessor: "debit",
                 sortable: true,
+                render: ({ debit, id }) => (
+                  <div className="flex items-center font-semibold">
+                    {/* Show original field if row is not being edited */}
+                    {!editingRowId || editingRowId !== id ? (
+                      <div>{debit}</div>
+                    ) : (
+                      // Show input field if row is being edited
+                      <input
+                          type="text"
+                          value={(editedData as PurchaseAccount).debit || ''}
+                          onChange={(e) => setEditedData({ ...(editedData as PurchaseAccount), debit: e.target.value })}
+                          placeholder="debit"
+                          style={{ backgroundColor: editingRowId === id ? '#f0f0f0' : 'inherit' }}
+                        />
+                    )}
+                  </div>
+                ),
               },
               {
                 accessor: "credit",
                 sortable: true,
+                render: ({ credit, id }) => (
+                  <div className="flex items-center font-semibold">
+                    {/* Show original field if row is not being edited */}
+                    {!editingRowId || editingRowId !== id ? (
+                      <div>{credit}</div>
+                    ) : (
+                      // Show input field if row is being edited
+                      <input
+                          type="text"
+                          value={(editedData as PurchaseAccount).credit || ''}
+                          onChange={(e) => setEditedData({ ...(editedData as PurchaseAccount), credit: e.target.value })}
+                          placeholder="credit"
+                          style={{ backgroundColor: editingRowId === id ? '#f0f0f0' : 'inherit' }}
+                        />
+                    )}
+                  </div>
+                ),
               },
               {
                 accessor: "balance",
                 sortable: true,
+                render: ({ balance, id }) => (
+                  <div className="flex items-center font-semibold">
+                    {/* Show original field if row is not being edited */}
+                    {!editingRowId || editingRowId !== id ? (
+                      <div>{balance}</div>
+                    ) : (
+                      // Show input field if row is being edited
+                      <input
+                          type="text"
+                          value={(editedData as PurchaseAccount).balance || ''}
+                          onChange={(e) => setEditedData({ ...(editedData as PurchaseAccount), balance: e.target.value })}
+                          placeholder="balance"
+                          style={{ backgroundColor: editingRowId === id ? '#f0f0f0' : 'inherit' }}
+                        />
+                    )}
+                  </div>
+                ),
               },
               {
                 accessor: "createdAt",
@@ -199,27 +320,58 @@ console.log('purchaseAccountTable:',purchaseAccounts);
                 textAlignment: "center",
                 render: ({ id }) => (
                   <div className="mx-auto flex w-max items-center gap-4">
-                    <Link
-                      href="/apps/invoice/edit"
-                      className="flex hover:text-info"
-                    >
-                      <EditIcon />
-                    </Link>
-                    <Link
-                      href="/apps/invoice/preview"
-                      className="flex hover:text-primary"
-                    >
-                      <PreviewIcon />
-                    </Link>
-                    <button
-                      type="button"
-                      className="flex hover:text-danger"
-                      onClick={(e) => deleteRow(id)}
-                    >
-                      <DeleteIcon />
-                    </button>
+                    {/* Show edit button if row is not being edited */}
+                    {!editingRowId || editingRowId !== id ? (
+                      <>
+                          <button
+                            type="button"
+                            className="flex hover:text-danger"
+                            onClick={() => handleEdit(id)} // Call handleEdit function on click
+                          >
+                            <EditIcon />
+                          </button>
+                          <button
+                          type="button"
+                          className="flex hover:text-danger"
+                          onClick={(e) => deleteRow(id)}
+                        >
+                          <DeleteIcon />
+                        </button>
+                    </>
+                    ) : (
+                      // Show update and cancel buttons if row is being edited
+                      <>
+                          <button
+                            type="button"
+                            className="flex hover:text-danger"
+                            onClick={(e) => handleUpdate(id)} // Call handleUpdate function on click
+                          >
+                            Update
+                          </button>
+                          <button
+                            type="button"
+                            className="flex hover:text-danger"
+                            onClick={handleCancel} // Call handleUpdate function on click
+                          >
+                            Cancel
+                          </button>
+                      </>
+                    )}
+
                   </div>
+                  
+
+
+
+
+
                 ),
+
+                
+
+
+
+
               },
             ]}
             highlightOnHover={true}

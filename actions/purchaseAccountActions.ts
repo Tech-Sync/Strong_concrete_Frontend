@@ -1,5 +1,6 @@
 "use server";
 import { auth } from "@/auth";
+import { PurchaseAccount } from "@/types/types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
@@ -29,6 +30,24 @@ export const getAllPurchaseAccounts = async () => {
       throw new Error(
         data.message || "Something went wrong, Please try again!"
       );
+    }
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};
+export const updatePurchaseAccount = async (id: any, data: any) => {
+  const headers = await authConfig();
+  try {
+    const response = await fetch(`${BASE_URL}/purchase_accounts/${id}`, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify(data),
+    });
+
+    if (response.status === 204 || response.status === 202) {
+      return { message: "Updated!" };
+    } else {
+      throw new Error("Something went wrong, Please try again!");
     }
   } catch (error: any) {
     return { error: error.message };
