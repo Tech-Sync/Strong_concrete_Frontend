@@ -44,13 +44,16 @@ export const updatePurchaseAccount = async (id: any, data: any) => {
       body: JSON.stringify(data),
     });
 
-    if (response.status === 204 || response.status === 202) {
-      return { message: "Updated!" };
-    } else {
-      throw new Error("Something went wrong, Please try again!");
-    }
-  } catch (error: any) {
-    return { error: error.message };
+    // if (response.status === 204 || response.status === 202) {
+    //   return { message: "Updated!" };
+    // } else {
+    //   throw new Error("Something went wrong, Please try again!");
+    // }
+    return { message: "Updated successfully" };
+  } catch (error) {
+    console.error("Error in updatePurchaseAccount:", error);
+    // If an error occurs, return an object with an error property
+    return { error: "An error occurred while updating" }; // ***
   }
 };
 
