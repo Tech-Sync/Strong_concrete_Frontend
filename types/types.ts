@@ -66,18 +66,8 @@ export interface PurchaseAccount {
   id: number,
   PurchaseId: number,
   Purchase: {
-    FirmId: number,
     Material:{name: string | null},
-    MaterialId: number,
-    createdAt: string,
-    creatorId: number | null,
-    deletedAt: string | null,
     id: number,
-    quantity: number,
-    totalPrice: number,
-    unitPrice: number,
-    updatedAt: string | null,
-    updatorId: number | null
  },
   debit: number,
   credit: number,
@@ -90,7 +80,6 @@ export interface PurchaseAccount {
   updaterId: number | null
   deletedAt: string | null,
 }
-
 
 export interface Product {
   id: number;

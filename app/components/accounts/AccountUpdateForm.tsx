@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Form, Field, ErrorMessage, FormikProps } from "formik";
-import { Material, PurchaseAccount } from "@/types/types";
+import { Material } from "@/types/types";
 import { ModalListIcon } from "@/app/icons/modal";
 import Select from "react-select";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,16 +9,15 @@ interface Option {
   value: string | number; // Specify allowed value types (adjust as needed)
   label: string;
 }
-const AccountForm: React.FC<FormikProps<PurchaseAccount>> = ({
+const AccountUpdateForm: React.FC<FormikProps<Material>> = ({
   touched,
   errors,
   isSubmitting,
   handleSubmit,
-  setFieldValue,
   values
 }) => {
+
 const dispatch = useDispatch()
-console.log(values);
 
 useEffect(() => {
   //@ts-ignore
@@ -47,11 +46,13 @@ const materialOptions = materials.map(material => ({
       <div className="mb-3">
         <div className="relative">
           <ModalListIcon />
-          <label htmlFor="firm">Firm</label>
-                                <Select name='FirmId'
-                                    value={firmOptions.find(option => option.value === values.FirmId)}
-                                    onChange={option => setFieldValue('FirmId', option ? Number(option.value) : '')}
-                                    className='form-input' placeholder="Select a Firm" options={firmOptions} />
+          <Field
+            name="firm"
+            label="Select a Firm"
+            as={Select} // Use Select component as the field wrapper
+            options={firmOptions as Option[]}
+            // Other Select component props (e.g., isClearable, styles)
+          />
        
         </div>
               <ErrorMessage name="firm" component="div" className="error" />
@@ -106,4 +107,4 @@ const materialOptions = materials.map(material => ({
   );
 };
 
-export default AccountForm;
+export default AccountUpdateForm;

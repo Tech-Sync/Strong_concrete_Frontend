@@ -3,36 +3,48 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Formik } from "formik";
 import React, { Fragment } from "react";
 import { object, string } from "yup";
-import MaterialForm from "./AccountForm";
+import AccountForm from "./AccountForm";
 import { coloredToast } from "@/lib/sweetAlerts";
 import { useRouter } from "next/navigation";
 import { getAllMaterialAsync, useDispatch } from "@/lib/redux";
 import {  PurchaseAccount } from "@/types/types";
-import { addMaterial, updateMaterial } from "@/lib/redux/slices/materialSlice/materialActions";
 import { ModalCloseIcon } from "@/app/icons/modal";
+import { updatePurchaseAccount } from "@/lib/redux/slices/accountsSlice/accountsAction";
+import AccountUpdateForm from "./AccountUpdateForm";
 
 const accountsSchema = object({
-  name: string().required("Material name is required!"),
-  unitType: string().required("Unit type field is required."),
+  firm: string().required("firm is required!"),
+  material: string().required("material is required."),
+  debit: string().required("debit is required."),
+  credit: string().required("credit is required."),
+  balance: string().required("balance is required."),
 });
 
 interface accountsModalProps {
   setModal: (value: boolean) => void;
   modal: boolean;
   accountsInitials: PurchaseAccount;
-  setMaterialInitials: (value: object) => void;
+  setAccountsInitials: (value: object) => void;
 }
 
-export default function AccountModal({ modal, setModal, accountsInitials, setMaterialInitials, }: accountsModalProps) {
-
-  const emptyMaterial = { name: "", unitType: "" };
+export default function AccountModal({ modal, setModal, accountsInitials, setAccountsInitials, }: accountsModalProps) {
+console.log(accountsInitials)
+  const emptyMaterial = {
+    Firm: {name: "", id: 0},
+    Purchase:{id:0,Material:{name:''}},
+    debit: 0,
+    credit: 0,
+    balance: 0,
+    id: 0,
+    FirmId:0,
+};
   const dispatch = useDispatch();
   const router = useRouter();
   return (
     <div>
       <button
         onClick={() => {
-          setModal(true), setMaterialInitials(emptyMaterial);
+          setModal(true), setAccountsInitials(emptyMaterial);
         }}
         className="btn btn-primary gap-2"
       >
@@ -69,7 +81,7 @@ export default function AccountModal({ modal, setModal, accountsInitials, setMat
               >
                 <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg border-0 py-1 px-4 text-black dark:text-white-dark">
                   <div className="flex items-center justify-between p-5 text-lg font-semibold dark:text-white ">
-                    <h5>Add New Material</h5>
+                    <h5>Create Credit</h5>
                     <button
                       type="button"
                       onClick={() => setModal(false)}
@@ -83,33 +95,35 @@ export default function AccountModal({ modal, setModal, accountsInitials, setMat
                       initialValues={accountsInitials.id ? accountsInitials : emptyMaterial}
                       validationSchema={accountsSchema}
                       onSubmit={async (values, { setSubmitting, resetForm }) => {
-                        if ("id" in accountsInitials) {
-                          const res = await updateMaterial(values);
+                        console.log(values);
+                        
+                        // if ("id" in accountsInitials) {
+                        //   const res = await updatePurchaseAccount(values);
 
-                          if (res.message) {
-                            coloredToast("success", res.message, "bottom-start");
-                            setModal(false);
-                            dispatch(getAllMaterialAsync());
-                          } else {
-                            coloredToast("danger", res.error, "bottom-start");
-                          }
-                        } else {
-                          const res = await addMaterial(values);
+                        //   if (res.message) {
+                        //     coloredToast("success", res.message, "bottom-start");
+                        //     setModal(false);
+                        //     dispatch(getAllMaterialAsync());
+                        //   } else {
+                        //     coloredToast("danger", res.error, "bottom-start");
+                        //   }
+                        // } else {
+                        //   const res = await updatePurchaseAccount(values);
 
-                          setTimeout(() => {
-                            setSubmitting(false);
-                            if (res.message) {
-                              coloredToast("success", res.message, "bottom-start");
-                              setModal(false);
-                              dispatch(getAllMaterialAsync());
-                            } else {
-                              coloredToast("danger", res.error, "bottom-start");
-                            }
-                          }, 500);
-                        }
+                        //   setTimeout(() => {
+                        //     setSubmitting(false);
+                        //     if (res.message) {
+                        //       coloredToast("success", res.message, "bottom-start");
+                        //       setModal(false);
+                        //       dispatch(getAllMaterialAsync());
+                        //     } else {
+                        //       coloredToast("danger", res.error, "bottom-start");
+                        //     }
+                        //   }, 500);
+                        // }
                       }}
                       //@ts-ignore
-                      component={(props) => <MaterialForm {...props} />}
+                      component={(props) => accountsInitials.id ? <AccountForm {...props} /> : <AccountUpdateForm {...props} />}
                     ></Formik>
                   </div>
                 </Dialog.Panel>

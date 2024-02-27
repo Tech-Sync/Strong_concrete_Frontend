@@ -50,8 +50,13 @@ console.log('purchaseAccountTable:',accounts);
   });
 
   const [accountsInitials, setAccountsInitials] = useState({
-    Firm: "",
-    unittype: "",
+    Firm: {name: "", id: 0},
+    Purchase:{id:0,Material:{name:''}},
+    debit: 0,
+    credit: 0,
+    balance: 0,
+    id: 0,
+    FirmId:0,
 });
 
 useEffect(() => {
@@ -270,6 +275,8 @@ useEffect(() => {
                             type="button"
                             className="flex hover:text-danger"
                             onClick={() => {
+                              console.log('account:',account);
+                              
                               //@ts-ignore
                               setAccountsInitials(account), setModal(true);
                           }}
