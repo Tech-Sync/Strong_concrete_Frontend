@@ -38,8 +38,8 @@ console.log(accountsInitials)
     id: 0,
     FirmId:0,
 };
-  const dispatch = useDispatch();
-  const router = useRouter();
+console.log(emptyMaterial);
+
   return (
     <div>
       <button
@@ -123,7 +123,7 @@ console.log(accountsInitials)
                         // }
                       }}
                       //@ts-ignore
-                      component={(props) => accountsInitials.id ? <AccountForm {...props} /> : <AccountUpdateForm {...props} />}
+                      component={(props) => accountsInitials.id ? <AccountUpdateForm {...props} /> : <AccountForm {...props} />}
                     ></Formik>
                   </div>
                 </Dialog.Panel>

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Form, Field, ErrorMessage, FormikProps } from "formik";
-import { Material } from "@/types/types";
+import { Material, PurchaseAccount } from "@/types/types";
 import { ModalListIcon } from "@/app/icons/modal";
 import Select from "react-select";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,12 +9,13 @@ interface Option {
   value: string | number; // Specify allowed value types (adjust as needed)
   label: string;
 }
-const AccountUpdateForm: React.FC<FormikProps<Material>> = ({
+const AccountUpdateForm: React.FC<FormikProps<PurchaseAccount>> = ({
   touched,
   errors,
   isSubmitting,
   handleSubmit,
-  values
+  values,
+  setFieldValue
 }) => {
 
 const dispatch = useDispatch()
@@ -44,15 +45,16 @@ const materialOptions = materials.map(material => ({
     <Form onSubmit={handleSubmit}>
     
       <div className="mb-3">
+       
         <div className="relative">
-          <ModalListIcon />
-          <Field
-            name="firm"
-            label="Select a Firm"
-            as={Select} // Use Select component as the field wrapper
-            options={firmOptions as Option[]}
-            // Other Select component props (e.g., isClearable, styles)
-          />
+          <label>Firm</label>
+          <Select name='FirmId'
+                                    value={firmOptions.find(option => option.value === values.FirmId)}
+                                    onChange={option => setFieldValue('FirmId', option ? Number(option.value) : '')}
+                                    placeholder="Select a Firm" options={firmOptions}
+                                    aria-label="Select a Firm" aria-describedby="firm"
+                                    isDisabled={values.FirmId !== 0}
+                                    />
        
         </div>
               <ErrorMessage name="firm" component="div" className="error" />
@@ -60,14 +62,15 @@ const materialOptions = materials.map(material => ({
       </div>
       <div className="mb-3">
         <div className="relative">
-          <ModalListIcon />
-          <Field
-            name="material"
-            label="Select a Material"
-            as={Select} // Use Select component as the field wrapper
-            options={materialOptions as Option[]}
-            // Other Select component props (e.g., isClearable, styles)
-          />
+         
+          <label>Material</label>
+          <Select name='MaterialId'
+                                    value={materialOptions.find(option => option.value === values.Purchase?.id)}
+                                    onChange={option => setFieldValue('MaterialId', option ? Number(option.value) : '')}
+                                    placeholder="Select a Material" 
+                                    required options={materialOptions}
+                                    isDisabled={values.Purchase?.id !== 0}
+                                    />
       
         </div>
               <ErrorMessage name="material" component="div" className="error" />

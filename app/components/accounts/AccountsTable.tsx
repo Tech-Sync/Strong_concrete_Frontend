@@ -252,15 +252,7 @@ useEffect(() => {
                   <div>{formatDate(updatedAt)}</div>
                 ),
               },
-              {
-                accessor: "updaterId",
-                sortable: true,
-                render: ({ updaterId, id }) => (
-                  <div className="flex items-center font-semibold">
-                    <div>{updaterId}</div>
-                  </div>
-                ),
-              },
+         
               {
                 accessor: "action",
                 title: "Actions",

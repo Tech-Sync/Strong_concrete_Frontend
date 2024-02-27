@@ -18,7 +18,7 @@ const AccountForm: React.FC<FormikProps<PurchaseAccount>> = ({
   values
 }) => {
 const dispatch = useDispatch()
-console.log(values);
+
 
 useEffect(() => {
   //@ts-ignore
@@ -47,7 +47,7 @@ const materialOptions = materials.map(material => ({
       <div className="mb-3">
         <div className="relative">
           <ModalListIcon />
-          <label htmlFor="firm">Firm</label>
+         
                                 <Select name='FirmId'
                                     value={firmOptions.find(option => option.value === values.FirmId)}
                                     onChange={option => setFieldValue('FirmId', option ? Number(option.value) : '')}
