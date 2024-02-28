@@ -149,7 +149,7 @@ const Sidebar = () => {
 
                             <li className="nav-item">
                                 <ul>
-                                    {routes.map(route => (
+                                    {routes?.map(route => (
 
                                         <li className="nav-item" key={route.name}>
                                             <Link href={route.path} className="group">

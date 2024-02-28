@@ -35,7 +35,7 @@ const NavbarMessagesDrop = () => {
 	]);
 
  const removeMessage = (value: number) => {
-		setMessages(messages.filter((user) => user.id !== value));
+		setMessages(messages?.filter((user) => user.id !== value));
 	};
   return (
    <div className="dropdown shrink-0">
@@ -57,7 +57,7 @@ const NavbarMessagesDrop = () => {
      {messages.length > 0 ? (
       <>
        <li onClick={(e) => e.stopPropagation()}>
-        {messages.map((message) => {
+        {messages?.map((message) => {
          return (
           <div key={message.id} className="flex items-center py-3 px-5">
            <div >{message.image}</div>

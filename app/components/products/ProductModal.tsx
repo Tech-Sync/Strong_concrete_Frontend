@@ -51,7 +51,7 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
   useEffect(() => {
     dispatch(getAllMaterialAsync());
     if (productInitials.materials) {
-      const initialItems: Item[] = Object.entries(productInitials?.materials).map(([name, quantity], index) => ({
+      const initialItems: Item[] = Object.entries(productInitials?.materials)?.map(([name, quantity], index) => ({
         id: index + 1,
         name,
         quantity: quantity.toString(),
@@ -63,7 +63,7 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
 
   const materials = useSelector(selectMaterials);
 
-  const materialOptions = materials.map(material => ({ value: material.id, label: material.name, }))
+  const materialOptions = materials?.map(material => ({ value: material.id, label: material.name, }))
 
   const addItem = () => {
     let maxId = 0;
@@ -71,11 +71,11 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
     setItems([...items, { id: maxId + 1, name: '', quantity: '', },]);
   };
 
-  const removeItem = (item: any = null) => { setItems(items.filter((d: any) => d.id !== item.id)); };
+  const removeItem = (item: any = null) => { setItems(items?.filter((d: any) => d.id !== item.id)); };
 
   const changeQuantityPrice = (value: string, id: number) => {
 
-    const updatedItems = items.map((item) => {
+    const updatedItems = items?.map((item) => {
       if (item.id === id) {
         return { ...item, quantity: value };
       }
@@ -87,7 +87,7 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
   const handleSelectChange = (option: SingleValue<{ label: string; value: number }>, id: number) => {
     // Check if option is not null before proceeding
     if (option !== null) {
-      const updatedItems = items.map((item): Item => {
+      const updatedItems = items?.map((item): Item => {
         if (item.id === id) {
           // Proceed knowing option is not null
           return { ...item, name: option.label, quantity: item.quantity ?? '' };
@@ -99,7 +99,7 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
     } else {
       // Handle the case when option is null, e.g., selection is cleared
       // You might want to reset the related fields in your items or handle it in some other way
-      const updatedItems = items.map((item): Item => {
+      const updatedItems = items?.map((item): Item => {
         if (item.id === id) {
           // Reset name and MaterialId when selection is cleared
           return { ...item, name: '', quantity: item.quantity ?? '' };
@@ -227,9 +227,9 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
                       {
                         ({ handleSubmit, touched, errors, isSubmitting }) => (
                           <Form onSubmit={handleSubmit}>
-                            {items.length <= 0 && (<span className="!text-center font-semibold">Items not selected.</span>)}
+                            {items?.length <= 0 && (<span className="!text-center font-semibold">Items not selected.</span>)}
                             {
-                              items.map((item: any, i: any) => {
+                              items?.map((item: any, i: any) => {
                                 return (
                                   <div key={item.id} className="flex gap-x-2 mb-3">
                                     <Select

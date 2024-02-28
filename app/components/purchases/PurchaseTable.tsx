@@ -53,13 +53,13 @@ export default function PurchaseTable() {
   useEffect(() => {
     const from = (page - 1) * pageSize;
     const to = from + pageSize;
-    setRecords([...initialRecords.slice(from, to)]);
+    setRecords([...(Array.isArray(initialRecords) ? initialRecords.slice(from, to) : [])]);
   }, [page, pageSize, initialRecords]);
 
   useEffect(() => {
     if (purchases) {
       setInitialRecords(() => {
-        return purchases.filter((purchase) => {
+        return purchases?.filter((purchase) => {
           const materialName = purchase?.Material?.name;
           const firmName = purchase.Firm?.name;
           const createdAt = purchase.createdAt;
@@ -89,11 +89,11 @@ export default function PurchaseTable() {
       }
     } else {
       let selectedRows = selectedRecords || [];
-      if (selectedRows.length === 0) {
+      if (selectedRows?.length === 0) {
         coloredToast("warning", "Select items to delete!");
         return;
       }
-      const ids = selectedRows.map((d: any) => { return d.id; });
+      const ids = selectedRows?.map((d: any) => { return d.id; });
       const deletionSuccess = await multiDeleteToast(ids, deleteMultiPurchase, updatePurchases);
       if (deletionSuccess) {
         setSelectedRecords([]);
@@ -221,7 +221,7 @@ export default function PurchaseTable() {
               },
             ]}
             highlightOnHover={true}
-            totalRecords={initialRecords.length}
+            totalRecords={initialRecords?.length}
             recordsPerPage={pageSize}
             page={page}
             onPageChange={(p) => setPage(p)}

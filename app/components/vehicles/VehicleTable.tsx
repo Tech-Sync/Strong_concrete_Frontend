@@ -4,39 +4,34 @@ import { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
 import { DeleteIcon, EditIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
-import { firmStatuses } from "@/app/constraints/roles&status";
+import { vehicleStatuses } from "@/app/constraints/roles&status";
 import { coloredToast } from "@/lib/sweetAlerts";
 import {
-  getAllFrimAsync,
-  selectFirms,
   selectIsDarkMode,
-  selectFirmStatus,
   useDispatch,
   useSelector,
-  updateFirm,
+  getAllVehicleAsync,
+  selectVehicles,
+  updateVehicleState,
 } from "@/lib/redux";
-// import FirmModal from "./FirmModal";
-import {
-  deleteFirm,
-  deleteMultiFirm,
-} from "@/lib/redux/slices/firmSlice/firmActions";
+import VehicleModal from "./VehicleModal";
 import useDeleteToasts from "@/hooks/useDeleteToasts";
+import { deleteMultiVehicle, deleteVehicle } from "@/lib/redux/slices/vehicleSlice/vehicleActions";
 
 export default function VehicleTable() {
   const dispatch = useDispatch();
   const { deleteToast, multiDeleteToast } = useDeleteToasts();
-  const firms = useSelector(selectFirms);
-  const firmStatus = useSelector(selectFirmStatus);
+  const vehicles = useSelector(selectVehicles);
   const isDark = useSelector(selectIsDarkMode);
 
   useEffect(() => {
-    dispatch(getAllFrimAsync());
+    dispatch(getAllVehicleAsync());
   }, []);
 
   const [page, setPage] = useState(1);
   const PAGE_SIZES = [10, 20, 30, 40, 50];
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-  const [initialRecords, setInitialRecords] = useState(sortBy(firms, "id"));
+  const [initialRecords, setInitialRecords] = useState(sortBy(vehicles, "id"));
   const [records, setRecords] = useState(initialRecords);
   const [selectedRecords, setSelectedRecords] = useState<any>([]);
   const [search, setSearch] = useState("");
@@ -47,19 +42,18 @@ export default function VehicleTable() {
   const [modal, setModal] = useState(false);
 
   //@ts-ignore
-  const [firmInitials, setFirmInitials] = useState({
-    name: "",
-    address: "",
-    phoneNo: "",
-    tpinNo: "",
-    email: "",
-    status: "",
+  const [vehicleInitials, setVehicleInitials] = useState({
+    DriverId: '',
+    plateNumber: "",
+    model: '',
+    capacity: '',
+    status: ''
   });
 
   useEffect(() => {
-    setRecords(firms);
-    setInitialRecords(firms);
-  }, [firms]);
+    setRecords(vehicles);
+    setInitialRecords(vehicles);
+  }, [vehicles]);
 
   useEffect(() => {
     setPage(1);
@@ -68,22 +62,29 @@ export default function VehicleTable() {
   useEffect(() => {
     const from = (page - 1) * pageSize;
     const to = from + pageSize;
-    setRecords([...initialRecords.slice(from, to)]);
+    setRecords([...(Array.isArray(initialRecords) ? initialRecords.slice(from, to) : [])]);
   }, [page, pageSize, initialRecords]);
 
   useEffect(() => {
     setInitialRecords(() => {
-      return firms.filter((firm) => {
+      return vehicles?.filter((vehicle) => {
+        const plateNumber = vehicle.plateNumber.toString()
+        const model = vehicle.model.toString()
+        const capacity = vehicle.capacity.toString()
+        const status = vehicle.status.toString()
+        const firstName = vehicle.driver.firstName
+        const lastName = vehicle.driver.lastName
         return (
-          firm.address.toLowerCase().includes(search.toLowerCase()) ||
-          firm.email.toLowerCase().includes(search.toLowerCase()) ||
-          firm.name.toLowerCase().includes(search.toLowerCase()) ||
-          firm.phoneNo.toLowerCase().includes(search.toLowerCase()) ||
-          firm.tpinNo.toLowerCase().includes(search.toLowerCase())
+          plateNumber.toLowerCase().includes(search.toLowerCase()) ||
+          firstName.toLowerCase().includes(search.toLowerCase()) ||
+          lastName.toLowerCase().includes(search.toLowerCase()) ||
+          model.toLowerCase().includes(search.toLowerCase()) ||
+          capacity.toLowerCase().includes(search.toLowerCase()) ||
+          status.toLowerCase().includes(search.toLowerCase())
         );
       });
     });
-  }, [firms, search]);
+  }, [vehicles, search]);
 
   useEffect(() => {
     const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
@@ -93,21 +94,21 @@ export default function VehicleTable() {
 
   const deleteRow = async (id: any = null) => {
     if (id) {
-      const deletionSuccess = await deleteToast(id, deleteFirm, updateFirm);
+      const deletionSuccess = await deleteToast(id, deleteVehicle, updateVehicleState);
       if (deletionSuccess) {
         setSelectedRecords([]);
         setSearch("");
       }
     } else {
       let selectedRows = selectedRecords || [];
-      if (selectedRows.length === 0) {
+      if (selectedRows?.length === 0) {
         coloredToast("warning", "Select items to delete!");
         return;
       }
-      const ids = selectedRows.map((d: any) => {
+      const ids = selectedRows?.map((d: any) => {
         return d.id;
       });
-      const deletionSuccess = await multiDeleteToast(ids, deleteMultiFirm, updateFirm);
+      const deletionSuccess = await multiDeleteToast(ids, deleteMultiVehicle, updateVehicleState);
       if (deletionSuccess) {
         setSelectedRecords([]);
         setSearch("");
@@ -116,9 +117,6 @@ export default function VehicleTable() {
     }
   };
 
-  /*   if (firmStatus === "loading") {
-    return <h1 className="text-lg text-center">LOADING...</h1>;
-  } */
 
   return (
     <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
@@ -132,14 +130,14 @@ export default function VehicleTable() {
               <DeleteIcon />
               Delete
             </button>
-           {/*  <FirmModal
+            <VehicleModal
               modal={modal}
               setModal={setModal}
               //@ts-ignore
-              firmInitials={firmInitials}
+              vehicleInitials={vehicleInitials}
               //@ts-ignore
-              setFirmInitials={setFirmInitials}
-            /> */}
+              setVehicleInitials={setVehicleInitials}
+            />
           </div>
           <div className="ltr:ml-auto rtl:mr-auto">
             <input
@@ -154,8 +152,8 @@ export default function VehicleTable() {
         <div className="datatables pagination-padding">
           <DataTable
             className={`${isDark} table-hover whitespace-nowrap`}
-            records={records?.map((material, index) => ({
-              ...material,
+            records={records?.map((vehicle, index) => ({
+              ...vehicle,
               serialNumber: index + 1,
             }))}
             columns={[
@@ -169,24 +167,24 @@ export default function VehicleTable() {
                 ),
               },
               {
-                accessor: "name",
+                accessor: "Driver Name",
                 sortable: true,
-                render: ({ name, id }) => (
+                render: ({ driver, id }) => (
                   <div className="flex items-center font-semibold">
-                    <div>{name as string}</div>
+                    <div>{driver.firstName + " " + driver.lastName}</div>
                   </div>
                 ),
               },
               {
-                accessor: "email",
+                accessor: "plateNumber",
                 sortable: true,
               },
               {
-                accessor: "phoneNo",
+                accessor: "model",
                 sortable: true,
               },
               {
-                accessor: "tpinNo",
+                accessor: "capacity",
                 sortable: true,
               },
               {
@@ -203,7 +201,7 @@ export default function VehicleTable() {
                 render: ({ status }) => (
                   <span className={`badge badge-outline-secondary`}>
                     {/* @ts-ignore */}
-                    {firmStatuses[String(status)]}
+                    {vehicleStatuses[String(status)]}
                   </span>
                 ),
               },
@@ -212,12 +210,12 @@ export default function VehicleTable() {
                 title: "Actions",
                 sortable: false,
                 textAlignment: "center",
-                render: (firm) => (
+                render: (vehicle) => (
                   <div className="mx-auto flex w-max items-center gap-4">
                     <button
                       onClick={() => {
                         //@ts-ignore
-                        setFirmInitials(firm), setModal(true);
+                        setVehicleInitials(vehicle), setModal(true);
                       }}
                       className="flex hover:text-info">
                       <EditIcon />
@@ -231,7 +229,7 @@ export default function VehicleTable() {
                     <button
                       type="button"
                       className="flex hover:text-danger"
-                      onClick={(e) => deleteRow(firm.id)}>
+                      onClick={(e) => deleteRow(vehicle.id)}>
                       <DeleteIcon />
                     </button>
                   </div>
@@ -239,7 +237,7 @@ export default function VehicleTable() {
               },
             ]}
             highlightOnHover={true}
-            totalRecords={initialRecords.length}
+            totalRecords={initialRecords?.length}
             recordsPerPage={pageSize}
             page={page}
             onPageChange={(p) => setPage(p)}

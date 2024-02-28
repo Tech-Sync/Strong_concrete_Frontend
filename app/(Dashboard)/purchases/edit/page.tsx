@@ -80,7 +80,7 @@ const Edit = () => {
     };
 
     const removeItem = (item: any = null) => {
-        setItems(items.filter((d: any) => d.id !== item.id));
+        setItems(items?.filter((d: any) => d.id !== item.id));
     };
 
     const changeQuantityPrice = (type: string, value: string, id: number) => {
@@ -413,7 +413,7 @@ const Edit = () => {
                                         </td>
                                     </tr>
                                 )}
-                                {items.map((item: any, index: any) => {
+                                {items?.map((item: any, index: any) => {
                                     return (
                                         <tr className="align-top" key={item.id}>
                                             <td>
@@ -504,7 +504,7 @@ const Edit = () => {
                 <div className="panel mb-5">
                     <label htmlFor="currency">Currency</label>
                     <select id="currency" name="currency" className="form-select" value={selectedCurrency} onChange={(e) => setSelectedCurrency(e.target.value)}>
-                        {currencyList.map((currency, i) => (
+                        {currencyList?.map((currency, i) => (
                             <option value={currency} key={i}>
                                 {currency}
                             </option>

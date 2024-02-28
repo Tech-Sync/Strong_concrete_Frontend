@@ -59,12 +59,13 @@ export default function ProductTable() {
   useEffect(() => {
     const from = (page - 1) * pageSize;
     const to = from + pageSize;
-    setRecords([...initialRecords.slice(from, to)]);
+    // setRecords([...initialRecords?.slice(from, to)]);
+    setRecords([...(Array.isArray(initialRecords) ? initialRecords.slice(from, to) : [])]);
   }, [page, pageSize, initialRecords]);
 
   useEffect(() => {
     setInitialRecords(() => {
-      return products.filter((product) => {
+      return products?.filter((product) => {
         const price = product.price.toString()
         return (
           price.toLowerCase().includes(search.toLowerCase()) ||
@@ -93,7 +94,7 @@ export default function ProductTable() {
         coloredToast("warning", "Select items to delete!");
         return;
       }
-      const ids = selectedRows.map((d: any) => {
+      const ids = selectedRows?.map((d: any) => {
         return d.id;
       });
       const deletionSuccess = await multiDeleteToast(ids, deleteMultiProduct, updateProductState);
@@ -140,7 +141,7 @@ export default function ProductTable() {
         <div className="datatables pagination-padding">
           <DataTable
             className={`${isDark} table-hover whitespace-nowrap`}
-            records={records.map((product, index) => ({
+            records={records?.map((product, index) => ({
               ...product,
               serialNumber: index + 1,
             }))}
@@ -168,7 +169,7 @@ export default function ProductTable() {
                 sortable: true,
                 render: ({ materials, id }) => (
                   <div className="flex flex-col">
-                    {Object.entries(materials).map(([key, value]) => {
+                    {Object.entries(materials)?.map(([key, value]) => {
                       let unit = 'kg';
                       if (key === 'STONE' || key === 'SAND') {
                         unit = 'ton';
@@ -215,7 +216,7 @@ export default function ProductTable() {
               },
             ]}
             highlightOnHover={true}
-            totalRecords={initialRecords.length}
+            totalRecords={initialRecords?.length}
             recordsPerPage={pageSize}
             page={page}
             onPageChange={(p) => setPage(p)}

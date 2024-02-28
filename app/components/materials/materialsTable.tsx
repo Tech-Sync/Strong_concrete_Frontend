@@ -54,12 +54,12 @@ const MaterialsTable = () => {
     useEffect(() => {
         const from = (page - 1) * pageSize;
         const to = from + pageSize;
-        setRecords([...initialRecords.slice(from, to)]);
+        setRecords([...(Array.isArray(initialRecords) ? initialRecords.slice(from, to) : [])]);
     }, [page, pageSize, initialRecords]);
 
     useEffect(() => {
         setInitialRecords(() => {
-            return materials.filter((material) => {
+            return materials?.filter((material) => {
                 return (
                     material.name.toLowerCase().includes(search.toLowerCase()) ||
                     material.unitType.toLowerCase().includes(search.toLowerCase())
@@ -85,11 +85,11 @@ const MaterialsTable = () => {
             }
         } else {
             let selectedRows = selectedRecords || [];
-            if (selectedRows.length === 0) {
+            if (selectedRows?.length === 0) {
                 coloredToast("warning", "Select items to delete!");
                 return;
             }
-            const ids = selectedRows.map((d: any) => {
+            const ids = selectedRows?.map((d: any) => {
                 return d.id;
             });
             const deletionSuccess = await multiDeleteToast(ids, deleteMultiMaterial, updateMaterial);
@@ -193,7 +193,7 @@ const MaterialsTable = () => {
                         },
                     ]}
                     highlightOnHover={true}
-                    totalRecords={initialRecords.length}
+                    totalRecords={initialRecords?.length}
                     recordsPerPage={pageSize}
                     page={page}
                     onPageChange={(p) => setPage(p)}
