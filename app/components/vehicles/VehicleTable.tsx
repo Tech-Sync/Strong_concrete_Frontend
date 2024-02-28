@@ -47,7 +47,8 @@ export default function VehicleTable() {
     plateNumber: "",
     model: '',
     capacity: '',
-    status: ''
+    status: 1,
+    isPublic: true
   });
 
   useEffect(() => {
@@ -72,8 +73,8 @@ export default function VehicleTable() {
         const model = vehicle.model.toString()
         const capacity = vehicle.capacity.toString()
         const status = vehicle.status.toString()
-        const firstName = vehicle.driver.firstName
-        const lastName = vehicle.driver.lastName
+        const firstName = vehicle.driver?.firstName
+        const lastName = vehicle.driver?.lastName
         return (
           plateNumber.toLowerCase().includes(search.toLowerCase()) ||
           firstName.toLowerCase().includes(search.toLowerCase()) ||
@@ -178,6 +179,15 @@ export default function VehicleTable() {
               {
                 accessor: "plateNumber",
                 sortable: true,
+              },
+              {
+                accessor: "Condition",
+                sortable: true,
+                render: ({ isPublic, id }) => (
+                  <div className="flex items-center font-semibold">
+                    <div>{isPublic ? 'Good':"Fixing"}</div>
+                  </div>
+                ),
               },
               {
                 accessor: "model",

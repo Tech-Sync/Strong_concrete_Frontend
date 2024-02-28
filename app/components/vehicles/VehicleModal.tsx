@@ -2,23 +2,23 @@ import { PlusIcon } from "@/app/icons";
 import { Dialog, Transition } from "@headlessui/react";
 import { Formik } from "formik";
 import React, { Fragment, useState } from "react";
-import { object, string } from "yup";
+import { boolean, number, object, string } from "yup";
 import { coloredToast } from "@/lib/sweetAlerts";
 import { useRouter } from "next/navigation";
-import { getAllFrimAsync, useDispatch } from "@/lib/redux";
+import { getAllFrimAsync, getAllVehicleAsync, useDispatch } from "@/lib/redux";
 import { Firm } from "@/types/types";
 import { addFirm, updateFirm } from "@/lib/redux/slices/firmSlice/firmActions";
 import VehicleForm from "./VehicleForm";
 import { ModalCloseIcon } from "@/app/icons/modal";
+import { createVehicle, updateVehicle } from "@/lib/redux/slices/vehicleSlice/vehicleActions";
 
 const firmSchema = object({
-  name: string().required("This field is required."),
-  phoneNo: string().required("This field is required."),
-  address: string().required("This field is required."),
-  status: string().required("This field is required."),
-  email: string()
-    .email("Please enter a valid email address!")
-    .required("Email is required!"),
+  DriverId: string().required("This field is required."),
+  plateNumber: string().required("This field is required."),
+  model: string().required("This field is required."),
+  capacity: number().required("This field is required."),
+  status: string().required("This field is required!"),
+  isPublic: boolean().required("This field is required!"),
 });
 
 interface firmModalProps {
@@ -35,7 +35,8 @@ export default function VehicleModal({ modal, setModal, vehicleInitials, setVehi
     plateNumber: "",
     model: '',
     capacity: '',
-    status: ''
+    status: 1,
+    isPublic: true
   };
   const dispatch = useDispatch();
   const router = useRouter();
@@ -81,8 +82,8 @@ export default function VehicleModal({ modal, setModal, vehicleInitials, setVehi
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="panel my-32 w-full max-w-sm overflow-hidden rounded-lg border-0 py-1 px-4 text-black dark:text-white-dark">
-                  <div className="flex items-center justify-between p-4 text-lg font-semibold dark:text-white ">
+                <Dialog.Panel className="panel my-32 w-full max-w-lg overflow-hidden rounded-lg border-0 py-1 px-4 text-black dark:text-white-dark">
+                  <div className="flex items-center justify-between p-5 text-lg font-semibold dark:text-white ">
                     <h5>{vehicleInitials.id ? "Update The Vehicle" : "Add New Vehicle"}</h5>
                     <button
                       type="button"
@@ -98,28 +99,25 @@ export default function VehicleModal({ modal, setModal, vehicleInitials, setVehi
                       validationSchema={firmSchema}
                       onSubmit={async (values, { setSubmitting, resetForm }) => {
                         if ("id" in vehicleInitials) {
+                          console.log('update', values);
                           //@ts-ignore
-                          console.log('update');
-                       /*    const res = await updateFirm(values);
+                          const res = await updateVehicle(values);
                           if (res.message) {
                             coloredToast("success", res.message, "bottom-start");
                             setModal(false);
-                            dispatch(getAllFrimAsync());
+                            dispatch(getAllVehicleAsync());
                           } else {
                             coloredToast("danger", res.error, "bottom-start");
-                          } */
+                          }
                         } else {
-                          const res = await addFirm(values);
+                          console.log('add', values);
+                          const res = await createVehicle(values);
                           setTimeout(() => {
                             setSubmitting(false);
                             if (res.message) {
-                              coloredToast(
-                                "success",
-                                res.message,
-                                "bottom-start"
-                              );
+                              coloredToast("success", res.message, "bottom-start");
                               setModal(false);
-                              dispatch(getAllFrimAsync());
+                              dispatch(getAllVehicleAsync());
                             } else {
                               coloredToast("danger", res.error, "bottom-start");
                             }

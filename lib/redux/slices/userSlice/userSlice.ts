@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { User } from "@/types/types";
-import { getAllUserAsync } from "./thunk";
+import { getAllUsersAsync } from "./thunk";
 
 const initialState: UserSliceState = {
   users: [],
@@ -21,14 +21,14 @@ export const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getAllUserAsync.pending, (state) => {
+      .addCase(getAllUsersAsync.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(getAllUserAsync.rejected, (state, action) => {
+      .addCase(getAllUsersAsync.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload ?? null;
       })
-      .addCase(getAllUserAsync.fulfilled, (state, action) => {
+      .addCase(getAllUsersAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.users = action.payload;
       });

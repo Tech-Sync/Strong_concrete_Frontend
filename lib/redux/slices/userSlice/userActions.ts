@@ -14,7 +14,7 @@ const authConfig = async () => {
   };
 };
 
-export const getAllUser = async () => {
+export const getAllUsers= async () => {
   const headers = await authConfig();
   try {
     const response = await fetch(`${BASE_URL}/users`, {
@@ -79,7 +79,7 @@ export const deleteMultiUser = async (ids: any) => {
   }
 };
 
-export const createUsers = async (vehicleData: Object) => {
+export const createUser = async (vehicleData: Object) => {
   const headers = await authConfig();
   try {
     const response = await fetch(`${BASE_URL}/users`, {
@@ -123,3 +123,25 @@ export const updateUser = async (vehicleData: Product) => {
     return { error: error.message };
   }
 };
+
+
+export const getFilteredUsers= async (filter:string) => {
+  const headers = await authConfig();
+  try {
+    const response = await fetch(`${BASE_URL}/users?${filter}`, {
+      cache: "no-cache",
+      headers,
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return data;
+    } else {
+      throw new Error(data.message || "Something went wrong, Please try again!");
+    }
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};
+

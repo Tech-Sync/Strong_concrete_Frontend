@@ -1,10 +1,10 @@
 import { createAppAsyncThunk } from "../../createAppAsyncThunk";
-import { getAllUser } from "./userActions";
+import { getAllUsers } from "./userActions";
 
-export const getAllUserAsync = createAppAsyncThunk(
+export const getAllUsersAsync = createAppAsyncThunk(
   "user/getAllUsers",
   async () => {
-    const response = await getAllUser();
+    const response = await getAllUsers();
     return response.data;
   }
 );

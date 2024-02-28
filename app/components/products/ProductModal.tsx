@@ -234,7 +234,7 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
                                   <div key={item.id} className="flex gap-x-2 mb-3">
                                     <Select
                                       name='FirmId'
-                                      className=' flex-1'
+                                      className='flex-1'
                                       placeholder={"Select a Material"}
                                       options={materialOptions}
                                       onChange={option => handleSelectChange(option, item.id)}

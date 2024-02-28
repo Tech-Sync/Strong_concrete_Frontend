@@ -1,61 +1,93 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Field, ErrorMessage, FormikProps } from "formik";
-import { AddressIcon, EmailIcon, NameIcon, PhoneIcon, StatusIcon, TpinIcon, } from "./VehicleModalIcons";
-import { Vehicle } from "@/types/types";
+import { AddressIcon, NameIcon, PhoneIcon } from "./VehicleModalIcons";
+import { User, Vehicle } from "@/types/types";
 import Select from 'react-select';
-import { getAllFrimAsync, getAllMaterialAsync, selectFirms, selectMaterials, useDispatch, useSelector } from "@/lib/redux";
+import { useDispatch } from "@/lib/redux";
+import { getFilteredUsers } from "@/lib/redux/slices/userSlice/userActions";
+import { vehicleStatuses } from "@/app/constraints/roles&status";
 
 
-interface FormValues {
+/* interface FormValues {
   name: string;
   address: string;
   phoneNo: string;
   tpinNo: string;
   email: string;
   status: string;
-}
+} */
 
 const VehicleForm: React.FC<FormikProps<Vehicle>> = ({ touched, errors, isSubmitting, handleSubmit, setFieldValue, values }) => {
 
   const dispatch = useDispatch()
+  const [drivers, setDrivers] = useState<User[]>([])
 
   useEffect(() => {
-    dispatch(getAllFrimAsync());
-    dispatch(getAllMaterialAsync());
+    (
+      async () => {
+        const res = await getFilteredUsers('search[role]=1')
+        if (!res?.error) {
+          setDrivers(res.data)
+        }
+      }
+    )()
+
   }, [dispatch]);
 
-  const firms = useSelector(selectFirms);
-  const materials = useSelector(selectMaterials);
 
-
-  const firmOptions = firms?.filter(firm => firm.status === 2)?.map(firm => ({
-    value: firm.id,
-    label: firm.name
-  }))
-  const materialOptions = materials?.map(material => ({
-    value: material.id,
-    label: material.name,
+  const driverOptions = drivers?.map(driver => ({
+    value: driver?.id,
+    label: driver.firstName + " " + driver.firstName
   }))
 
+  const readyOptions = [
+    { value: false, label: "False" },
+    { value: true, label: "True" },
+  ]
 
+  const statusOptions = Object.entries(vehicleStatuses).map(([key, value]) => ({
+    value: parseInt(key),
+    label: value
+  }));
+  
   return (
     <Form onSubmit={handleSubmit}>
-      <div className="flex gap-x-2 mb-3">
 
-      </div>
-      <div className="relative mb-4">
-        <StatusIcon />
-        <div
-          className={`${touched.status && errors.status ? "has-error" : ""}`}
-        >
-          <Select name='FirmId'
+      <div className="relative mb-3">
+        <label htmlFor="DriverId" className="mb-1">Select the driver</label>
+        <div className={`${touched.status && errors.status ? "has-error" : ""}`}>
+          <Select name='DriverId'
             //@ts-ignore
-            value={firmOptions.find(option => option.value === values.FirmId)}
-            onChange={option => setFieldValue('FirmId', option ? Number(option.value) : '')}
-            className='form-input' placeholder="Select a Firm" options={firmOptions} />
+            value={driverOptions.find(option => option.value === values.DriverId)}
+            onChange={option => setFieldValue('DriverId', option ? Number(option.value) : '')}
+            className='form-input' placeholder="Driver" options={driverOptions} />
         </div>
       </div>
+
+      <div className="flex gap-x-2">
+        <div className="relative mb-3 flex-1">
+          <label htmlFor="name" className="mb-1">Ready</label>
+          <div className={`${touched.isPublic && errors.isPublic ? "has-error" : ""}`}>
+            <Select name='isPublic'
+              value={readyOptions.find(option => option.value === values.isPublic)}
+              onChange={option => setFieldValue('isPublic', option ? option.value : '')}
+              className='form-input' options={readyOptions} />
+          </div>
+        </div>
+        <div className="relative mb-3 flex-1">
+          <label htmlFor="name" className="mb-1">Status</label>
+          <div className={`${touched.status && errors.status ? "has-error" : ""}`} >
+            <Select name='status'
+              //@ts-ignore
+              value={statusOptions.find(option => option.value === values.status)}
+              onChange={option => setFieldValue('status', option ? Number(option.value) : '')}
+              className='form-input' options={statusOptions} />
+          </div>
+        </div>
+      </div>
+
       <div className="mb-3">
+        <label htmlFor="plateNumber" className="mb-1">Plate number</label>
         <div className="relative">
           <NameIcon />
           <Field
@@ -73,74 +105,44 @@ const VehicleForm: React.FC<FormikProps<Vehicle>> = ({ touched, errors, isSubmit
         />
       </div>
 
-      <div className="mb-3">
-        <div className="relative">
-          <AddressIcon />
-          <Field
-            type="number"
+      <div className="flex gap-x-2">
+        <div className="mb-3">
+          <label htmlFor="model" className="mb-1">Model</label>
+          <div className="relative">
+            <AddressIcon />
+            <Field
+              type="number"
+              name="model"
+              placeholder="Model"
+              className={`form-input ltr:pl-10 rtl:pr-10${touched.model && errors.model ? "border-red-500" : ""
+                }`}
+            />
+          </div>
+          <ErrorMessage
             name="model"
-            placeholder="Model"
-            className={`form-input ltr:pl-10 rtl:pr-10${touched.model && errors.model ? "border-red-500" : ""
-              }`}
+            component="div"
+            className="text-red-500 text-sm mt-1 "
           />
         </div>
-        <ErrorMessage
-          name="model"
-          component="div"
-          className="text-red-500 text-sm mt-1 "
-        />
-      </div>
 
-      <div className="mb-3">
-        <div className="relative">
-          <PhoneIcon />
-          <Field
-            type="number"
+        <div className="mb-3">
+          <label htmlFor="capacity" className="mb-1">Capacity</label>
+          <div className="relative">
+            <PhoneIcon />
+            <Field
+              type="number"
+              name="capacity"
+              placeholder="Capacity (m3)"
+              className={`form-input ltr:pl-10 rtl:pr-10${touched.capacity && errors.capacity ? "border-red-500" : ""
+                }`}
+            />
+          </div>
+          <ErrorMessage
             name="capacity"
-            placeholder="Capacity (m3)"
-            className={`form-input ltr:pl-10 rtl:pr-10${touched.capacity && errors.capacity ? "border-red-500" : ""
-              }`}
+            component="div"
+            className="text-red-500 text-sm mt-1"
           />
         </div>
-        <ErrorMessage
-          name="capacity"
-          component="div"
-          className="text-red-500 text-sm mt-1"
-        />
-      </div>
-      <div className="mb-3">
-        <div className="relative">
-          <EmailIcon />
-          <Field
-            type="email"
-            name="email"
-            placeholder="Firm Email"
-            className={`form-input ltr:pl-10 rtl:pr-10${touched.email && errors.email ? "border-red-500" : ""
-              }`}
-          />
-        </div>
-        <ErrorMessage
-          name="email"
-          component="div"
-          className="text-red-500 text-sm mt-1"
-        />
-      </div>
-      <div className="mb-3">
-        <div className="relative">
-          <TpinIcon />
-          <Field
-            type="text"
-            name="tpinNo"
-            placeholder="Firm Tpin Number"
-            className={`form-input ltr:pl-10 rtl:pr-10${touched.tpinNo && errors.tpinNo ? "border-red-500" : ""
-              }`}
-          />
-        </div>
-        <ErrorMessage
-          name="tpinNo"
-          component="div"
-          className="text-red-500 text-sm mt-1"
-        />
       </div>
 
       <button
