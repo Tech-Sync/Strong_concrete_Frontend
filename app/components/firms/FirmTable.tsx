@@ -68,12 +68,12 @@ export default function FirmTable() {
   useEffect(() => {
     const from = (page - 1) * pageSize;
     const to = from + pageSize;
-    setRecords([...initialRecords.slice(from, to)]);
+    setRecords([...(Array.isArray(initialRecords) ? initialRecords.slice(from, to) : [])]);
   }, [page, pageSize, initialRecords]);
 
   useEffect(() => {
     setInitialRecords(() => {
-      return firms.filter((firm) => {
+      return firms?.filter((firm) => {
         return (
           firm.address.toLowerCase().includes(search.toLowerCase()) ||
           firm.email.toLowerCase().includes(search.toLowerCase()) ||
@@ -100,11 +100,11 @@ export default function FirmTable() {
       }
     } else {
       let selectedRows = selectedRecords || [];
-      if (selectedRows.length === 0) {
+      if (selectedRows?.length === 0) {
         coloredToast("warning", "Select items to delete!");
         return;
       }
-      const ids = selectedRows.map((d: any) => {
+      const ids = selectedRows?.map((d: any) => {
         return d.id;
       });
       const deletionSuccess = await multiDeleteToast(ids, deleteMultiFirm, updateFirm);
@@ -239,7 +239,7 @@ export default function FirmTable() {
               },
             ]}
             highlightOnHover={true}
-            totalRecords={initialRecords.length}
+            totalRecords={initialRecords?.length}
             recordsPerPage={pageSize}
             page={page}
             onPageChange={(p) => setPage(p)}

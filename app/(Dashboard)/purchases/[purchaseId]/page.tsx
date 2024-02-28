@@ -82,7 +82,7 @@ const Preview = async ({ params }: { params: { purchaseId: string } }) => {
           <table className="table-striped">
             <thead>
               <tr>
-                {columns.map((column) => {
+                {columns?.map((column) => {
                   return (
                     <th key={column.key} className={column?.class}>
                       {column.label}

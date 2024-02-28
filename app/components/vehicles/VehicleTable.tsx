@@ -1,37 +1,37 @@
 "use client";
-import Link from "next/link";
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
 import { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
-import { useSelector } from "react-redux";
-import { Purchase } from "@/types/types";
-import { DeleteIcon, EditIcon, PlusIcon, PreviewIcon } from "@/app/icons";
+import { DeleteIcon, EditIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
+import { vehicleStatuses } from "@/app/constraints/roles&status";
 import { coloredToast } from "@/lib/sweetAlerts";
-import { getAllPurchaseAsync, updatePurchaseState, selectIsDarkMode, selectPurchases, updatePurchases, useDispatch } from "@/lib/redux";
+import {
+  selectIsDarkMode,
+  useDispatch,
+  useSelector,
+  getAllVehicleAsync,
+  selectVehicles,
+  updateVehicleState,
+} from "@/lib/redux";
+import VehicleModal from "./VehicleModal";
 import useDeleteToasts from "@/hooks/useDeleteToasts";
-import { deleteMultiPurchase, deletePurchase } from "@/lib/redux/slices/purchaseSlice/purchaseActions";
-import { useRouter } from "next/navigation";
+import { deleteMultiVehicle, deleteVehicle } from "@/lib/redux/slices/vehicleSlice/vehicleActions";
 
-
-
-export default function PurchaseTable() {
+export default function VehicleTable() {
   const dispatch = useDispatch();
-  const router = useRouter()
   const { deleteToast, multiDeleteToast } = useDeleteToasts();
-  const purchases = useSelector(selectPurchases);
+  const vehicles = useSelector(selectVehicles);
   const isDark = useSelector(selectIsDarkMode);
 
   useEffect(() => {
-    dispatch(getAllPurchaseAsync());
-    dispatch(updatePurchaseState(null))
+    dispatch(getAllVehicleAsync());
   }, []);
 
-
   const [page, setPage] = useState(1);
-  const PAGE_SIZES = [10, 20, 30, 50, 100];
+  const PAGE_SIZES = [10, 20, 30, 40, 50];
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-  const [initialRecords, setInitialRecords] = useState(sortBy(purchases, "id"));
+  const [initialRecords, setInitialRecords] = useState(sortBy(vehicles, "id"));
   const [records, setRecords] = useState(initialRecords);
   const [selectedRecords, setSelectedRecords] = useState<any>([]);
   const [search, setSearch] = useState("");
@@ -39,12 +39,22 @@ export default function PurchaseTable() {
     columnAccessor: "id",
     direction: "asc",
   });
+  const [modal, setModal] = useState(false);
 
+  //@ts-ignore
+  const [vehicleInitials, setVehicleInitials] = useState({
+    DriverId: '',
+    plateNumber: "",
+    model: '',
+    capacity: '',
+    status: 1,
+    isPublic: true
+  });
 
   useEffect(() => {
-    setRecords(purchases);
-    setInitialRecords(purchases);
-  }, [purchases]);
+    setRecords(vehicles);
+    setInitialRecords(vehicles);
+  }, [vehicles]);
 
   useEffect(() => {
     setPage(1);
@@ -57,22 +67,25 @@ export default function PurchaseTable() {
   }, [page, pageSize, initialRecords]);
 
   useEffect(() => {
-    if (purchases) {
-      setInitialRecords(() => {
-        return purchases?.filter((purchase) => {
-          const materialName = purchase?.Material?.name;
-          const firmName = purchase.Firm?.name;
-          const createdAt = purchase.createdAt;
-
-          return (
-            (materialName?.toLowerCase().includes(search.toLowerCase()) ?? false) ||
-            (firmName?.toLowerCase().includes(search.toLowerCase()) ?? false) ||
-            createdAt.toLowerCase().includes(search.toLowerCase())
-          );
-        });
+    setInitialRecords(() => {
+      return vehicles?.filter((vehicle) => {
+        const plateNumber = vehicle.plateNumber.toString()
+        const model = vehicle.model.toString()
+        const capacity = vehicle.capacity.toString()
+        const status = vehicle.status.toString()
+        const firstName = vehicle.driver?.firstName
+        const lastName = vehicle.driver?.lastName
+        return (
+          plateNumber.toLowerCase().includes(search.toLowerCase()) ||
+          firstName.toLowerCase().includes(search.toLowerCase()) ||
+          lastName.toLowerCase().includes(search.toLowerCase()) ||
+          model.toLowerCase().includes(search.toLowerCase()) ||
+          capacity.toLowerCase().includes(search.toLowerCase()) ||
+          status.toLowerCase().includes(search.toLowerCase())
+        );
       });
-    }
-  }, [purchases, search]);
+    });
+  }, [vehicles, search]);
 
   useEffect(() => {
     const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
@@ -82,7 +95,7 @@ export default function PurchaseTable() {
 
   const deleteRow = async (id: any = null) => {
     if (id) {
-      const deletionSuccess = await deleteToast(id, deletePurchase, updatePurchases);
+      const deletionSuccess = await deleteToast(id, deleteVehicle, updateVehicleState);
       if (deletionSuccess) {
         setSelectedRecords([]);
         setSearch("");
@@ -93,8 +106,10 @@ export default function PurchaseTable() {
         coloredToast("warning", "Select items to delete!");
         return;
       }
-      const ids = selectedRows?.map((d: any) => { return d.id; });
-      const deletionSuccess = await multiDeleteToast(ids, deleteMultiPurchase, updatePurchases);
+      const ids = selectedRows?.map((d: any) => {
+        return d.id;
+      });
+      const deletionSuccess = await multiDeleteToast(ids, deleteMultiVehicle, updateVehicleState);
       if (deletionSuccess) {
         setSelectedRecords([]);
         setSearch("");
@@ -102,6 +117,7 @@ export default function PurchaseTable() {
       }
     }
   };
+
 
   return (
     <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
@@ -111,15 +127,18 @@ export default function PurchaseTable() {
             <button
               type="button"
               className="btn btn-danger gap-2"
-              onClick={() => deleteRow()}
-            >
+              onClick={() => deleteRow()}>
               <DeleteIcon />
               Delete
             </button>
-            <Link href="/purchases/add" className="btn btn-primary gap-2">
-              <PlusIcon />
-              Add New
-            </Link>
+            <VehicleModal
+              modal={modal}
+              setModal={setModal}
+              //@ts-ignore
+              vehicleInitials={vehicleInitials}
+              //@ts-ignore
+              setVehicleInitials={setVehicleInitials}
+            />
           </div>
           <div className="ltr:ml-auto rtl:mr-auto">
             <input
@@ -131,53 +150,52 @@ export default function PurchaseTable() {
             />
           </div>
         </div>
-
         <div className="datatables pagination-padding">
           <DataTable
             className={`${isDark} table-hover whitespace-nowrap`}
-            records={records?.map((purchase) => ({ ...purchase }))}
+            records={records?.map((vehicle, index) => ({
+              ...vehicle,
+              serialNumber: index + 1,
+            }))}
             columns={[
               {
-                accessor: "id",
+                accessor: "Id",
                 sortable: true,
-                render: ({ id }) => (
-                  <div className="font-semibold text-primary underline hover:no-underline">{`#${id}`}</div>
+                render: ({ serialNumber }) => (
+                  <div className="font-semibold text-primary underline hover:no-underline">
+                    {`#${serialNumber}`}
+                  </div>
                 ),
               },
               {
-                accessor: "Firm",
+                accessor: "Driver Name",
                 sortable: true,
-                render: ({ Firm, id }) => (
+                render: ({ driver, id }) => (
                   <div className="flex items-center font-semibold">
-                    <div className={Firm.name ? "" : "text-red-800"}>{Firm.name ?? 'Data Deleted'}</div>
+                    <div>{driver.firstName + " " + driver.lastName}</div>
                   </div>
                 ),
               },
               {
-                accessor: "purchase",
-                sortable: true,
-                render: ({ Material, id }) => (
-                  <div className="flex items-center">
-                    <div className={Material.name ? "" : "text-red-800"}>{Material.name ?? 'Data Deleted'}</div>
-                  </div>
-                ),
-              },
-              {
-                accessor: "quantity",
+                accessor: "plateNumber",
                 sortable: true,
               },
               {
-                accessor: "unitPrice",
+                accessor: "Condition",
                 sortable: true,
-              },
-              {
-                accessor: "totalPrice",
-                sortable: true,
-                render: ({ totalPrice, id }) => (
+                render: ({ isPublic, id }) => (
                   <div className="flex items-center font-semibold">
-                    <div>{totalPrice}</div>
+                    <div>{isPublic ? 'Good':"Fixing"}</div>
                   </div>
                 ),
+              },
+              {
+                accessor: "model",
+                sortable: true,
+              },
+              {
+                accessor: "capacity",
+                sortable: true,
               },
               {
                 accessor: "createdAt",
@@ -188,32 +206,40 @@ export default function PurchaseTable() {
                 ),
               },
               {
+                accessor: "status",
+                sortable: true,
+                render: ({ status }) => (
+                  <span className={`badge badge-outline-secondary`}>
+                    {/* @ts-ignore */}
+                    {vehicleStatuses[String(status)]}
+                  </span>
+                ),
+              },
+              {
                 accessor: "action",
                 title: "Actions",
                 sortable: false,
                 textAlignment: "center",
-                render: (purchase) => (
+                render: (vehicle) => (
                   <div className="mx-auto flex w-max items-center gap-4">
                     <button
                       onClick={() => {
-                        router.push(`/purchases/add`)
-                        dispatch(updatePurchaseState(purchase))
+                        //@ts-ignore
+                        setVehicleInitials(vehicle), setModal(true);
                       }}
-                      className="flex hover:text-info"
-                    >
+                      className="flex hover:text-info">
                       <EditIcon />
                     </button>
-                    <Link
-                      href={`/purchases/${purchase.id}`}
+                    {/*     <Link
+                      href="/apps/invoice/preview"
                       className="flex hover:text-primary"
                     >
                       <PreviewIcon />
-                    </Link>
+                    </Link> */}
                     <button
                       type="button"
                       className="flex hover:text-danger"
-                      onClick={(e) => deleteRow(purchase.id)}
-                    >
+                      onClick={(e) => deleteRow(vehicle.id)}>
                       <DeleteIcon />
                     </button>
                   </div>
