@@ -10,14 +10,15 @@ import {  PurchaseAccount } from "@/types/types";
 import { ModalCloseIcon } from "@/app/icons/modal";
 import {  updatePurchaseAccount } from "@/lib/redux/slices/accountsSlice/accountsAction";
 import AccountForm from "./AccountForm";
+import AccountUpdateForm from "./AccountUpdateForm";
 
-// const accountsSchema = object({
-//   firm: string().required("firm is required!"),
-//   material: string().required("material is required."),
-//   debit: string().required("debit is required."),
-//   credit: string().required("credit is required."),
-//   balance: string().required("balance is required."),
-// });
+const accountsSchema = object({
+  firm: string().required("firm is required!"),
+  material: string().required("material is required."),
+  debit: string().required("debit is required."),
+  credit: string().required("credit is required."),
+  balance: string().required("balance is required."),
+});
 
 interface accountsModalProps {
   setModal: (value: boolean) => void;
@@ -92,11 +93,11 @@ const dispatch = useDispatch();
                   <div className="p-5">
                     <Formik
                       initialValues={accountsInitials.id ? accountsInitials : emptyMaterial}
-                      // validationSchema={accountsSchema}
+                       validationSchema={accountsSchema}
 
                       onSubmit={async (values, { setSubmitting, resetForm }) => {
                         console.log(values);
-                        console.log(setSubmitting);
+                   
                         const data = {
                           FirmId: values.FirmId,
                           credit: values.credit,
@@ -163,8 +164,8 @@ const dispatch = useDispatch();
                       //   // }
                       // }}
                       //@ts-ignore
-                      // component={(props) => accountsInitials.id ? <AccountUpdateForm {...props} /> : <AccountForm {...props} />}
-                       component={(props) =>  <AccountForm {...props} /> }
+                       // component={(props) => accountsInitials.id ? <AccountUpdateForm {...props} /> : <AccountForm {...props} />}
+                        component={(props) =>  <AccountForm {...props} /> }
                     ></Formik>
                   </div>
                 </Dialog.Panel>

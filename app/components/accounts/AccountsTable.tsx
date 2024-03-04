@@ -34,7 +34,6 @@ const handleEdit = (id: any) => {
   // setAccountsInitials(account);
 }
 
-console.log('purchaseAccountTable:',accounts);
   const isDark = useSelector(selectThemeConfig).isDarkMode;
 
   const [page, setPage] = useState(1);
