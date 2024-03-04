@@ -116,3 +116,31 @@ export interface User {
   updatedAt: string | null;
   deletedAt: string | null;
 }
+
+export interface Sale  {
+  id: number,
+  FirmId: number,
+  ProductId: number,
+  quantity: number,
+  unitPrice: number,
+  location: string,
+  otherCharges: number,
+  totalPrice: number,
+  discount: number,
+  requestedDate: string,
+  sideContact: string,
+  confirmDate: string | null,
+  orderNumber: number,
+  status: number,
+  createdAt: string,
+  updatedAt: string | null,
+  deletedAt: string | null,
+  creatorId: number,
+  updaterId: number | null;
+  Firm: {
+    name: string
+  },
+  Product: {
+    name: string
+  }
+}

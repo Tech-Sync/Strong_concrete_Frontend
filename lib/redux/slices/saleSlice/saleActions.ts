@@ -13,10 +13,10 @@ const authConfig = async () => {
   };
 };
 
-export const getAllPurchases = async () => {
+export const getAllSales = async () => {
   const headers = await authConfig();
   try {
-    const response = await fetch(`${BASE_URL}/purchases`, {
+    const response = await fetch(`${BASE_URL}/sales`, {
       cache: "no-cache",
       headers,
     });
@@ -33,10 +33,10 @@ export const getAllPurchases = async () => {
   }
 };
 
-export const deletePurchase = async (id: any) => {
+export const deleteSale = async (id: any) => {
   const headers = await authConfig();
   try {
-    const response = await fetch(`${BASE_URL}/purchases/${id}`, {
+    const response = await fetch(`${BASE_URL}/sales/${id}`, {
       method: "DELETE",
       headers,
     });
@@ -54,11 +54,11 @@ export const deletePurchase = async (id: any) => {
   }
 };
 
-export const deleteMultiPurchase = async (ids:any) => {
+export const deleteMultiSale = async (ids:any) => {
   const headers = await authConfig();
 
   try {
-    const response = await fetch(`${BASE_URL}/purchases/multiple-delete`, {
+    const response = await fetch(`${BASE_URL}/sales/multiple-delete`, {
       method: "POST",
       headers,
       body: JSON.stringify({ids}),
@@ -77,11 +77,11 @@ export const deleteMultiPurchase = async (ids:any) => {
   }
 };
 
-export const readPurchase = async (id:string) => {
+export const readSale = async (id:string) => {
   const headers = await authConfig();
   
   try {
-    const response = await fetch(`${BASE_URL}/purchases/${id}`, {
+    const response = await fetch(`${BASE_URL}/sales/${id}`, {
       headers,
     });
 
@@ -99,13 +99,13 @@ export const readPurchase = async (id:string) => {
 
 }
 
-export const addPurchase = async (purchaseData: Object) => {
+export const addSale = async (saleData: Object) => {
   const headers = await authConfig();
   try {
-    const response = await fetch(`${BASE_URL}/purchases`, {
+    const response = await fetch(`${BASE_URL}/sales`, {
       method: "POST",
       headers,
-      body: JSON.stringify(purchaseData),
+      body: JSON.stringify(saleData),
     });
 
     const data = await response.json();
@@ -130,13 +130,13 @@ interface updateData{
   unitPrice: string | number,
 }
 
-export const updatePurchase = async (purchaseData: updateData) => {
+export const updateSale = async (saleData: updateData) => {
   const headers = await authConfig();
   try {
-    const response = await fetch(`${BASE_URL}/purchases/${purchaseData.id}`, {
+    const response = await fetch(`${BASE_URL}/sales/${saleData.id}`, {
       method: "PUT",
       headers,
-      body: JSON.stringify(purchaseData),
+      body: JSON.stringify(saleData),
     });
 
     const data = await response.json();
