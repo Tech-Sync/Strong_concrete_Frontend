@@ -3,22 +3,21 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Formik } from "formik";
 import React, { Fragment } from "react";
 import { object, string } from "yup";
-import AccountForm from "./AccountForm";
 import { coloredToast } from "@/lib/sweetAlerts";
 import { useRouter } from "next/navigation";
-import { getAllMaterialAsync, useDispatch } from "@/lib/redux";
+import { getAllAccountsAsync, getAllMaterialAsync, useDispatch } from "@/lib/redux";
 import {  PurchaseAccount } from "@/types/types";
 import { ModalCloseIcon } from "@/app/icons/modal";
-import { updatePurchaseAccount } from "@/lib/redux/slices/accountsSlice/accountsAction";
-import AccountUpdateForm from "./AccountUpdateForm";
+import {  updatePurchaseAccount } from "@/lib/redux/slices/accountsSlice/accountsAction";
+import AccountForm from "./AccountForm";
 
-const accountsSchema = object({
-  firm: string().required("firm is required!"),
-  material: string().required("material is required."),
-  debit: string().required("debit is required."),
-  credit: string().required("credit is required."),
-  balance: string().required("balance is required."),
-});
+// const accountsSchema = object({
+//   firm: string().required("firm is required!"),
+//   material: string().required("material is required."),
+//   debit: string().required("debit is required."),
+//   credit: string().required("credit is required."),
+//   balance: string().required("balance is required."),
+// });
 
 interface accountsModalProps {
   setModal: (value: boolean) => void;
@@ -28,7 +27,7 @@ interface accountsModalProps {
 }
 
 export default function AccountModal({ modal, setModal, accountsInitials, setAccountsInitials, }: accountsModalProps) {
-console.log(accountsInitials)
+const dispatch = useDispatch();
   const emptyMaterial = {
     Firm: {name: "", id: 0},
     Purchase:{id:0,Material:{name:''}},
@@ -38,7 +37,7 @@ console.log(accountsInitials)
     id: 0,
     FirmId:0,
 };
-console.log(emptyMaterial);
+
 
   return (
     <div>
@@ -93,37 +92,79 @@ console.log(emptyMaterial);
                   <div className="p-5">
                     <Formik
                       initialValues={accountsInitials.id ? accountsInitials : emptyMaterial}
-                      validationSchema={accountsSchema}
+                      // validationSchema={accountsSchema}
+
                       onSubmit={async (values, { setSubmitting, resetForm }) => {
                         console.log(values);
+                        console.log(setSubmitting);
+                        const data = {
+                          FirmId: values.FirmId,
+                          credit: values.credit,
                         
-                        // if ("id" in accountsInitials) {
-                        //   const res = await updatePurchaseAccount(values);
+                        }
+                        
+                        if ("id" in accountsInitials) {
+                          //@ts-ignore
+                          const res = await updatePurchaseAccount(values.id, data);
 
-                        //   if (res.message) {
-                        //     coloredToast("success", res.message, "bottom-start");
-                        //     setModal(false);
-                        //     dispatch(getAllMaterialAsync());
-                        //   } else {
-                        //     coloredToast("danger", res.error, "bottom-start");
-                        //   }
-                        // } else {
-                        //   const res = await updatePurchaseAccount(values);
+                          if (res.message) {
+                            coloredToast("success", res.message, "bottom-start");
+                            setModal(false);
+                            dispatch(getAllAccountsAsync());
+                          } else {
+                            //@ts-ignore
+                            coloredToast("danger", res.error, "bottom-start");
+                          }
+                        } else {
+                            //@ts-ignore
+                          const res = await updatePurchaseAccount(values.id, data);
 
-                        //   setTimeout(() => {
-                        //     setSubmitting(false);
-                        //     if (res.message) {
-                        //       coloredToast("success", res.message, "bottom-start");
-                        //       setModal(false);
-                        //       dispatch(getAllMaterialAsync());
-                        //     } else {
-                        //       coloredToast("danger", res.error, "bottom-start");
-                        //     }
-                        //   }, 500);
-                        // }
+                          setTimeout(() => {
+                            setSubmitting(false);
+                            if (res.message) {
+                              coloredToast("success", res.message, "bottom-start");
+                              setModal(false);
+                              dispatch(getAllAccountsAsync());
+                            } else {
+                                //@ts-ignore
+                              coloredToast("danger", res.error, "bottom-start");
+                            }
+                          }, 500);
+                        }
                       }}
+                      // onSubmit={async (values, { setSubmitting, resetForm }) => {
+                      //   console.log(values);
+                      //   console.log(setSubmitting);
+                        
+                        
+                      //   // if ("id" in accountsInitials) {
+                      //   //   const res = await updatePurchaseAccount(values);
+
+                      //   //   if (res.message) {
+                      //   //     coloredToast("success", res.message, "bottom-start");
+                      //   //     setModal(false);
+                      //   //     dispatch(getAllMaterialAsync());
+                      //   //   } else {
+                      //   //     coloredToast("danger", res.error, "bottom-start");
+                      //   //   }
+                      //   // } else {
+                      //   //   const res = await updatePurchaseAccount(values);
+
+                      //   //   setTimeout(() => {
+                      //   //     setSubmitting(false);
+                      //   //     if (res.message) {
+                      //   //       coloredToast("success", res.message, "bottom-start");
+                      //   //       setModal(false);
+                      //   //       dispatch(getAllMaterialAsync());
+                      //   //     } else {
+                      //   //       coloredToast("danger", res.error, "bottom-start");
+                      //   //     }
+                      //   //   }, 500);
+                      //   // }
+                      // }}
                       //@ts-ignore
-                      component={(props) => accountsInitials.id ? <AccountUpdateForm {...props} /> : <AccountForm {...props} />}
+                      // component={(props) => accountsInitials.id ? <AccountUpdateForm {...props} /> : <AccountForm {...props} />}
+                       component={(props) =>  <AccountForm {...props} /> }
                     ></Formik>
                   </div>
                 </Dialog.Panel>

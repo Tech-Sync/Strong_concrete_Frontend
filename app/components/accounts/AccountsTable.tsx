@@ -72,12 +72,12 @@ useEffect(() => {
   useEffect(() => {
     const from = (page - 1) * pageSize;
     const to = from + pageSize;
-    setRecords([...initialRecords.slice(from, to)]);
+    setRecords([...(Array.isArray(initialRecords) ? initialRecords.slice(from, to) : [])]);
   }, [page, pageSize, initialRecords]);
 
   useEffect(() => {
     setInitialRecords(() => {
-      return accounts.filter((account) => {
+      return accounts?.filter((account) => {
         return (
 
           //@ts-ignore
@@ -167,7 +167,7 @@ useEffect(() => {
         <div className="datatables pagination-padding">
           <DataTable
             className={`${isDark} table-hover whitespace-nowrap`}
-            records={records.map((account) => ({ ...account }))}
+            records={records?.map((account) => ({ ...account }))}
             columns={[
               {
                 accessor: "id",
@@ -302,7 +302,7 @@ useEffect(() => {
               },
             ]}
             highlightOnHover={true}
-            totalRecords={initialRecords.length}
+            totalRecords={initialRecords?.length}
             recordsPerPage={pageSize}
             page={page}
             onPageChange={(p) => setPage(p)}
