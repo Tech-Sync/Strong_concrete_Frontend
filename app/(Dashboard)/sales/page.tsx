@@ -1,6 +1,7 @@
-import SaleTable from '@/app/components/sales/SaleTable'
+import SableTabs from '@/app/components/sales/SableTabs'
 import Link from 'next/link'
 import React from 'react'
+
 
 const SalePage = () => {
   return (
@@ -15,7 +16,7 @@ const SalePage = () => {
           <span>Sales</span>
         </li>
       </ul>
-      <SaleTable />
+      <SableTabs />
     </div>
   )
 }
