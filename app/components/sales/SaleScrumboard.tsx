@@ -7,27 +7,35 @@ import ScrumboardDeleteIcon from '@/app/icons/scrumboardIcons/ScrumboardDeleteIc
 import ScrumboardTagIcon from '@/app/icons/scrumboardIcons/ScrumboardTagIcon';
 import ScrumboardDateIcon from '@/app/icons/scrumboardIcons/ScrumboardDateIcon';
 import { getWeeklySaleAsync, selectWeeklySales, useDispatch, useSelector } from '@/lib/redux';
+import { getWeeklySale, updateOrder } from '@/lib/redux/slices/saleSlice/saleActions';
+import { coloredToast } from '@/lib/sweetAlerts';
+import { PreviewIcon } from '@/app/icons';
+import { useRouter } from 'next/navigation';
 
 const SaleScrumboard = () => {
 
     const dispatch = useDispatch();
-    const sales = useSelector(selectWeeklySales);
-    const [projectList, setProjectList] = useState<any>(sales);
+    const router = useRouter()
+    // const sales = useSelector(selectWeeklySales);
+    const [projectList, setProjectList] = useState<any>([]);
 
 
     useEffect(() => {
-        dispatch(getWeeklySaleAsync({ startDate: '', endDate: '' }));
+        // dispatch(getWeeklySaleAsync({ startDate: '', endDate: '' }));
+        (async () => {
+            const sales = await getWeeklySale('', '')
+            setProjectList(sales.weeklySale);
+
+        })()
+
+        // const clonedSales = JSON.parse(JSON.stringify(sales));
+        // setProjectList(clonedSales);
     }, []);
 
-    useEffect(() => {
-        // Deep clone the sales data to make it mutable
-        const clonedSales = JSON.parse(JSON.stringify(sales));
-        setProjectList(clonedSales);
-    }, [sales]);
-
-
-
-
+    // useEffect(() => {
+    //     const clonedSales = JSON.parse(JSON.stringify(sales));
+    //     setProjectList(clonedSales);
+    // }, [sales]);
 
     return (
         <div>
@@ -56,11 +64,6 @@ const SaleScrumboard = () => {
                                             setList={(newState, sortable) => {
                                                 if (sortable) {
 
-                                                    // const draggedItemId = sortable.dragged.dataset.id; // Make sure each item has a data-id attribute
-                                                    // const newOrderNumber = newState.findIndex(item => item.id === draggedItemId) + 1;
-                                                    // console.log('draggedItemId',draggedItemId);
-                                                    // console.log('newOrderNumber',newOrderNumber);
-
                                                     const groupId: any = sortable.el.closest('[data-group]')?.getAttribute('data-group') || 0;
                                                     const newList = projectList?.map((task: any) => {
                                                         if (parseInt(task.id) === parseInt(groupId)) {
@@ -72,22 +75,32 @@ const SaleScrumboard = () => {
                                                     setProjectList(newList);
                                                 }
                                             }}
-                                            onEnd={(evt) => {
-                                                const draggedItemId = evt.item.dataset.id; 
+                                            onEnd={async (evt) => {
+                                                const draggedSaleId = evt.item.dataset.id;
                                                 //@ts-ignore
-                                                const newOrderNumber = evt?.newIndex + 1; 
+                                                const newOrderNumber = evt?.newIndex + 1;
                                                 const newProjectId = evt.to.parentElement?.attributes[0].nodeValue
                                                 //@ts-ignore
                                                 const newProject = projectList.find(project => project.id.toString() === newProjectId);
                                                 if (newProject) {
-                                                    const newProjectDate = newProject.date;
-                                                    console.log(`Dragged Item ID: ${draggedItemId}, New Order Number: ${newOrderNumber}, New Project Date: ${newProjectDate}`);
-                                                    // Now you can use newProjectDate to update the backend
+                                                    const newOrderDate = newProject.date;
+                                                    // console.log(`Dragged Item ID: ${draggedSaleId}, New Order Number: ${newOrderNumber}, New Project Date: ${newOrderDate}`);
+                                                    const updateOrderData = { newOrderNumber, newOrderDate }
+
+                                                    if (draggedSaleId) {
+
+                                                        const res = await updateOrder(draggedSaleId, updateOrderData)
+                                                        // dispatch(getWeeklySaleAsync({ startDate: '', endDate: '' }));
+                                                        const sales = await getWeeklySale('', '')
+                                                        setProjectList(sales.weeklySale);
+                                                        setTimeout(() => {
+                                                            coloredToast("success", res.message, "bottom-start");
+                                                        }, 900);
+                                                    }
                                                 } else {
-                                                    console.error("New project not found");
+                                                    console.error("Something went wrong sorry..");
                                                 }
-                                                // Now you can send the draggedItemId and newOrderNumber to the backend
-                                                // Example API call: updateTaskOrder(draggedItemId, newOrderNumber);
+
                                             }}
                                             animation={200}
                                             group={{ name: 'shared', pull: true, put: true }}
@@ -121,8 +134,8 @@ const SaleScrumboard = () => {
                                                                     <button type="button" className="hover:text-info">
                                                                         <ScrumboardEditIcon />
                                                                     </button>
-                                                                    <button type="button" className="hover:text-danger">
-                                                                        <ScrumboardDeleteIcon />
+                                                                    <button type="button" className="hover:text-danger" onClick={() => router.push(`/sales/${order.id}`)}>
+                                                                        <PreviewIcon />
                                                                     </button>
                                                                 </div>
                                                             </div>
@@ -142,87 +155,3 @@ const SaleScrumboard = () => {
     );
 };
 export default SaleScrumboard;
-
-
-/* 
-
-[
-        {
-            id: 1,
-            title: 'Monday',
-            date: '2024-03-04',
-            orders: [
-                {
-                    projectId: 1,
-                    id: 1,
-                    title: 'Creating a new Portfolio on Dribble',
-                    description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-                    image: true,
-                    date: ' 08 Aug, 2020',
-                    tags: ['designing'],
-                },
-                {
-                    projectId: 1,
-                    id: 2,
-                    title: 'Singapore Team Meet',
-                    description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-                    date: ' 09 Aug, 2020',
-                    tags: ['meeting'],
-                },
-            ],
-        },
-        {
-            id: 2,
-            title: 'Tuesday',
-            date: '2024-03-05',
-            tasks: [
-                {
-                    projectId: 2,
-                    id: 3,
-                    title: 'Plan a trip to another country',
-                    description: '',
-                    date: ' 10 Sep, 2020',
-                },
-            ],
-        },
-        {
-            id: 3,
-            title: 'Wednesday',
-            date: '2024-03-06',
-            tasks: [
-                {
-                    projectId: 3,
-                    id: 4,
-                    title: 'Dinner with Kelly Young',
-                    description: '',
-                    date: ' 08 Aug, 2020',
-                },
-                {
-                    projectId: 3,
-                    id: 5,
-                    title: 'Launch New SEO Wordpress Theme ',
-                    description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                    date: ' 09 Aug, 2020',
-                },
-            ],
-        },
-        {
-            id: 4,
-            title: 'Thursday',
-            date: '2024-03-07',
-            tasks: [],
-        },
-        {
-            id: 5,
-            title: 'Friday',
-            date: '2024-03-08',
-            tasks: [],
-        },
-        {
-            id: 6,
-            title: 'Saturday',
-            date: '2024-03-09',
-            tasks: [],
-        },
-    ]
-*/

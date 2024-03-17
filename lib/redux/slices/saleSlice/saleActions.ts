@@ -145,16 +145,19 @@ export const addSale = async (saleData: Object) => {
 export const updateOrder = async (orderId:string, updateOrderBody:object) => {
   const headers = await authConfig();
   try {
-    const response = await fetch(`${BASE_URL}/update-order/${orderId}`, {
+    const response = await fetch(`${BASE_URL}/sales/update-order/${orderId}`, {
       method: "POST",
       headers,
       body: JSON.stringify(updateOrderBody),
     });
 
     const data = await response.json();
-
     if (response.ok) {
-      return { message: "Successfully Created!" };
+      if (!data.isError) {
+        return { message: data.data };
+      } else {
+      return { message: "Something went wrong, Please try again!" };
+      }
     } else {
       throw new Error(
         data.message || "Something went wrong, Please try again!"

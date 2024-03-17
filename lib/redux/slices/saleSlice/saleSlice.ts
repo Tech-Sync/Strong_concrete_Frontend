@@ -22,6 +22,10 @@ export const saleSlice = createSlice({
     updateSaleState:(state, action: PayloadAction<Sale | null>) => {
       state.loading = false;
       state.sale = action.payload;
+    },
+    clearWeeklySalesState:(state) => {
+      state.loading = false;
+      state.weeklySales = [];
     }
   },
   extraReducers: (builder) => {
@@ -62,4 +66,4 @@ interface SalesSliceState {
 }
 
 
-export const { updateSales, updateSaleState } = saleSlice.actions;
+export const { updateSales, updateSaleState, clearWeeklySalesState } = saleSlice.actions;
