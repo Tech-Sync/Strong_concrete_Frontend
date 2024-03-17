@@ -98,6 +98,27 @@ export const readSale = async (id:string) => {
   }
 
 }
+export const getWeeklySale = async (startDate:string,endDate:string) => {
+  const headers = await authConfig();
+  
+  try {
+    const response = await fetch(`${BASE_URL}/sales/w?startDate=${startDate}&endDate=${endDate}`, {
+      headers,
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return data;
+    } else {
+      throw new Error( data.message || "Something went wrong, Please try again!");
+    }
+
+  } catch (error:any) {
+    return { error: error.message };
+  }
+
+}
 
 export const addSale = async (saleData: Object) => {
   const headers = await authConfig();
@@ -121,6 +142,29 @@ export const addSale = async (saleData: Object) => {
     return { error: error.message };
   }
 };
+export const updateOrder = async (orderId:string, updateOrderBody:object) => {
+  const headers = await authConfig();
+  try {
+    const response = await fetch(`${BASE_URL}/update-order/${orderId}`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(updateOrderBody),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return { message: "Successfully Created!" };
+    } else {
+      throw new Error(
+        data.message || "Something went wrong, Please try again!"
+      );
+    }
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};
+
 
 interface updateData{
   id: string | number,

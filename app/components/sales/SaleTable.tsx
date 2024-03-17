@@ -15,6 +15,7 @@ import { saleStatuses } from "@/app/constraints/roles&status";
 
 
 export default function SaleTable() {
+
     const dispatch = useDispatch();
     const router = useRouter()
     const { deleteToast, multiDeleteToast } = useDeleteToasts();

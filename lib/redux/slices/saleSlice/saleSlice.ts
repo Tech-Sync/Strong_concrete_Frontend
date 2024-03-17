@@ -1,9 +1,10 @@
-import { Sale} from "@/types/types";
+import { Sale, WeeklySale} from "@/types/types";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { getAllSaleAsync } from "./thunk";
+import { getAllSaleAsync, getWeeklySaleAsync } from "./thunk";
 
 const initialState: SalesSliceState = {
   sales: [],
+  weeklySales:[],
   loading: false,
   error: null,
   status: "idle",
@@ -35,6 +36,17 @@ export const saleSlice = createSlice({
       .addCase(getAllSaleAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.sales = action.payload;
+      })
+      .addCase(getWeeklySaleAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(getWeeklySaleAsync.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload ?? null;
+      })
+      .addCase(getWeeklySaleAsync.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.weeklySales = action.payload;
       });
   },
 });
@@ -42,6 +54,7 @@ export const saleSlice = createSlice({
 //Types
 interface SalesSliceState {
   sales: Sale[];
+  weeklySales:WeeklySale[]
   sale:  Sale | null;
   loading: boolean;
   error: string | null;

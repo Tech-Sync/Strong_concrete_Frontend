@@ -144,3 +144,19 @@ export interface Sale  {
     name: string
   }
 }
+
+export interface WeeklySale {
+  id: number,
+  title: string,
+  date: string,
+  orders: [
+    {
+      projectId: number,
+      id: number,
+      title: string,
+      description: string,
+      date:string,
+      tags: string
+    }
+  ]
+}
