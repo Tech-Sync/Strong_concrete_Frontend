@@ -5,6 +5,7 @@ import { Tab } from '@headlessui/react';
 import { Fragment } from 'react';
 import SaleTable from './SaleTable';
 import SaleScrumboard from './SaleScrumboard';
+import SaleCalendar from './SaleCalender';
 
 export default function SableTabs() {
     return (
@@ -43,7 +44,7 @@ export default function SableTabs() {
                             </button>
                         )}
                     </Tab>
-                    {/*       <Tab as={Fragment}>
+                    <Tab as={Fragment}>
                         {({ selected }) => (
                             <button
                                 className={`${selected ? 'text-secondary !outline-none before:!w-full' : ''}
@@ -69,10 +70,10 @@ export default function SableTabs() {
                                         strokeLinecap="round"
                                     ></path>
                                 </svg>
-                                Contact
+                                Calender
                             </button>
                         )}
-                    </Tab> */}
+                    </Tab>
                 </Tab.List>
                 <Tab.Panels>
                     <Tab.Panel>
@@ -85,7 +86,11 @@ export default function SableTabs() {
                             <SaleTable />
                         </div>
                     </Tab.Panel>
-                    <Tab.Panel>Disabled</Tab.Panel>
+                    <Tab.Panel>
+                        <div className=' pt-5'>
+                            <SaleCalendar />
+                        </div>
+                    </Tab.Panel>
                 </Tab.Panels>
             </Tab.Group>
         </div>

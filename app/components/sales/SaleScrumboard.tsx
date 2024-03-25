@@ -44,7 +44,7 @@ const SaleScrumboard = () => {
                     <div className="overflow-x-auto flex items-start flex-nowrap gap-5 pb-2 px-2">
                         {projectList?.map((project: any) => {
                             return (
-                                <div key={project.id} className="panel w-72 flex-none" data-group={project.id}>
+                                <div key={project.id} className="panel w-[17rem] flex-none" data-group={project.id}>
                                     <div className="flex justify-between mb-5">
                                         <h4 className="text-base font-semibold">{project.title}</h4>
 
