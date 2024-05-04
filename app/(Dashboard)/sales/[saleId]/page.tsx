@@ -130,7 +130,7 @@ const SalePage = async ({ params }: { params: { saleId: string } }) => {
                                 <td>{sale.location}</td>
                               {/*   @ts-ignore */}
                                 <td className={`${statusTextClasses[sale.status]}`}>
-                                    {saleStatuses[sale.status.toString()]}
+                                    {saleStatuses[sale?.status?.toString()]}
                                 </td>
                                 <td>{sale.quantity}</td>
                                 <td className="ltr:text-right rtl:text-left">
