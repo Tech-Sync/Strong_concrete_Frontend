@@ -11,6 +11,7 @@ import { getWeeklySale, updateOrder } from '@/lib/redux/slices/saleSlice/saleAct
 import { coloredToast } from '@/lib/sweetAlerts';
 import { PreviewIcon } from '@/app/icons';
 import { useRouter } from 'next/navigation';
+import moment from 'moment';
 
 const SaleScrumboard = () => {
 
@@ -19,26 +20,80 @@ const SaleScrumboard = () => {
     // const sales = useSelector(selectWeeklySales);
     const [projectList, setProjectList] = useState<any>([]);
 
+    const [weekRange, setWeekRange] = useState({
+        start: moment().startOf('isoWeek').format('YYYY-MM-DD'),
+        end: moment().endOf('isoWeek').format('YYYY-MM-DD'),
+    });
+
+    // Function to move to the previous week
+    const handlePrevWeek = () => {
+        setWeekRange({
+            start: moment(weekRange.start, 'YYYY-MM-DD').subtract(1, 'weeks').startOf('isoWeek').format('YYYY-MM-DD'),
+            end: moment(weekRange.start, 'YYYY-MM-DD').subtract(1, 'weeks').endOf('isoWeek').format('YYYY-MM-DD'),
+        });
+    };
+
+    // Function to move to the next week
+    const handleNextWeek = () => {
+        setWeekRange({
+            start: moment(weekRange.start, 'YYYY-MM-DD').add(1, 'weeks').startOf('isoWeek').format('YYYY-MM-DD'),
+            end: moment(weekRange.start, 'YYYY-MM-DD').add(1, 'weeks').endOf('isoWeek').format('YYYY-MM-DD'),
+        });
+    };
+
+    // Function to reset to the current week
+    const handleThisWeek = () => {
+        setWeekRange({
+            start: moment().startOf('isoWeek').format('YYYY-MM-DD'),
+            end: moment().endOf('isoWeek').format('YYYY-MM-DD'),
+        });
+    };
+
 
     useEffect(() => {
         // dispatch(getWeeklySaleAsync({ startDate: '', endDate: '' }));
         (async () => {
-            const sales = await getWeeklySale('', '')
+            const sales = await getWeeklySale(weekRange.start, weekRange.end)
             setProjectList(sales.weeklySale);
 
         })()
 
         // const clonedSales = JSON.parse(JSON.stringify(sales));
         // setProjectList(clonedSales);
-    }, []);
+    }, [weekRange.start, weekRange.end]);
 
     // useEffect(() => {
     //     const clonedSales = JSON.parse(JSON.stringify(sales));
     //     setProjectList(clonedSales);
     // }, [sales]);
 
+    
+console.log(projectList);
+
     return (
         <div>
+            <div className='flex items-center justify-between sm:flex-row flex-col gap-y-2'>
+                <div className='flex gap-2'>
+                    <button className='btn btn-outline-primary btn-sm' onClick={handlePrevWeek}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 12H4M4 12L10 6M4 12L10 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+
+                    </button>
+                    <button className='btn btn-outline-primary btn-sm' onClick={handleNextWeek}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 12H20M20 12L14 6M20 12L14 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+
+                    </button>
+                </div>
+                <div>
+                    <h1 className='text-lg text-slate-400'>{weekRange.start} / {weekRange.end}</h1>
+                </div>
+                <div className='flex gap-2'>
+                    <button className='btn btn-outline-primary btn-sm' onClick={handleThisWeek}>This Week</button>
+                </div>
+            </div>
             <div className="relative pt-3">
                 <div className="perfect-scrollbar h-full -mx-2">
                     <div className="overflow-x-auto flex items-start flex-nowrap gap-5 pb-2 px-2">

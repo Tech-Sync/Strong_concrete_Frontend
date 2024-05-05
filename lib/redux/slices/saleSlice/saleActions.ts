@@ -26,7 +26,7 @@ export const getAllSales = async () => {
     if (response.ok) {
       return data;
     } else {
-      throw new Error( data.message || "Something went wrong, Please try again!");
+      throw new Error(data.message || "Something went wrong, Please try again!");
     }
   } catch (error: any) {
     return { error: error.message };
@@ -46,7 +46,7 @@ export const deleteSale = async (id: any) => {
     if (!data.error && response.status === 202) {
       return { message: data.message, remainingData: data.data };
     } else {
-      throw new Error( data.message ?? "Something went wrong, Please try again!");
+      throw new Error(data.message ?? "Something went wrong, Please try again!");
     }
 
   } catch (error: any) {
@@ -54,14 +54,14 @@ export const deleteSale = async (id: any) => {
   }
 };
 
-export const deleteMultiSale = async (ids:any) => {
+export const deleteMultiSale = async (ids: any) => {
   const headers = await authConfig();
 
   try {
     const response = await fetch(`${BASE_URL}/sales/multiple-delete`, {
       method: "POST",
       headers,
-      body: JSON.stringify({ids}),
+      body: JSON.stringify({ ids }),
     });
 
     const data = await response.json();
@@ -69,7 +69,7 @@ export const deleteMultiSale = async (ids:any) => {
     if (!data.error && response.status === 202) {
       return { message: data.message, remainingData: data.data };
     } else {
-      throw new Error( data.message ?? "Something went wrong, Please try again!");
+      throw new Error(data.message ?? "Something went wrong, Please try again!");
     }
 
   } catch (error: any) {
@@ -77,9 +77,9 @@ export const deleteMultiSale = async (ids:any) => {
   }
 };
 
-export const readSale = async (id:string) => {
+export const readSale = async (id: string) => {
   const headers = await authConfig();
-  
+
   try {
     const response = await fetch(`${BASE_URL}/sales/${id}`, {
       headers,
@@ -90,17 +90,17 @@ export const readSale = async (id:string) => {
     if (response.ok) {
       return data;
     } else {
-      throw new Error( data.message || "Something went wrong, Please try again!");
+      throw new Error(data.message || "Something went wrong, Please try again!");
     }
 
-  } catch (error:any) {
+  } catch (error: any) {
     return { error: error.message };
   }
 
 }
-export const getWeeklySale = async (startDate:string,endDate:string) => {
+export const getWeeklySale = async (startDate: string, endDate: string) => {
   const headers = await authConfig();
-  
+console.log(startDate, endDate);
   try {
     const response = await fetch(`${BASE_URL}/sales/w?startDate=${startDate}&endDate=${endDate}`, {
       headers,
@@ -111,10 +111,10 @@ export const getWeeklySale = async (startDate:string,endDate:string) => {
     if (response.ok) {
       return data;
     } else {
-      throw new Error( data.message || "Something went wrong, Please try again!");
+      throw new Error(data.message || "Something went wrong, Please try again!");
     }
 
-  } catch (error:any) {
+  } catch (error: any) {
     return { error: error.message };
   }
 
@@ -142,7 +142,7 @@ export const addSale = async (saleData: Object) => {
     return { error: error.message };
   }
 };
-export const updateOrder = async (orderId:string, updateOrderBody:object) => {
+export const updateOrder = async (orderId: string, updateOrderBody: object) => {
   const headers = await authConfig();
   try {
     const response = await fetch(`${BASE_URL}/sales/update-order/${orderId}`, {
@@ -156,7 +156,7 @@ export const updateOrder = async (orderId:string, updateOrderBody:object) => {
       if (!data.isError) {
         return { message: data.data };
       } else {
-      return { message: "Something went wrong, Please try again!" };
+        return { message: "Something went wrong, Please try again!" };
       }
     } else {
       throw new Error(
@@ -169,7 +169,7 @@ export const updateOrder = async (orderId:string, updateOrderBody:object) => {
 };
 
 
-interface updateData{
+interface updateData {
   id: string | number,
   MaterialId: string | number,
   FirmId: string | number,
@@ -191,7 +191,7 @@ export const updateSale = async (saleData: updateData) => {
     if (response.ok && data.isUpdated) {
       return { message: "Successfully Updated!" };
     } else {
-      throw new Error( data.message || "Something went wrong, Please try again!" );
+      throw new Error(data.message || "Something went wrong, Please try again!");
     }
   } catch (error: any) {
     return { error: error.message };

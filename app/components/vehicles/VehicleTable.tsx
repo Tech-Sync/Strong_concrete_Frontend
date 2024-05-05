@@ -172,7 +172,7 @@ export default function VehicleTable() {
                 sortable: true,
                 render: ({ driver, id }) => (
                   <div className="flex items-center font-semibold">
-                    <div>{driver.firstName + " " + driver.lastName}</div>
+                    <div>{driver?.firstName + " " + driver?.lastName}</div>
                   </div>
                 ),
               },
