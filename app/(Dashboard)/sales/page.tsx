@@ -1,4 +1,4 @@
-import SableTabs from '@/app/components/sales/SableTabs'
+import SaleTabs from '@/app/components/sales/SaleTabs'
 import Link from 'next/link'
 import React from 'react'
 
@@ -16,7 +16,7 @@ const SalePage = () => {
           <span>Sales</span>
         </li>
       </ul>
-      <SableTabs />
+      <SaleTabs />
     </div>
   )
 }

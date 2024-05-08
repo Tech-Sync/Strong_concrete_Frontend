@@ -46,7 +46,6 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
   const [items, setItems] = useState<Item[]>([]);
   const emptyProduct = { name: "", price: '' }
 
-  console.log(items);
 
   useEffect(() => {
     dispatch(getAllMaterialAsync());

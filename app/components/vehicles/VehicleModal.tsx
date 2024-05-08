@@ -99,7 +99,6 @@ export default function VehicleModal({ modal, setModal, vehicleInitials, setVehi
                       validationSchema={firmSchema}
                       onSubmit={async (values, { setSubmitting, resetForm }) => {
                         if ("id" in vehicleInitials) {
-                          console.log('update', values);
                           //@ts-ignore
                           const res = await updateVehicle(values);
                           if (res.message) {
@@ -110,7 +109,6 @@ export default function VehicleModal({ modal, setModal, vehicleInitials, setVehi
                             coloredToast("danger", res.error, "bottom-start");
                           }
                         } else {
-                          console.log('add', values);
                           const res = await createVehicle(values);
                           setTimeout(() => {
                             setSubmitting(false);

@@ -100,7 +100,6 @@ export const readSale = async (id: string) => {
 }
 export const getWeeklySale = async (startDate: string, endDate: string) => {
   const headers = await authConfig();
-console.log(startDate, endDate);
   try {
     const response = await fetch(`${BASE_URL}/sales/w?startDate=${startDate}&endDate=${endDate}`, {
       headers,

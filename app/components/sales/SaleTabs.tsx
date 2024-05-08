@@ -7,7 +7,7 @@ import SaleTable from './SaleTable';
 import SaleScrumboard from './SaleScrumboard';
 import SaleCalendar from './SaleCalender';
 
-export default function SableTabs() {
+export default function SaleTabs() {
     return (
         <div className="">
             <Tab.Group>

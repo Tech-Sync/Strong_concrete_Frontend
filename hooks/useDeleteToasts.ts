@@ -73,7 +73,6 @@ const useDeleteToasts = () => {
       });
 
       if (result.isConfirmed) {
-        console.log('onaylandi');
         const res = await deletionFunction(ids);
 
 
@@ -88,7 +87,6 @@ const useDeleteToasts = () => {
           });
           return true;
         } else {
-          console.log('else kismi');
           await Swal.fire({
             title: "Error",
             text: res?.error,
@@ -99,7 +97,6 @@ const useDeleteToasts = () => {
         }
       }
     } catch (error) {
-      console.log('catch ksimi');
       Swal.fire({
         title: "Error",
         text: "An unexpected error occurred.",

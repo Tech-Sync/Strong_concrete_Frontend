@@ -58,7 +58,6 @@ export default function ResetPassForm() {
               coloredToast("danger", "Something went wrong.");
             });
         }, 500);
-        console.log();
       }}
     >
       {({ touched, errors, isSubmitting, handleSubmit }) => (
