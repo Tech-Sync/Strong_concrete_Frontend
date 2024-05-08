@@ -129,7 +129,7 @@ export interface Sale  {
   discount: number,
   requestedDate: string,
   sideContact: string,
-  confirmDate: string | null,
+  orderDate: string | null,
   orderNumber: number,
   status: number,
   createdAt: string,

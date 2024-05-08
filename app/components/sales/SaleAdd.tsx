@@ -1,26 +1,20 @@
 'use client'
-// import { coloredToast } from '@/utils/sweetAlerts';
 import { Field, Form, Formik } from 'formik';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Select from 'react-select';
 import { useEffect, useState } from 'react';
-// import { fetchAllKycAsync, selectKycs } from '@/lib/features/kyc/kycSlice';
-// import { Kyc } from '@/types/types';
-// import { fetchAllProductAsync, selectProducts } from '@/lib/features/products/productSlice';
-import { first } from 'lodash';
-import { getAllFrimAsync, getAllProductAsync, selectFirms, selectProducts, selectSale, useDispatch, useSelector } from '@/lib/redux';
 
-const InvoiceAdd = () => {
+import { getAllFrimAsync, getAllProductAsync, getAllSaleAsync, selectFirms, selectProducts, selectSale, updateSaleState, useDispatch, useSelector } from '@/lib/redux';
+import { coloredToast } from '@/lib/sweetAlerts';
+import { addSale } from '@/lib/redux/slices/saleSlice/saleActions';
+
+const SaleAdd = () => {
     const dispatch = useDispatch();
     const router = useRouter()
     const products = useSelector(selectProducts);
     const firms = useSelector(selectFirms);
     const sale = useSelector(selectSale);
-
-    // const firms = useAppSelector(selectKycs);
-    // const products = useAppSelector(selectProducts);
 
     useEffect(() => {
         dispatch(getAllFrimAsync())
@@ -56,52 +50,58 @@ const InvoiceAdd = () => {
         return `${year}-${month}-${day}`;
     };
 
-    const initialValueCustomer = firms.find(firm => firm.id === sale?.firm.id);
+    const initialValueCustomer = firms.find(firm => firm.id === sale?.FirmId);
 
 
     const [selectedCustomer, setSelectedCustomer] = useState(initialValueCustomer);
 
     const initialValues = {
-        // staff_id: sale?.staff.id || 0,
-        // staff_first_name: sale?.staff.first_name || '',
-        // staff_last_name: sale?.staff.last_name || '',
-        // firm_first_name: sale?.firm.first_name || '',
-        // firm_last_name: sale?.firm.last_name || '',
-        // sale_number: sale?.sale_number || '',
         id: sale?.id || 0,
         FirmId: sale?.FirmId || 0,
         ProductId: sale?.ProductId || 0,
-        status: sale?.status || 'PENDING',
-        // total_price: sale?.total_price || '0.00',
-        // discounts: sale?.discounts || '0.00',
-        quantity: sale?.quan || '0.00',
-        taxes: sale?.taxes || '16',
-        total_amount_due_date: formatDateForInput(sale?.total_amount_due_date) || new Date().toISOString(),
-        payment_terms: sale?.payment_terms || '',
-        additional_notes: sale?.additional_notes || '',
+        status: sale?.status || 1,
+        location: sale?.location || '',
+        quantity: sale?.quantity || 0,
+        otherCharges: sale?.otherCharges || 0,
+        unitPrice: sale?.unitPrice || 0,
+        totalPrice: sale?.totalPrice || 0,
+        discount: sale?.discount || 0,
+        orderNumber: sale?.orderNumber || 0,
+        requestedDate: sale?.requestedDate || '',
+        orderDate: sale?.orderDate || '',
+        sideContact: sale?.sideContact || '',
+        createdAt: sale?.createdAt || '',
+        updatedAt: sale?.updatedAt || '',
+        creatorId: sale?.creatorId || '',
+        updaterId: sale?.updaterId || '',
+
+        // taxes: sale?.taxes || '16',
+        // total_amount_due_date: formatDateForInput(sale?.total_amount_due_date) || new Date().toISOString(),
+        // payment_terms: sale?.payment_terms || '',
+        // additional_notes: sale?.additional_notes || '',
         // timestamp: sale?.timestamp || '',
         // updated: sale?.updated || '',
-        sale_items: sale?.sale_items.map(item => ({
-            id: item.id,
-            product: {
-                id: item.product.id,
-                name: item.product.name,
-                price: item.product.price,
-            },
-            quantity: item.quantity,
-            discounts: item.discounts
-        })) || [
-                {
-                    id: 1,
-                    product: {
-                        id: 0,
-                        name: '',
-                        price: 0,
-                    },
-                    quantity: 1,
-                    discounts: 0,
-                },
-            ]
+        // sale_items: sale?.sale_items.map(item => ({
+        //     id: item.id,
+        //     product: {
+        //         id: item.product.id,
+        //         name: item.product.name,
+        //         price: item.product.price,
+        //     },
+        //     quantity: item.quantity,
+        //     discounts: item.discounts
+        // })) || [
+        //         {
+        //             id: 1,
+        //             product: {
+        //                 id: 0,
+        //                 name: '',
+        //                 price: 0,
+        //             },
+        //             quantity: 1,
+        //             discounts: 0,
+        //         },
+        //     ]
     };
 
 
@@ -112,7 +112,7 @@ const InvoiceAdd = () => {
                 onSubmit={async (values, { setSubmitting, resetForm }) => {
                     if (sale) {
                         console.log('values---', values);
-                        const { sale_items, firm, ...valuesToSend } = values
+                        // const { sale_items, firm, ...valuesToSend } = values
                         //@ts-ignore
                         const res = await updateInvoice(valuesToSend)
                         setTimeout(() => {
@@ -122,27 +122,27 @@ const InvoiceAdd = () => {
                                 router.replace('/sale')
                                 coloredToast("success", res.message, "bottom-start");
                                 // dispatch(getAllFrimAsync());
-                                dispatch(updateInvoiceState(null))
+                                dispatch(updateSaleState(null))
                             } else {
                                 coloredToast("danger", res.error, "bottom-start");
                             }
                         }, 500);
                     } else {
-                        const transformedItems = values.sale_items.map(item => ({
-                            product: item.product.id,
-                            quantity: Number(item.quantity),
-                            discounts: Number(item.discounts)
-                        }));
+                        // const transformedItems = values.sale_items.map(item => ({
+                        //     product: item.product.id,
+                        //     quantity: Number(item.quantity),
+                        //     discounts: Number(item.discounts)
+                        // }));
                         const { id, ...valuesToSend } = values
-                        const payload = { ...valuesToSend, sale_items: transformedItems };
-                        const res = await createInvoice(payload);
+                        // const payload = { ...valuesToSend, sale_items: transformedItems };
+                        const res = await addSale(valuesToSend);
                         setTimeout(() => {
                             setSubmitting(false);
                             if (res.message) {
                                 coloredToast("success", res.message, "bottom-start");
                                 router.replace('/sale')
                                 resetForm();
-                                dispatch(fetchAllInvoicesAsync({}));
+                                dispatch(getAllSaleAsync());
                             } else {
                                 coloredToast("danger", res.error, "bottom-start");
                             }
@@ -162,9 +162,9 @@ const InvoiceAdd = () => {
                                             <Image src="/assets/images/client-link.png" alt="img" width={120} height={120} />
                                         </div>
                                         <div className="mt-6 space-y-1 text-gray-500 dark:text-gray-400">
-                                            <div>3nd Floor,Finance House, Hero's Place, Lusaka, Zambia</div>
-                                            <div>clientLinko@gmail.com</div>
-                                            <div>+260 (970) 732-4567</div>
+                                            <div>Mungwi, Lusaka west Mungwi road Lusaka ZM, 10101</div>
+                                            <div>strong-concrete@gmail.com</div>
+                                            <div>+260 (97) 123-4567</div>
                                         </div>
                                     </div>
                                     <div className="w-full lg:w-1/2 lg:max-w-fit">
@@ -312,90 +312,80 @@ const InvoiceAdd = () => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {values.sale_items.length <= 0 && (
-                                                    <tr>
-                                                        <td colSpan={5} className="!text-center font-semibold">
-                                                            No Item Available
-                                                        </td>
-                                                    </tr>
-                                                )}
-                                                {values.sale_items.map((item, index) => {
-                                                    return (
-                                                        <tr className="align-top" key={item.id}>
-                                                            <td>
-                                                                <Field
-                                                                    as={Select} placeholder="Select The Product"
-                                                                    name={`sale_items[${index}].product.id`}
-                                                                    options={productOP}
-                                                                    value={productOP.find(option => option.value === item.product.id)}
-                                                                    //@ts-ignore
-                                                                    onChange={option => {
-                                                                        setFieldValue(`sale_items[${index}].product.id`, option ? option.value : '');
-                                                                        setFieldValue(`sale_items[${index}].product.price`, option ? option.price : 0);
-                                                                    }}
-                                                                    className="min-w-[200px] "
-                                                                />
 
-                                                            </td>
-                                                            <td>
-                                                                <Field
-                                                                    name={`sale_items[${index}].quantity`}
-                                                                    type="number"
-                                                                    className="form-input w-32"
-                                                                    placeholder="Quantity"
-                                                                    min={0}
-                                                                />
-                                                            </td>
-                                                            <td>
-                                                                <Field
-                                                                    name={`sale_items[${index}].product.price`}
-                                                                    type="number"
-                                                                    className="form-input w-32"
-                                                                    placeholder="Price"
-                                                                    min={0}
-                                                                    readOnly
-                                                                />
-                                                            </td>
-                                                            <td>
-                                                                <Field
-                                                                    name={`sale_items[${index}].discounts`}
-                                                                    type="number"
-                                                                    className="form-input w-32"
-                                                                    placeholder="Disscount"
-                                                                    min={0}
-                                                                />
-                                                            </td>
-                                                            <td >${(values.sale_items[index].quantity * values.sale_items[index].product.price) - values.sale_items[index].discounts}</td>
-                                                            <td>
-                                                                <button type="button" onClick={() => {
-                                                                    const newItems = values.sale_items.filter((item, i) => i !== index);
-                                                                    setFieldValue('sale_items', newItems);
-                                                                }}>
-                                                                    <svg
-                                                                        xmlns="http://www.w3.org/2000/svg"
-                                                                        width="20"
-                                                                        height="20"
-                                                                        viewBox="0 0 24 24"
-                                                                        fill="none"
-                                                                        stroke="currentColor"
-                                                                        strokeWidth="1.5"
-                                                                        strokeLinecap="round"
-                                                                        strokeLinejoin="round"
-                                                                    >
-                                                                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                                                                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                                                                    </svg>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    );
-                                                })}
+                                                <tr className="align-top">
+                                                    <td>
+                                                        <Field
+                                                            as={Select} placeholder="Select The Product"
+                                                            name='ProductId'
+                                                            options={productOP}
+                                                            value={productOP.find(option => option.value === values.ProductId)}
+                                                            //@ts-ignore
+                                                            onChange={option => {
+                                                                setFieldValue(`ProductId`, option ? option.value : '');
+                                                                setFieldValue(`unitPrice`, option ? option.price : 0);
+                                                            }}
+                                                            className="min-w-[200px] "
+                                                        />
+
+                                                    </td>
+                                                    <td>
+                                                        <Field
+                                                            name='quantity'
+                                                            type="number"
+                                                            className="form-input w-32"
+                                                            placeholder="Quantity"
+                                                            min={0}
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <Field
+                                                            name='unitPrice'
+                                                            type="number"
+                                                            className="form-input w-32"
+                                                            placeholder="Price"
+                                                            min={0}
+                                                            readOnly
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <Field
+                                                            name='discount'
+                                                            type="number"
+                                                            className="form-input w-32"
+                                                            placeholder="Disscount"
+                                                            min={0}
+                                                        />
+                                                    </td>
+                                                    <td >$</td>
+                                                    <td>
+                                                     {/*    <button type="button" onClick={() => {
+                                                            const newItems = values.sale_items.filter((item, i) => i !== index);
+                                                            setFieldValue('sale_items', newItems);
+                                                        }}>
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                width="20"
+                                                                height="20"
+                                                                viewBox="0 0 24 24"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                strokeWidth="1.5"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                            >
+                                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                            </svg>
+                                                        </button> */}
+                                                    </td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                     <div className="mt-6 flex flex-col justify-between px-4 sm:flex-row">
                                         <div className="mb-6 sm:mb-0">
-                                            <button type="button" className="btn btn-primary" onClick={() => {
+                                           {/*  <button type="button" className="btn btn-primary" onClick={() => {
                                                 const newItem = {
                                                     id: values.sale_items.length + 1,
                                                     product: {
@@ -410,7 +400,7 @@ const InvoiceAdd = () => {
                                                 setFieldValue('sale_items', newItems);
                                             }}>
                                                 Add Item
-                                            </button>
+                                            </button> */}
                                         </div>
                                     </div>
                                 </div>
@@ -445,14 +435,14 @@ const InvoiceAdd = () => {
                                             <Field id="shipping_costs" type="number" name="shipping_costs" className="form-input" defaultValue={0} placeholder="Shipping Charge" />
                                         </div>
                                     </div>
-                                    <div className="mt-4">
+                                  {/*   <div className="mt-4">
                                         <label htmlFor="payment-method">Accept Payment Via</label>
                                         <Select placeholder="Select The Payment" options={paymentOp}
                                             value={paymentOp.find(option => option.value === values.payment_terms)}
                                             onChange={option => { setFieldValue('payment_terms', option ? option.value : ''); }}
                                             className='flex-1'
                                         />
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <div className="panel">
                                     <div className=''>
@@ -462,11 +452,11 @@ const InvoiceAdd = () => {
                                             </div> */}
                                         <div className="mt-4 flex items-center justify-between">
                                             <div>Tax(%)</div>
-                                            <div>{values.taxes}%</div>
+                                            <div>16%</div>
                                         </div>
                                         <div className="mt-4 flex items-center justify-between">
                                             <div>Shipping Rate($)</div>
-                                            <div>${values.shipping_costs}</div>
+                                            <div>${values.otherCharges}</div>
                                         </div>
                                         <div className="mt-4 flex items-center justify-between">
                                             <div>Discount($)</div>
@@ -546,4 +536,4 @@ const InvoiceAdd = () => {
     );
 };
 
-export default InvoiceAdd;
+export default SaleAdd;

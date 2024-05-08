@@ -139,10 +139,10 @@ export default function SaleTable() {
                             <DeleteIcon />
                             Delete
                         </button>
-                        <Link href="/sales/add" className="btn btn-primary gap-2">
+                        <button onClick={() => { router.push(`/sales/add`), dispatch(updateSaleState(null)) }} className="btn btn-primary gap-2">
                             <PlusIcon />
                             Add New
-                        </Link>
+                        </button>
                     </div>
                     <div className="ltr:ml-auto rtl:mr-auto">
                         <input
@@ -197,9 +197,9 @@ export default function SaleTable() {
                             {
                                 accessor: "Confirm Date",
                                 sortable: true,
-                                render: ({ confirmDate, id, status }) => (
+                                render: ({ orderDate, id, status }) => (
                                     <div className="flex items-center">
-                                        <div className={confirmDate ? "" : "text-gray-800"}>{confirmDate ?? 'Not confirmed yet'}</div>
+                                        <div className={orderDate ? "" : "text-gray-800"}>{orderDate ?? 'Not confirmed yet'}</div>
                                     </div>
                                 ),
                             },
