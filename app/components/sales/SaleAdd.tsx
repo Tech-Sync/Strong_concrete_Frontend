@@ -5,9 +5,11 @@ import { useRouter } from 'next/navigation';
 import Select from 'react-select';
 import { useEffect, useState } from 'react';
 
-import { getAllFrimAsync, getAllProductAsync, getAllSaleAsync, selectFirms, selectProducts, selectSale, updateSaleState, useDispatch, useSelector } from '@/lib/redux';
+import { getAllFrimAsync, getAllProductAsync, getAllSaleAsync, selectFirms, selectProducts, selectSale, setFirmModal, updateFirmState, updateSaleState, useDispatch, useSelector } from '@/lib/redux';
 import { coloredToast } from '@/lib/sweetAlerts';
 import { addSale } from '@/lib/redux/slices/saleSlice/saleActions';
+import { PlusIcon } from '@/app/icons';
+import FirmModal from '../firms/FirmModal';
 
 const SaleAdd = () => {
     const dispatch = useDispatch();
@@ -21,7 +23,17 @@ const SaleAdd = () => {
         dispatch(getAllProductAsync())
     }, [])
 
-    const firmOP = firms.map((firm) => ({
+
+    const defaultParams = {
+        name: "",
+        address: "",
+        phoneNo: "",
+        tpinNo: "",
+        email: "",
+        status: "",
+    };
+
+    const firmOP = firms.filter(firm => firm.status === 1).map((firm) => ({
         label: firm.name,
         value: firm.id
     }))
@@ -203,17 +215,21 @@ const SaleAdd = () => {
                                                 <label htmlFor="reciever-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                                     Select Customer
                                                 </label>
-                                                <Select placeholder="Select The Customer" options={firmOP}
-                                                    // @ts-ignore
-                                                    value={firmOP.find(option => option.value === values.firm?.id)}
-                                                    onChange={option => {
-                                                        setFieldValue('firm', option ? option.value : '');
-                                                        const selectedCustomer = firms.find(firm => firm.id === option?.value);
+                                                <div className="flex  items-center gap-2 flex-1">
+                                                    <Select  className='flex-1' placeholder="Select The Customer" options={firmOP}
                                                         // @ts-ignore
-                                                        setSelectedCustomer(selectedCustomer || null);
-                                                    }}
-                                                    className='flex-1'
-                                                />
+                                                        value={firmOP.find(option => option.value === values.firm?.id)}
+                                                        onChange={option => {
+                                                            setFieldValue('firm', option ? option.value : '');
+                                                            const selectedCustomer = firms.find(firm => firm.id === option?.value);
+                                                            // @ts-ignore
+                                                            setSelectedCustomer(selectedCustomer || null);
+                                                        }}
+                                                    />
+                                                    <button onClick={() => { dispatch(setFirmModal(true)), dispatch(updateFirmState(defaultParams)) }} type="button" className="btn btn-outline-primary px-1 py-[7px]">
+                                                        <PlusIcon />
+                                                    </button>
+                                                </div>
                                             </div>
                                             <div className="mt-4 flex items-center">
                                                 <label htmlFor="reciever-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
@@ -359,7 +375,7 @@ const SaleAdd = () => {
                                                     </td>
                                                     <td >$</td>
                                                     <td>
-                                                     {/*    <button type="button" onClick={() => {
+                                                        {/*    <button type="button" onClick={() => {
                                                             const newItems = values.sale_items.filter((item, i) => i !== index);
                                                             setFieldValue('sale_items', newItems);
                                                         }}>
@@ -385,7 +401,7 @@ const SaleAdd = () => {
                                     </div>
                                     <div className="mt-6 flex flex-col justify-between px-4 sm:flex-row">
                                         <div className="mb-6 sm:mb-0">
-                                           {/*  <button type="button" className="btn btn-primary" onClick={() => {
+                                            {/*  <button type="button" className="btn btn-primary" onClick={() => {
                                                 const newItem = {
                                                     id: values.sale_items.length + 1,
                                                     product: {
@@ -435,7 +451,7 @@ const SaleAdd = () => {
                                             <Field id="shipping_costs" type="number" name="shipping_costs" className="form-input" defaultValue={0} placeholder="Shipping Charge" />
                                         </div>
                                     </div>
-                                  {/*   <div className="mt-4">
+                                    {/*   <div className="mt-4">
                                         <label htmlFor="payment-method">Accept Payment Via</label>
                                         <Select placeholder="Select The Payment" options={paymentOp}
                                             value={paymentOp.find(option => option.value === values.payment_terms)}
@@ -532,6 +548,7 @@ const SaleAdd = () => {
                 }
 
             </Formik>
+            <FirmModal />
         </>
     );
 };

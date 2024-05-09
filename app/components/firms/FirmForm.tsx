@@ -20,12 +20,7 @@ interface FormValues {
   status: string;
 }
 
-const FirmForm: React.FC<FormikProps<Firm>> = ({
-  touched,
-  errors,
-  isSubmitting,
-  handleSubmit,
-}) => {
+const FirmForm: React.FC<FormikProps<Firm>> = ({ touched, errors, isSubmitting, handleSubmit, }) => {
   return (
     <Form onSubmit={handleSubmit}>
       <div className="relative mb-4">
@@ -54,9 +49,8 @@ const FirmForm: React.FC<FormikProps<Firm>> = ({
             type="text"
             name="name"
             placeholder="Firm Name"
-            className={`form-input ltr:pl-10 rtl:pr-10${
-              touched.name && errors.name ? "border-red-500" : ""
-            }`}
+            className={`form-input ltr:pl-10 rtl:pr-10${touched.name && errors.name ? "border-red-500" : ""
+              }`}
           />
         </div>
         <ErrorMessage
@@ -73,9 +67,8 @@ const FirmForm: React.FC<FormikProps<Firm>> = ({
             type="text"
             name="address"
             placeholder="Firm Address"
-            className={`form-input ltr:pl-10 rtl:pr-10${
-              touched.address && errors.address ? "border-red-500" : ""
-            }`}
+            className={`form-input ltr:pl-10 rtl:pr-10${touched.address && errors.address ? "border-red-500" : ""
+              }`}
           />
         </div>
         <ErrorMessage
@@ -92,9 +85,8 @@ const FirmForm: React.FC<FormikProps<Firm>> = ({
             type="text"
             name="phoneNo"
             placeholder="Firm Phone Number"
-            className={`form-input ltr:pl-10 rtl:pr-10${
-              touched.phoneNo && errors.phoneNo ? "border-red-500" : ""
-            }`}
+            className={`form-input ltr:pl-10 rtl:pr-10${touched.phoneNo && errors.phoneNo ? "border-red-500" : ""
+              }`}
           />
         </div>
         <ErrorMessage
@@ -110,9 +102,8 @@ const FirmForm: React.FC<FormikProps<Firm>> = ({
             type="email"
             name="email"
             placeholder="Firm Email"
-            className={`form-input ltr:pl-10 rtl:pr-10${
-              touched.email && errors.email ? "border-red-500" : ""
-            }`}
+            className={`form-input ltr:pl-10 rtl:pr-10${touched.email && errors.email ? "border-red-500" : ""
+              }`}
           />
         </div>
         <ErrorMessage
@@ -128,9 +119,8 @@ const FirmForm: React.FC<FormikProps<Firm>> = ({
             type="text"
             name="tpinNo"
             placeholder="Firm Tpin Number"
-            className={`form-input ltr:pl-10 rtl:pr-10${
-              touched.tpinNo && errors.tpinNo ? "border-red-500" : ""
-            }`}
+            className={`form-input ltr:pl-10 rtl:pr-10${touched.tpinNo && errors.tpinNo ? "border-red-500" : ""
+              }`}
           />
         </div>
         <ErrorMessage

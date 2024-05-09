@@ -22,7 +22,7 @@ export interface Material {
 }
 
 export interface Firm {
-  id: number;
+  id?: number;
   name: string;
   address: string;
   email: string;

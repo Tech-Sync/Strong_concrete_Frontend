@@ -2,7 +2,7 @@
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
 import { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
-import { DeleteIcon, EditIcon } from "@/app/icons";
+import { DeleteIcon, EditIcon, PlusIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
 import { firmStatuses } from "@/app/constraints/roles&status";
 import { coloredToast } from "@/lib/sweetAlerts";
@@ -14,6 +14,8 @@ import {
   useDispatch,
   useSelector,
   updateFirm,
+  setFirmModal,
+  updateFirmState,
 } from "@/lib/redux";
 import FirmModal from "./FirmModal";
 import {
@@ -43,17 +45,6 @@ export default function FirmTable() {
   const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
     columnAccessor: "id",
     direction: "asc",
-  });
-  const [modal, setModal] = useState(false);
-
-  //@ts-ignore
-  const [firmInitials, setFirmInitials] = useState({
-    name: "",
-    address: "",
-    phoneNo: "",
-    tpinNo: "",
-    email: "",
-    status: "",
   });
 
   useEffect(() => {
@@ -116,9 +107,16 @@ export default function FirmTable() {
     }
   };
 
-  /*   if (firmStatus === "loading") {
-    return <h1 className="text-lg text-center">LOADING...</h1>;
-  } */
+  const defaultParams = {
+    name: "",
+    address: "",
+    phoneNo: "",
+    tpinNo: "",
+    email: "",
+    status: "",
+  };
+
+
 
   return (
     <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
@@ -132,14 +130,11 @@ export default function FirmTable() {
               <DeleteIcon />
               Delete
             </button>
-            <FirmModal
-              modal={modal}
-              setModal={setModal}
-              //@ts-ignore
-              firmInitials={firmInitials}
-              //@ts-ignore
-              setFirmInitials={setFirmInitials}
-            />
+            <button onClick={() => { dispatch(setFirmModal(true)), dispatch(updateFirmState(defaultParams)) }} className="btn btn-primary gap-2">
+              <PlusIcon />
+              Add New
+            </button>
+            <FirmModal />
           </div>
           <div className="ltr:ml-auto rtl:mr-auto">
             <input
@@ -216,8 +211,8 @@ export default function FirmTable() {
                   <div className="mx-auto flex w-max items-center gap-4">
                     <button
                       onClick={() => {
-                        //@ts-ignore
-                        setFirmInitials(firm), setModal(true);
+                        dispatch(updateFirmState(firm)),
+                        dispatch(setFirmModal(true))
                       }}
                       className="flex hover:text-info">
                       <EditIcon />
