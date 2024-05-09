@@ -1,15 +1,28 @@
 'use client'
-import { Field, Form, Formik } from 'formik';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Select from 'react-select';
 import { useEffect, useState } from 'react';
-
+import MaskedInput from 'react-text-mask';
 import { getAllFrimAsync, getAllProductAsync, getAllSaleAsync, selectFirms, selectProducts, selectSale, setFirmModal, updateFirmState, updateSaleState, useDispatch, useSelector } from '@/lib/redux';
 import { coloredToast } from '@/lib/sweetAlerts';
 import { addSale } from '@/lib/redux/slices/saleSlice/saleActions';
 import { PlusIcon } from '@/app/icons';
 import FirmModal from '../firms/FirmModal';
+import { number, object, string } from 'yup';
+
+const baseTicketSchema = object({
+    FirmId: number().required("Firm is required."),
+    ProductId: number().required("Product is required."),
+    quantity: number().required("Quantity is required."),
+    location: string().required("Location is required."),
+    sideContact: string().matches(
+        /^\+\d{3}-\d{3}-\d{3}-\d{3}$/,
+        "Phone number must be in the format +###-###-###-###"
+    ).required("Phone number is required"),
+    requestedDate: string().required("Requested Date is required."),
+});
 
 const SaleAdd = () => {
     const dispatch = useDispatch();
@@ -69,8 +82,8 @@ const SaleAdd = () => {
 
     const initialValues = {
         id: sale?.id || 0,
-        FirmId: sale?.FirmId || 0,
-        ProductId: sale?.ProductId || 0,
+        FirmId: sale?.FirmId || '',
+        ProductId: sale?.ProductId || '',
         status: sale?.status || 1,
         location: sale?.location || '',
         quantity: sale?.quantity || 0,
@@ -82,10 +95,10 @@ const SaleAdd = () => {
         requestedDate: sale?.requestedDate || '',
         orderDate: sale?.orderDate || '',
         sideContact: sale?.sideContact || '',
-        createdAt: sale?.createdAt || '',
-        updatedAt: sale?.updatedAt || '',
-        creatorId: sale?.creatorId || '',
-        updaterId: sale?.updaterId || '',
+        // createdAt: sale?.createdAt || '',
+        // updatedAt: sale?.updatedAt || '',
+        // creatorId: sale?.creatorId || '',
+        // updaterId: sale?.updaterId || '',
 
         // taxes: sale?.taxes || '16',
         // total_amount_due_date: formatDateForInput(sale?.total_amount_due_date) || new Date().toISOString(),
@@ -121,6 +134,7 @@ const SaleAdd = () => {
         <>
             <Formik
                 initialValues={initialValues}
+                validationSchema={baseTicketSchema}
                 onSubmit={async (values, { setSubmitting, resetForm }) => {
                     if (sale) {
                         console.log('values---', values);
@@ -140,19 +154,14 @@ const SaleAdd = () => {
                             }
                         }, 500);
                     } else {
-                        // const transformedItems = values.sale_items.map(item => ({
-                        //     product: item.product.id,
-                        //     quantity: Number(item.quantity),
-                        //     discounts: Number(item.discounts)
-                        // }));
                         const { id, ...valuesToSend } = values
-                        // const payload = { ...valuesToSend, sale_items: transformedItems };
+                        console.log('values---', valuesToSend);
                         const res = await addSale(valuesToSend);
                         setTimeout(() => {
                             setSubmitting(false);
                             if (res.message) {
                                 coloredToast("success", res.message, "bottom-start");
-                                router.replace('/sale')
+                                router.replace('/sales')
                                 resetForm();
                                 dispatch(getAllSaleAsync());
                             } else {
@@ -199,10 +208,26 @@ const SaleAdd = () => {
                                             <input id="startDate" type="date" name="inv-date" className="form-input w-2/3 lg:w-[250px]" />
                                         </div> */}
                                         <div className="mt-4 flex items-center">
-                                            <label htmlFor="total_amount_due_date" className="mb-0 flex-1 ltr:mr-2 rtl:ml-2">
-                                                Due Date
+                                            <label htmlFor="requestedDate" className="mb-0 flex-1 ltr:mr-2 rtl:ml-2">
+                                                Requested Date
                                             </label>
-                                            <Field name='total_amount_due_date' id="total_amount_due_date" type="date" className="form-input w-2/3 lg:w-[250px]" />
+                                            <div>
+                                                <Field name='requestedDate' id="requestedDate" type="date" className="form-input w-2/3 lg:w-[250px]" />
+                                                <ErrorMessage
+                                                    name="requestedDate"
+                                                    component="div"
+                                                    className="text-red-500 text-sm mt-1 " />
+                                            </div>
+                                        </div>
+                                        <div className="mt-4 flex items-center">
+                                            <label htmlFor="orderDate" className="mb-0 flex-1 ltr:mr-2 rtl:ml-2">
+                                                Confirmed Date
+                                            </label>
+                                            <Field name='orderDate' id="orderDate" type="date" className="form-input w-2/3 lg:w-[250px]" />
+                                            <ErrorMessage
+                                                name="orderDate"
+                                                component="div"
+                                                className="text-red-500 text-sm mt-1 " />
                                         </div>
                                     </div>
                                 </div>
@@ -210,25 +235,34 @@ const SaleAdd = () => {
                                 <div className="mt-8 px-4">
                                     <div className="flex flex-col justify-between lg:flex-row">
                                         <div className="mb-6 w-full lg:w-1/2 ltr:lg:mr-6 rtl:lg:ml-6">
-                                            <div className="text-lg">Bill To :-</div>
+                                            <div className="text-lg underline underline-offset-4">Bill To :</div>
                                             <div className="mt-4 flex items-center">
                                                 <label htmlFor="reciever-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                                     Select Customer
                                                 </label>
-                                                <div className="flex  items-center gap-2 flex-1">
-                                                    <Select  className='flex-1' placeholder="Select The Customer" options={firmOP}
-                                                        // @ts-ignore
-                                                        value={firmOP.find(option => option.value === values.firm?.id)}
-                                                        onChange={option => {
-                                                            setFieldValue('firm', option ? option.value : '');
-                                                            const selectedCustomer = firms.find(firm => firm.id === option?.value);
-                                                            // @ts-ignore
-                                                            setSelectedCustomer(selectedCustomer || null);
-                                                        }}
-                                                    />
-                                                    <button onClick={() => { dispatch(setFirmModal(true)), dispatch(updateFirmState(defaultParams)) }} type="button" className="btn btn-outline-primary px-1 py-[7px]">
-                                                        <PlusIcon />
-                                                    </button>
+                                                <div className='flex-1'>
+                                                    <div className="flex  items-center gap-2">
+                                                        <div className=' flex-1'>
+                                                            <Select placeholder="Select The Customer" options={firmOP}
+                                                                // @ts-ignore
+                                                                value={firmOP.find(option => option.value === values.FirmId)}
+                                                                onChange={option => {
+                                                                    setFieldValue('FirmId', option ? option.value : '');
+                                                                    const selectedCustomer = firms.find(firm => firm.id === option?.value);
+                                                                    // @ts-ignore
+                                                                    setSelectedCustomer(selectedCustomer || null);
+                                                                }}
+                                                            />
+
+                                                        </div>
+                                                        <button onClick={() => { dispatch(setFirmModal(true)), dispatch(updateFirmState(defaultParams)) }} type="button" className="btn btn-outline-primary px-1 py-[7px]">
+                                                            <PlusIcon />
+                                                        </button>
+                                                    </div>
+                                                    <ErrorMessage
+                                                        name="FirmId"
+                                                        component="div"
+                                                        className="text-red-500 text-sm mt-1 " />
                                                 </div>
                                             </div>
                                             <div className="mt-4 flex items-center">
@@ -241,7 +275,7 @@ const SaleAdd = () => {
                                                     name="reciever-name"
                                                     className="form-input flex-1"
                                                     // @ts-ignore
-                                                    value={selectedCustomer ? `${selectedCustomer?.first_name} ${selectedCustomer.last_name}` : ''}
+                                                    value={selectedCustomer ? `${selectedCustomer?.name} ` : ''}
                                                     placeholder="Enter Name" />
                                             </div>
                                             <div className="mt-4 flex items-center">
@@ -259,7 +293,7 @@ const SaleAdd = () => {
                                                 </label>
                                                 <input id="reciever-address" type="text" name="reciever-address" className="form-input flex-1" placeholder="Enter Address"
                                                     // @ts-ignore
-                                                    value={selectedCustomer ? `${selectedCustomer?.location}` : ''}
+                                                    value={selectedCustomer ? `${selectedCustomer?.address}` : ''}
                                                 />
                                             </div>
                                             <div className="mt-4 flex items-center">
@@ -268,12 +302,12 @@ const SaleAdd = () => {
                                                 </label>
                                                 <input id="reciever-number" type="text" name="reciever-number" className="form-input flex-1" placeholder="Enter Phone number"
                                                     // @ts-ignore
-                                                    value={selectedCustomer ? `${selectedCustomer?.phone_number}` : ''}
+                                                    value={selectedCustomer ? `${selectedCustomer?.phoneNo}` : ''}
                                                 />
                                             </div>
                                         </div>
                                         <div className="w-full lg:w-1/2">
-                                            <div className="text-lg">Payment Details:</div>
+                                            <div className="text-lg underline underline-offset-4">Delivery Details:</div>
                                             <div className="mt-4 flex items-center">
                                                 <label htmlFor="acno" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                                     Status
@@ -283,6 +317,51 @@ const SaleAdd = () => {
                                                     onChange={option => { setFieldValue('status', option ? option.value : ''); }}
                                                     className='flex-1'
                                                 />
+                                                <ErrorMessage
+                                                    name="status"
+                                                    component="div"
+                                                    className="text-red-500 text-sm mt-1 " />
+                                            </div>
+                                            <div className="mt-4 flex items-center">
+                                                <label htmlFor="sideContact" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                    Side Contact Number
+                                                </label>
+                                                <div className='flex-1'>
+                                                    <Field
+                                                        as={MaskedInput}
+                                                        id="sideContact"
+                                                        name="sideContact"
+                                                        type="text"
+                                                        placeholder="+___-___-___-___"
+                                                        className={`form-input  ${touched.sideContact && errors.sideContact ? "border-red-500" : ""}`}
+                                                        mask={[
+                                                            '+',
+                                                            /\d/, /\d/, /\d/, // Allow up to three digits for the country code
+                                                            '-',
+                                                            /\d/, /\d/, /\d/, // First group of three digits
+                                                            '-',
+                                                            /\d/, /\d/, /\d/, // Second group of three digits
+                                                            '-',
+                                                            /\d/, /\d/, /\d/  // Third group of three digits
+                                                        ]}
+                                                    />
+                                                    <ErrorMessage
+                                                        name="sideContact"
+                                                        component="div"
+                                                        className="text-red-500 text-sm mt-1 " />
+                                                </div>
+                                            </div>
+                                            <div className="mt-4 flex items-center">
+                                                <label htmlFor="location" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                    Delivery Address
+                                                </label>
+                                                <div className='flex-1'>
+                                                    <Field id="location" type="text" name="location" className="form-input" placeholder="Enter Delivery Address" />
+                                                    <ErrorMessage
+                                                        name="location"
+                                                        component="div"
+                                                        className="text-red-500 text-sm mt-1 " />
+                                                </div>
                                             </div>
                                             {/*  <div className="mt-4 flex items-center">
                                                 <label htmlFor="bank-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
@@ -343,7 +422,10 @@ const SaleAdd = () => {
                                                             }}
                                                             className="min-w-[200px] "
                                                         />
-
+                                                        <ErrorMessage
+                                                            name="ProductId"
+                                                            component="div"
+                                                            className="text-red-500 text-sm mt-1 " />
                                                     </td>
                                                     <td>
                                                         <Field
@@ -373,7 +455,7 @@ const SaleAdd = () => {
                                                             min={0}
                                                         />
                                                     </td>
-                                                    <td >$</td>
+                                                    <td >$ {(values.quantity * values.unitPrice) - values.discount}</td>
                                                     <td>
                                                         {/*    <button type="button" onClick={() => {
                                                             const newItems = values.sale_items.filter((item, i) => i !== index);
@@ -447,8 +529,8 @@ const SaleAdd = () => {
                                     </div> */}
                                     <div className="">
                                         <div>
-                                            <label htmlFor="shipping_costs">Shipping Charge($) </label>
-                                            <Field id="shipping_costs" type="number" name="shipping_costs" className="form-input" defaultValue={0} placeholder="Shipping Charge" />
+                                            <label htmlFor="otherCharges">Other Charges($) </label>
+                                            <Field id="otherCharges" type="number" name="otherCharges" className="form-input" defaultValue={0} placeholder="Other Charges" />
                                         </div>
                                     </div>
                                     {/*   <div className="mt-4">
@@ -471,16 +553,16 @@ const SaleAdd = () => {
                                             <div>16%</div>
                                         </div>
                                         <div className="mt-4 flex items-center justify-between">
-                                            <div>Shipping Rate($)</div>
+                                            <div>Other Charges ($)</div>
                                             <div>${values.otherCharges}</div>
                                         </div>
                                         <div className="mt-4 flex items-center justify-between">
                                             <div>Discount($)</div>
-                                            <div>$</div>
+                                            <div>${values.discount}</div>
                                         </div>
                                         <div className="mt-4 flex items-center justify-between font-semibold">
                                             <div>Total</div>
-                                            <div>$</div>
+                                            <div>${(values.quantity * values.unitPrice) + values.otherCharges - values.discount}</div>
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-1 mt-4">
