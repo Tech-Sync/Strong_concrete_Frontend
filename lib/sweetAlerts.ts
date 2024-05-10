@@ -1,4 +1,5 @@
 import { forgetPassword } from "@/actions/authActions";
+import { Firm } from "@/types/types";
 import Swal, { SweetAlertPosition } from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
@@ -62,102 +63,4 @@ export const forgetPasswordToast = async () => {
       Swal.fire(res?.error);
     }
   }
-};
-
-type DeletionFunction = (
-  id: any
-) => Promise<{ message?: string; error?: string }>;
-
-export const deleteToast = async (
-  id: any,
-  deletionFunction: DeletionFunction
-): Promise<boolean> => {
-  try {
-    const result = await Swal.fire({
-      icon: "warning",
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      showCancelButton: true,
-      confirmButtonText: "Delete",
-      padding: "2em",
-      customClass: "sweet-alerts",
-    });
-
-    if (result.isConfirmed) {
-      const res = await deletionFunction(id);
-      if (res?.message) {
-        await Swal.fire({
-          title: "Deleted!",
-          text: "It has been deleted.",
-          icon: "success",
-          customClass: "sweet-alerts",
-        });
-        return true;
-      } else {
-        await Swal.fire({
-          title: "Error",
-          text: res?.error || "An error occurred while trying to delete.",
-          icon: "error",
-          customClass: "sweet-alerts",
-        });
-        return false;
-      }
-    }
-  } catch (error) {
-    console.error("Error in deleteToast:", error);
-    Swal.fire({
-      title: "Error",
-      text: "An unexpected error occurred.",
-      icon: "error",
-      customClass: "sweet-alerts",
-    });
-  }
-  return false;
-};
-
-export const multiDeleteToast = async (
-  ids: any,
-  deletionFunction: DeletionFunction
-): Promise<boolean> => {
-  try {
-    const result = await Swal.fire({
-      icon: "warning",
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      showCancelButton: true,
-      confirmButtonText: "Delete",
-      padding: "2em",
-      customClass: "sweet-alerts",
-    });
-
-    if (result.isConfirmed) {
-      const res = await deletionFunction(ids);
-      if (res?.message) {
-        await Swal.fire({
-          title: "Deleted!",
-          text: "It has been deleted.",
-          icon: "success",
-          customClass: "sweet-alerts",
-        });
-        return true;
-      } else {
-        await Swal.fire({
-          title: "Error",
-          text: res?.error || "An error occurred while trying to delete.",
-          icon: "error",
-          customClass: "sweet-alerts",
-        });
-        return false;
-      }
-    }
-  } catch (error) {
-    console.error("Error in deleteToast:", error);
-    Swal.fire({
-      title: "Error",
-      text: "An unexpected error occurred.",
-      icon: "error",
-      customClass: "sweet-alerts",
-    });
-  }
-  return false;
 };

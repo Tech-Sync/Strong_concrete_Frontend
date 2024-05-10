@@ -8,17 +8,7 @@ export interface Register {
   email: string;
   password: string;
 }
-// {
-//     "id": 1,
-//     "name": "MATERIALNAME",
-//     "unitType": "Testtype",
-//     "quantity": 0,
-//     "createdAt": "2024-02-05T16:55:32.010Z",
-//     "updatedAt": "2024-02-05T16:55:32.010Z",
-//     "deletedAt": null,
-//     "creatorId": null,
-//     "updaterId": null
-// },
+
 export interface Material {
   id: number;
   name: string;
@@ -32,7 +22,7 @@ export interface Material {
 }
 
 export interface Firm {
-  id: number;
+  id?: number;
   name: string;
   address: string;
   email: string;
@@ -51,14 +41,144 @@ export interface Materials {
 
 export interface Purchase {
   id: number,
-  MaterialId : number,
+  MaterialId: number,
   quantity: number,
   unitPrice: number,
   totalPrice: number,
-  FirmId:number,
+  FirmId: number,
   createdAt: string,
   updatedAt: string,
+  Material: {
+    name: string | null,
+    unitType: string | null,
+  },
+  Firm: {
+    name: string | null,
+    address: string | null,
+    phoneNo: string | null,
+    email: string | null
+  },
   creatorId: number | null,
   updatorId: number | null
   deletedAt: string | null,
+}
+
+
+export interface Product {
+  id: number;
+  name: string;
+  price: number;
+  materials: {
+    STONE: number;
+    SAND: number;
+    CEMENT: number;
+  };
+  createdAt: string;
+  updatedAt: string | null;
+  deletedAt: string | null;
+  creatorId: number;
+  updaterId: number | null;
+}
+
+export interface Vehicle {
+  id: number;
+  status: number;
+  isPublic: boolean;
+  DriverId: number;
+  plateNumber: number;
+  model: number;
+  capacity: number;
+  driver: {
+    firstName: string,
+    lastName: string
+  };
+  createdAt: string;
+  updatedAt: string | null;
+  deletedAt: string | null;
+  creatorId: number;
+  updaterId: number | null;
+}
+
+export interface User {
+  id: number;
+  firstName: string,
+  lastName: string
+  nrcNo: string;
+  phoneNo: string;
+  address: string;
+  role: number;
+  email: string;
+  password: string;
+  emailToken: string;
+  isActive: boolean;
+  isVerified: boolean;
+  createdAt: string;
+  updatedAt: string | null;
+  deletedAt: string | null;
+}
+
+export interface Sale {
+  id: number,
+  FirmId: number | string,
+  ProductId: number | string,
+  quantity: number,
+  unitPrice: number,
+  location: string,
+  otherCharges: number,
+  totalPrice: number,
+  discount: number,
+  requestedDate: string,
+  sideContact: string,
+  orderDate: string | null,
+  orderNumber: number,
+  status: number,
+  createdAt?: string,
+  updatedAt?: string | null,
+  deletedAt?: string | null,
+  creatorId?: number,
+  updaterId?: number | null;
+  Firm?: {
+    name: string
+  },
+  Product?: {
+    name: string
+  }
+}
+
+export interface WeeklySale {
+  id: number,
+  title: string,
+  date: string,
+  orders: [
+    {
+      projectId: number,
+      id: number,
+      title: string,
+      description: string,
+      date: string,
+      tags: string
+    }
+  ]
+}
+
+export interface Production {
+  id: number,
+  SaleId: number,
+  VehicleIds: Array<any> | null,
+  status: number,
+  createdAt: string,
+  updatedAt: string | null,
+  deletedAt: null,
+  creatorId: number,
+  updaterId: null,
+  Sale: {
+    id: number,
+    quantity: number,
+    FirmId: number,
+    orderDate: string,
+    Product: {
+      id: number,
+      name: string
+    }
+  }
 }

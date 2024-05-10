@@ -32,7 +32,7 @@ const NavbarNotificationDrop = () => {
 		},
 	]);
 	const removeNotification = (value: number) => {
-		setNotifications(notifications.filter((user) => user.id !== value));
+		setNotifications(notifications?.filter((user) => user.id !== value));
 	};
 
   return (
@@ -60,7 +60,7 @@ const NavbarNotificationDrop = () => {
       </li>
       {notifications.length > 0 ? (
        <>
-        {notifications.map((notification) => {
+        {notifications?.map((notification) => {
          return (
           <li key={notification.id} className="dark:text-white-light/90" onClick={(e) => e.stopPropagation()}>
            <div className="group flex items-center px-4 py-2">

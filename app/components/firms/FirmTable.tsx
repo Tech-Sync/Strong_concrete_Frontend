@@ -2,10 +2,10 @@
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
 import { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
-import { DeleteIcon, EditIcon } from "@/app/icons";
+import { DeleteIcon, EditIcon, PlusIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
 import { firmStatuses } from "@/app/constraints/roles&status";
-import { coloredToast, deleteToast, multiDeleteToast } from "@/lib/sweetAlerts";
+import { coloredToast } from "@/lib/sweetAlerts";
 import {
   getAllFrimAsync,
   selectFirms,
@@ -13,20 +13,27 @@ import {
   selectFirmStatus,
   useDispatch,
   useSelector,
+  updateFirm,
+  setFirmModal,
+  updateFirmState,
 } from "@/lib/redux";
 import FirmModal from "./FirmModal";
-import { deleteFirm, deleteMultiFirm } from "@/lib/redux/slices/firmSlice/firmActions";
+import {
+  deleteFirm,
+  deleteMultiFirm,
+} from "@/lib/redux/slices/firmSlice/firmActions";
+import useDeleteToasts from "@/hooks/useDeleteToasts";
 
 export default function FirmTable() {
   const dispatch = useDispatch();
+  const { deleteToast, multiDeleteToast } = useDeleteToasts();
   const firms = useSelector(selectFirms);
   const firmStatus = useSelector(selectFirmStatus);
+  const isDark = useSelector(selectIsDarkMode);
 
   useEffect(() => {
     dispatch(getAllFrimAsync());
   }, []);
-
-  const isDark = useSelector(selectIsDarkMode);
 
   const [page, setPage] = useState(1);
   const PAGE_SIZES = [10, 20, 30, 40, 50];
@@ -39,17 +46,11 @@ export default function FirmTable() {
     columnAccessor: "id",
     direction: "asc",
   });
-  const [modal, setModal] = useState(false);
 
-  //@ts-ignore
-  const [firmInitials, setFirmInitials] = useState({
-    name: "",
-    address: "",
-    phoneNo: "",
-    tpinNo: "",
-    email: "",
-    status: "",
-  });
+  useEffect(() => {
+    setRecords(firms);
+    setInitialRecords(firms);
+  }, [firms]);
 
   useEffect(() => {
     setPage(1);
@@ -58,12 +59,12 @@ export default function FirmTable() {
   useEffect(() => {
     const from = (page - 1) * pageSize;
     const to = from + pageSize;
-    setRecords([...initialRecords.slice(from, to)]);
+    setRecords([...(Array.isArray(initialRecords) ? initialRecords.slice(from, to) : [])]);
   }, [page, pageSize, initialRecords]);
 
   useEffect(() => {
     setInitialRecords(() => {
-      return firms.filter((firm) => {
+      return firms?.filter((firm) => {
         return (
           firm.address.toLowerCase().includes(search.toLowerCase()) ||
           firm.email.toLowerCase().includes(search.toLowerCase()) ||
@@ -83,28 +84,22 @@ export default function FirmTable() {
 
   const deleteRow = async (id: any = null) => {
     if (id) {
-      const deletionSuccess = await deleteToast(id, deleteFirm);
+      const deletionSuccess = await deleteToast(id, deleteFirm, updateFirm);
       if (deletionSuccess) {
-        dispatch(getAllFrimAsync());
-        setRecords(firms);
-        setInitialRecords(firms);
         setSelectedRecords([]);
         setSearch("");
       }
     } else {
       let selectedRows = selectedRecords || [];
-      if (selectedRows.length === 0) {
+      if (selectedRows?.length === 0) {
         coloredToast("warning", "Select items to delete!");
         return;
       }
-      const ids = selectedRows.map((d: any) => {
+      const ids = selectedRows?.map((d: any) => {
         return d.id;
       });
-      const deletionSuccess = await multiDeleteToast(ids, deleteMultiFirm);
+      const deletionSuccess = await multiDeleteToast(ids, deleteMultiFirm, updateFirm);
       if (deletionSuccess) {
-        dispatch(getAllFrimAsync());
-        setRecords(firms);
-        setInitialRecords(firms);
         setSelectedRecords([]);
         setSearch("");
         setPage(1);
@@ -112,9 +107,16 @@ export default function FirmTable() {
     }
   };
 
-  /*   if (firmStatus === "loading") {
-    return <h1 className="text-lg text-center">LOADING...</h1>;
-  } */
+  const defaultParams = {
+    name: "",
+    address: "",
+    phoneNo: "",
+    tpinNo: "",
+    email: "",
+    status: "",
+  };
+
+
 
   return (
     <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
@@ -124,19 +126,15 @@ export default function FirmTable() {
             <button
               type="button"
               className="btn btn-danger gap-2"
-              onClick={() => deleteRow()}
-            >
+              onClick={() => deleteRow()}>
               <DeleteIcon />
               Delete
             </button>
-            <FirmModal
-              modal={modal}
-              setModal={setModal}
-              //@ts-ignore
-              firmInitials={firmInitials}
-              //@ts-ignore
-              setFirmInitials={setFirmInitials}
-            />
+            <button onClick={() => { dispatch(setFirmModal(true)), dispatch(updateFirmState(defaultParams)) }} className="btn btn-primary gap-2">
+              <PlusIcon />
+              Add New
+            </button>
+            <FirmModal />
           </div>
           <div className="ltr:ml-auto rtl:mr-auto">
             <input
@@ -151,7 +149,7 @@ export default function FirmTable() {
         <div className="datatables pagination-padding">
           <DataTable
             className={`${isDark} table-hover whitespace-nowrap`}
-            records={records.map((material, index) => ({
+            records={records?.map((material, index) => ({
               ...material,
               serialNumber: index + 1,
             }))}
@@ -213,11 +211,10 @@ export default function FirmTable() {
                   <div className="mx-auto flex w-max items-center gap-4">
                     <button
                       onClick={() => {
-                        //@ts-ignore
-                        setFirmInitials(firm), setModal(true);
+                        dispatch(updateFirmState(firm)),
+                        dispatch(setFirmModal(true))
                       }}
-                      className="flex hover:text-info"
-                    >
+                      className="flex hover:text-info">
                       <EditIcon />
                     </button>
                     {/*     <Link
@@ -229,8 +226,7 @@ export default function FirmTable() {
                     <button
                       type="button"
                       className="flex hover:text-danger"
-                      onClick={(e) => deleteRow(firm.id)}
-                    >
+                      onClick={(e) => deleteRow(firm.id)}>
                       <DeleteIcon />
                     </button>
                   </div>
@@ -238,7 +234,7 @@ export default function FirmTable() {
               },
             ]}
             highlightOnHover={true}
-            totalRecords={initialRecords.length}
+            totalRecords={initialRecords?.length}
             recordsPerPage={pageSize}
             page={page}
             onPageChange={(p) => setPage(p)}

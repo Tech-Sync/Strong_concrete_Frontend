@@ -7,7 +7,7 @@ import FirmForm from "./FirmForm";
 // import { addFirm, updateFirm } from "@/actions/firmActions";
 import { coloredToast } from "@/lib/sweetAlerts";
 import { useRouter } from "next/navigation";
-import { getAllFrimAsync, useDispatch } from "@/lib/redux";
+import { getAllFrimAsync, selectFirm, selectFirmModal, setFirmModal, useDispatch, useSelector } from "@/lib/redux";
 import { Firm } from "@/types/types";
 import { addFirm, updateFirm } from "@/lib/redux/slices/firmSlice/firmActions";
 
@@ -21,48 +21,33 @@ const firmSchema = object({
     .required("Email is required!"),
 });
 
-interface firmModalProps {
-  setModal: (value: boolean) => void;
-  modal: boolean;
-  firmInitials: Firm;
-  setFirmInitials: (value: object) => void;
-}
 
-export default function FirmModal({
-  modal,
-  setModal,
-  firmInitials,
-  setFirmInitials,
-}: firmModalProps) {
-  const emptyFirm = {
-    name: "",
-    address: "",
-    phoneNo: "",
-    tpinNo: "",
-    email: "",
-    status: "",
-  };
+
+export default function FirmModal() {
+
+
+  const ticketModal = useSelector(selectFirmModal);
+  const params = useSelector(selectFirm);
+
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const initialValues = {
+    id: params?.id || "",
+    name: params?.name || "",
+    address: params?.address || "",
+    phoneNo: params?.phoneNo || "",
+    tpinNo: params?.tpinNo || "",
+    email: params?.email || "",
+    status: params?.status || "",
+  }
+
+
   return (
     <div>
-      <button
-        onClick={() => {
-          setModal(true), setFirmInitials(emptyFirm);
-        }}
-        className="btn btn-primary gap-2"
-      >
-        <PlusIcon />
-        Add New
-      </button>
-      <Transition appear show={modal} as={Fragment}>
-        <Dialog
-          as="div"
-          open={modal}
-          onClose={() => {
-            setModal(false);
-          }}
-        >
+
+      <Transition appear show={ticketModal} as={Fragment}>
+        <Dialog as="div" open={ticketModal} onClose={() => { dispatch(setFirmModal(false)) }}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -90,10 +75,10 @@ export default function FirmModal({
               >
                 <Dialog.Panel className="panel my-8 w-full max-w-sm overflow-hidden rounded-lg border-0 py-1 px-4 text-black dark:text-white-dark">
                   <div className="flex items-center justify-between p-5 text-lg font-semibold dark:text-white ">
-                    <h5>Add New Firm</h5>
+                    <h5>{params.id ? "Update The Firm" : "Add New Firm"}</h5>
                     <button
                       type="button"
-                      onClick={() => setModal(false)}
+                      onClick={() => dispatch(setFirmModal(false))}
                       className="text-white-dark hover:text-dark"
                     >
                       <svg
@@ -114,37 +99,27 @@ export default function FirmModal({
                   </div>
                   <div className="p-5">
                     <Formik
-                      initialValues={firmInitials.id ? firmInitials : emptyFirm}
+                      initialValues={initialValues}
                       validationSchema={firmSchema}
-                      onSubmit={async (
-                        values,
-                        { setSubmitting, resetForm }
-                      ) => {
-                        if ("id" in firmInitials) {
+                      onSubmit={async (values, { setSubmitting, resetForm }) => {
+                        if (params.id) {
                           //@ts-ignore
                           const res = await updateFirm(values);
                           if (res.message) {
-                            coloredToast(
-                              "success",
-                              res.message,
-                              "bottom-start"
-                            );
-                            setModal(false);
+                            coloredToast("success", res.message, "bottom-start");
+                            dispatch(setFirmModal(false))
                             dispatch(getAllFrimAsync());
                           } else {
                             coloredToast("danger", res.error, "bottom-start");
                           }
                         } else {
-                          const res = await addFirm(values);
+                          const { id, ...data } = values
+                          const res = await addFirm(data);
                           setTimeout(() => {
                             setSubmitting(false);
                             if (res.message) {
-                              coloredToast(
-                                "success",
-                                res.message,
-                                "bottom-start"
-                              );
-                              setModal(false);
+                              coloredToast("success", res.message, "bottom-start");
+                              dispatch(setFirmModal(false))
                               dispatch(getAllFrimAsync());
                             } else {
                               coloredToast("danger", res.error, "bottom-start");

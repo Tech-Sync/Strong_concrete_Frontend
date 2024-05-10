@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import { useState, useEffect } from 'react';
 import { selectThemeConfig, themeConfigSlice } from '@/lib/redux/slices/themeConfigSlice';
-import { DashboardIcon,DoubleArrowIcon} from '@/app/icons'
+import { DashboardIcon, DoubleArrowIcon } from '@/app/icons'
 
 
 const Sidebar = () => {
@@ -64,8 +64,8 @@ const Sidebar = () => {
             icon: <DashboardIcon />,
         },
         {
-            name: "Orders",
-            path: '/orders',
+            name: "Sales",
+            path: '/sales',
             icon: <DashboardIcon />,
         },
         {
@@ -79,13 +79,13 @@ const Sidebar = () => {
             icon: <DashboardIcon />,
         },
         {
-            name: "Accounts",
-            path: '/accounts',
+            name: "Purchases",
+            path: '/purchases',
             icon: <DashboardIcon />,
         },
         {
-            name: "Vehicles",
-            path: '/vehicles',
+            name: "Accounts",
+            path: '/accounts',
             icon: <DashboardIcon />,
         },
         {
@@ -99,6 +99,16 @@ const Sidebar = () => {
             icon: <DashboardIcon />,
         },
         {
+            name: "Products",
+            path: '/products',
+            icon: <DashboardIcon />,
+        },
+        {
+            name: "Vehicles",
+            path: '/vehicles',
+            icon: <DashboardIcon />,
+        },
+        {
             name: "Users",
             path: '/users',
             icon: <DashboardIcon />,
@@ -108,12 +118,6 @@ const Sidebar = () => {
             path: '/settings',
             icon: <DashboardIcon />,
         },
-        {
-            name: "Purchases",
-            path: '/purchases',
-            icon: <DashboardIcon />,
-        }
-
 
 
     ]
@@ -145,7 +149,7 @@ const Sidebar = () => {
 
                             <li className="nav-item">
                                 <ul>
-                                    {routes.map(route => (
+                                    {routes?.map(route => (
 
                                         <li className="nav-item" key={route.name}>
                                             <Link href={route.path} className="group">

@@ -56,7 +56,6 @@ export const verifyEmail = async (emailToken: string) => {
     }
   } catch (error) {
     if (error instanceof Error) {
-      console.log(error);
       return { error: "Something went wrong ! Try again" };
     }
     throw error;
