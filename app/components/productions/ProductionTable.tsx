@@ -4,39 +4,36 @@ import { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
 import { DeleteIcon, EditIcon, PlusIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
-import { firmStatuses } from "@/app/constraints/roles&status";
+import { productionStatuses } from "@/app/constraints/roles&status";
 import { coloredToast } from "@/lib/sweetAlerts";
-import { getAllFrimAsync, selectFirms, selectIsDarkMode, selectFirmStatus, useDispatch, useSelector, updateFirm, setFirmModal, updateFirmState, } from "@/lib/redux";
-import FirmModal from "./FirmModal";
-import { deleteFirm, deleteMultiFirm } from "@/lib/redux/slices/firmSlice/firmActions";
+import { getAllProductionAsync, selectProductions, selectIsDarkMode, selectProductionStatus, useDispatch, useSelector, updateProduction, setProductionModal, updateProductionState, } from "@/lib/redux";
+import ProductionModal from "./ProductionModal";
 import useDeleteToasts from "@/hooks/useDeleteToasts";
+import { deleteMultiProduction, deleteProduction } from "@/lib/redux/slices/productionSlice/ProductionActions";
 
-export default function FirmTable() {
+export default function ProductionTable() {
   const dispatch = useDispatch();
   const { deleteToast, multiDeleteToast } = useDeleteToasts();
-  const firms = useSelector(selectFirms);
+  const productions = useSelector(selectProductions);
   const isDark = useSelector(selectIsDarkMode);
 
   useEffect(() => {
-    dispatch(getAllFrimAsync());
+    dispatch(getAllProductionAsync());
   }, []);
-
+  console.log(productions);
   const [page, setPage] = useState(1);
   const PAGE_SIZES = [10, 20, 30, 40, 50];
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-  const [initialRecords, setInitialRecords] = useState(sortBy(firms, "id"));
+  const [initialRecords, setInitialRecords] = useState(sortBy(productions, "id"));
   const [records, setRecords] = useState(initialRecords);
   const [selectedRecords, setSelectedRecords] = useState<any>([]);
   const [search, setSearch] = useState("");
-  const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
-    columnAccessor: "id",
-    direction: "asc",
-  });
+  const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({ columnAccessor: "id", direction: "asc" });
 
   useEffect(() => {
-    setRecords(firms);
-    setInitialRecords(firms);
-  }, [firms]);
+    setRecords(productions);
+    setInitialRecords(productions);
+  }, [productions]);
 
   useEffect(() => {
     setPage(1);
@@ -50,17 +47,14 @@ export default function FirmTable() {
 
   useEffect(() => {
     setInitialRecords(() => {
-      return firms?.filter((firm) => {
+      return productions?.filter((production) => {
         return (
-          firm.address.toLowerCase().includes(search.toLowerCase()) ||
-          firm.email.toLowerCase().includes(search.toLowerCase()) ||
-          firm.name.toLowerCase().includes(search.toLowerCase()) ||
-          firm.phoneNo.toLowerCase().includes(search.toLowerCase()) ||
-          firm.tpinNo.toLowerCase().includes(search.toLowerCase())
+          production.Sale?.Product?.name.toLowerCase().includes(search.toLowerCase()) ||
+          production.Sale?.orderDate.toLowerCase().includes(search.toLowerCase())
         );
       });
     });
-  }, [firms, search]);
+  }, [productions, search]);
 
   useEffect(() => {
     const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
@@ -70,7 +64,7 @@ export default function FirmTable() {
 
   const deleteRow = async (id: any = null) => {
     if (id) {
-      const deletionSuccess = await deleteToast(id, deleteFirm, updateFirm);
+      const deletionSuccess = await deleteToast(id, deleteProduction, updateProduction);
       if (deletionSuccess) {
         setSelectedRecords([]);
         setSearch("");
@@ -84,7 +78,7 @@ export default function FirmTable() {
       const ids = selectedRows?.map((d: any) => {
         return d.id;
       });
-      const deletionSuccess = await multiDeleteToast(ids, deleteMultiFirm, updateFirm);
+      const deletionSuccess = await multiDeleteToast(ids, deleteMultiProduction, updateProduction);
       if (deletionSuccess) {
         setSelectedRecords([]);
         setSearch("");
@@ -116,11 +110,11 @@ export default function FirmTable() {
               <DeleteIcon />
               Delete
             </button>
-            <button onClick={() => { dispatch(setFirmModal(true)), dispatch(updateFirmState(defaultParams)) }} className="btn btn-primary gap-2">
+            {/*   <button onClick={() => { dispatch(setProductionModal(true)), dispatch(updateProductionState(defaultParams)) }} className="btn btn-primary gap-2">
               <PlusIcon />
               Add New
-            </button>
-            <FirmModal />
+            </button> */}
+            <ProductionModal />
           </div>
           <div className="ltr:ml-auto rtl:mr-auto">
             <input
@@ -135,8 +129,8 @@ export default function FirmTable() {
         <div className="datatables pagination-padding">
           <DataTable
             className={`${isDark} table-hover whitespace-nowrap`}
-            records={records?.map((material, index) => ({
-              ...material,
+            records={records?.map((item, index) => ({
+              ...item,
               serialNumber: index + 1,
             }))}
             columns={[
@@ -152,30 +146,28 @@ export default function FirmTable() {
               {
                 accessor: "name",
                 sortable: true,
-                render: ({ name, id }) => (
+                render: ({ Sale, id }) => (
                   <div className="flex items-center font-semibold">
-                    <div>{name as string}</div>
+                    <div>{Sale.Product.name}</div>
                   </div>
                 ),
               },
               {
-                accessor: "email",
+                accessor: "quantity",
                 sortable: true,
+                render: ({ Sale, id }) => (
+                  <div className="flex items-center font-semibold">
+                    <div>{Sale.quantity}</div>
+                  </div>
+                ),
               },
               {
-                accessor: "phoneNo",
+                accessor: "order date",
                 sortable: true,
-              },
-              {
-                accessor: "tpinNo",
-                sortable: true,
-              },
-              {
-                accessor: "createdAt",
-                sortable: true,
-                titleClassName: "text-left",
-                render: ({ createdAt, id }) => (
-                  <div>{formatDate(createdAt)}</div>
+                render: ({ Sale, id }) => (
+                  <div className="flex items-center font-semibold">
+                    <div>{formatDate(Sale.orderDate)}</div>
+                  </div>
                 ),
               },
               {
@@ -184,7 +176,7 @@ export default function FirmTable() {
                 render: ({ status }) => (
                   <span className={`badge badge-outline-secondary`}>
                     {/* @ts-ignore */}
-                    {firmStatuses[String(status)]}
+                    {productionStatuses[String(status)]}
                   </span>
                 ),
               },
@@ -193,12 +185,12 @@ export default function FirmTable() {
                 title: "Actions",
                 sortable: false,
                 textAlignment: "center",
-                render: (firm) => (
+                render: (production) => (
                   <div className="mx-auto flex w-max items-center gap-4">
                     <button
                       onClick={() => {
-                        dispatch(updateFirmState(firm)),
-                          dispatch(setFirmModal(true))
+                        dispatch(updateProductionState(production)),
+                          dispatch(setProductionModal(true))
                       }}
                       className="flex hover:text-info">
                       <EditIcon />
@@ -212,7 +204,7 @@ export default function FirmTable() {
                     <button
                       type="button"
                       className="flex hover:text-danger"
-                      onClick={(e) => deleteRow(firm.id)}>
+                      onClick={(e) => deleteRow(production.id)}>
                       <DeleteIcon />
                     </button>
                   </div>
