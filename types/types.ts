@@ -41,11 +41,11 @@ export interface Materials {
 
 export interface Purchase {
   id: number,
-  MaterialId : number,
+  MaterialId: number,
   quantity: number,
   unitPrice: number,
   totalPrice: number,
-  FirmId:number,
+  FirmId: number,
   createdAt: string,
   updatedAt: string,
   Material: {
@@ -117,10 +117,10 @@ export interface User {
   deletedAt: string | null;
 }
 
-export interface Sale  {
+export interface Sale {
   id: number,
-  FirmId: number,
-  ProductId: number,
+  FirmId: number | string,
+  ProductId: number | string,
   quantity: number,
   unitPrice: number,
   location: string,
@@ -132,15 +132,15 @@ export interface Sale  {
   orderDate: string | null,
   orderNumber: number,
   status: number,
-  createdAt: string,
-  updatedAt: string | null,
-  deletedAt: string | null,
-  creatorId: number,
-  updaterId: number | null;
-  Firm: {
+  createdAt?: string,
+  updatedAt?: string | null,
+  deletedAt?: string | null,
+  creatorId?: number,
+  updaterId?: number | null;
+  Firm?: {
     name: string
   },
-  Product: {
+  Product?: {
     name: string
   }
 }
@@ -155,8 +155,30 @@ export interface WeeklySale {
       id: number,
       title: string,
       description: string,
-      date:string,
+      date: string,
       tags: string
     }
   ]
+}
+
+export interface Production {
+  id: number,
+  SaleId: number,
+  VehicleIds: Array<any> | null,
+  status: number,
+  createdAt: string,
+  updatedAt: string | null,
+  deletedAt: null,
+  creatorId: number,
+  updaterId: null,
+  Sale: {
+    id: number,
+    quantity: number,
+    FirmId: number,
+    orderDate: string,
+    Product: {
+      id: number,
+      name: string
+    }
+  }
 }

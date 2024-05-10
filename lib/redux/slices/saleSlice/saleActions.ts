@@ -1,5 +1,6 @@
 "use server";
 import { auth } from "@/auth";
+import { Sale } from "@/types/types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
@@ -168,15 +169,9 @@ export const updateOrder = async (orderId: string, updateOrderBody: object) => {
 };
 
 
-interface updateData {
-  id: string | number,
-  MaterialId: string | number,
-  FirmId: string | number,
-  quantity: string | number,
-  unitPrice: string | number,
-}
 
-export const updateSale = async (saleData: updateData) => {
+
+export const updateSale = async (saleData:Sale) => {
   const headers = await authConfig();
   try {
     const response = await fetch(`${BASE_URL}/sales/${saleData.id}`, {

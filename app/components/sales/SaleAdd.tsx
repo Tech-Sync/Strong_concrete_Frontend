@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import MaskedInput from 'react-text-mask';
 import { getAllFrimAsync, getAllProductAsync, getAllSaleAsync, selectFirms, selectProducts, selectSale, setFirmModal, updateFirmState, updateSaleState, useDispatch, useSelector } from '@/lib/redux';
 import { coloredToast } from '@/lib/sweetAlerts';
-import { addSale } from '@/lib/redux/slices/saleSlice/saleActions';
+import { addSale, updateSale } from '@/lib/redux/slices/saleSlice/saleActions';
 import { PlusIcon } from '@/app/icons';
 import FirmModal from '../firms/FirmModal';
 import { number, object, string } from 'yup';
@@ -137,15 +137,12 @@ const SaleAdd = () => {
                 validationSchema={baseTicketSchema}
                 onSubmit={async (values, { setSubmitting, resetForm }) => {
                     if (sale) {
-                        console.log('values---', values);
-                        // const { sale_items, firm, ...valuesToSend } = values
-                        //@ts-ignore
-                        const res = await updateInvoice(valuesToSend)
+                        const res = await updateSale(values)
                         setTimeout(() => {
                             if (res.message) {
                                 setSubmitting(false);
                                 resetForm();
-                                router.replace('/sale')
+                                router.replace('/sales')
                                 coloredToast("success", res.message, "bottom-start");
                                 // dispatch(getAllFrimAsync());
                                 dispatch(updateSaleState(null))
