@@ -22,7 +22,7 @@ export interface Material {
 }
 
 export interface Firm {
-  id: number;
+  id?: number;
   name: string;
   address: string;
   email: string;
@@ -41,11 +41,11 @@ export interface Materials {
 
 export interface Purchase {
   id: number,
-  MaterialId : number,
+  MaterialId: number,
   quantity: number,
   unitPrice: number,
   totalPrice: number,
-  FirmId:number,
+  FirmId: number,
   createdAt: string,
   updatedAt: string,
   Material: {
@@ -115,4 +115,70 @@ export interface User {
   createdAt: string;
   updatedAt: string | null;
   deletedAt: string | null;
+}
+
+export interface Sale {
+  id: number,
+  FirmId: number | string,
+  ProductId: number | string,
+  quantity: number,
+  unitPrice: number,
+  location: string,
+  otherCharges: number,
+  totalPrice: number,
+  discount: number,
+  requestedDate: string,
+  sideContact: string,
+  orderDate: string | null,
+  orderNumber: number,
+  status: number,
+  createdAt?: string,
+  updatedAt?: string | null,
+  deletedAt?: string | null,
+  creatorId?: number,
+  updaterId?: number | null;
+  Firm?: {
+    name: string
+  },
+  Product?: {
+    name: string
+  }
+}
+
+export interface WeeklySale {
+  id: number,
+  title: string,
+  date: string,
+  orders: [
+    {
+      projectId: number,
+      id: number,
+      title: string,
+      description: string,
+      date: string,
+      tags: string
+    }
+  ]
+}
+
+export interface Production {
+  id: number,
+  SaleId: number,
+  VehicleIds: Array<any> | null,
+  status: number,
+  createdAt: string,
+  updatedAt: string | null,
+  deletedAt: null,
+  creatorId: number,
+  updaterId: null,
+  Sale: {
+    id: number,
+    quantity: number,
+    FirmId: number,
+    orderDate: string,
+    Product: {
+      id: number,
+      name: string
+    }
+  }
 }

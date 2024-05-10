@@ -1,5 +1,6 @@
 "use server";
 import { auth } from "@/auth";
+import { Production } from "@/types/types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
@@ -13,10 +14,10 @@ const authConfig = async () => {
   };
 };
 
-export const getAllPurchases = async () => {
+export const getAllProductions = async () => {
   const headers = await authConfig();
   try {
-    const response = await fetch(`${BASE_URL}/purchases`, {
+    const response = await fetch(`${BASE_URL}/productions`, {
       cache: "no-cache",
       headers,
     });
@@ -26,17 +27,19 @@ export const getAllPurchases = async () => {
     if (response.ok) {
       return data;
     } else {
-      throw new Error( data.message || "Something went wrong, Please try again!");
+      throw new Error(
+        data.message || "Something went wrong, Please try again!"
+      );
     }
   } catch (error: any) {
     return { error: error.message };
   }
 };
 
-export const deletePurchase = async (id: any) => {
+export const deleteProduction = async (id: any) => {
   const headers = await authConfig();
   try {
-    const response = await fetch(`${BASE_URL}/purchases/${id}`, {
+    const response = await fetch(`${BASE_URL}/productions/${id}`, {
       method: "DELETE",
       headers,
     });
@@ -54,14 +57,13 @@ export const deletePurchase = async (id: any) => {
   }
 };
 
-export const deleteMultiPurchase = async (ids:any) => {
+export const deleteMultiProduction = async (ids: any) => {
   const headers = await authConfig();
-
   try {
-    const response = await fetch(`${BASE_URL}/purchases/multiple-delete`, {
+    const response = await fetch(`${BASE_URL}/productions/multiple-delete`, {
       method: "POST",
       headers,
-      body: JSON.stringify({ids}),
+      body: JSON.stringify({ ids }),
     });
 
     const data = await response.json();
@@ -71,41 +73,28 @@ export const deleteMultiPurchase = async (ids:any) => {
     } else {
       throw new Error( data.message ?? "Something went wrong, Please try again!");
     }
-
+    
   } catch (error: any) {
     return { error: error.message };
   }
 };
 
-export const readPurchase = async (id:string) => {
-  const headers = await authConfig();
-  
-  try {
-    const response = await fetch(`${BASE_URL}/purchases/${id}`, {
-      headers,
-    });
+/* interface productionDataProp {
+  name: string;
+  address: string;
+  phoneNo: string;
+  tpinNo: string;
+  email: string;
+  status: string;
+} */
 
-    const data = await response.json();
-
-    if (response.ok) {
-      return data;
-    } else {
-      throw new Error( data.message || "Something went wrong, Please try again!");
-    }
-
-  } catch (error:any) {
-    return { error: error.message };
-  }
-
-}
-
-export const addPurchase = async (purchaseData: Object) => {
+export const addProduction = async (productionData: Object) => {
   const headers = await authConfig();
   try {
-    const response = await fetch(`${BASE_URL}/purchases`, {
+    const response = await fetch(`${BASE_URL}/productions`, {
       method: "POST",
       headers,
-      body: JSON.stringify(purchaseData),
+      body: JSON.stringify(productionData),
     });
 
     const data = await response.json();
@@ -121,30 +110,22 @@ export const addPurchase = async (purchaseData: Object) => {
     return { error: error.message };
   }
 };
-
-interface updateData{
-  id: string | number,
-  MaterialId: string | number,
-  FirmId: string | number,
-  quantity: string | number,
-  unitPrice: string | number,
-}
-
-export const updatePurchase = async (purchaseData: updateData) => {
+export const updateProduction = async (productionData: Production) => {
   const headers = await authConfig();
   try {
-    const response = await fetch(`${BASE_URL}/purchases/${purchaseData.id}`, {
+    const response = await fetch(`${BASE_URL}/productions/${productionData.id}`, {
       method: "PUT",
       headers,
-      body: JSON.stringify(purchaseData),
+      body: JSON.stringify(productionData),
     });
 
     const data = await response.json();
-
     if (response.ok && data.isUpdated) {
       return { message: "Successfully Updated!" };
     } else {
-      throw new Error( data.message || "Something went wrong, Please try again!" );
+      throw new Error(
+        data.message || "Something went wrong, Please try again!"
+      );
     }
   } catch (error: any) {
     return { error: error.message };

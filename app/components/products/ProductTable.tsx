@@ -173,6 +173,8 @@ export default function ProductTable() {
                       let unit = 'kg';
                       if (key === 'STONE' || key === 'SAND') {
                         unit = 'ton';
+                      }else if (key === 'WATER') {
+                        unit = 'lt';
                       }
                       return <span key={key}>{`${key.toLowerCase()}: ${value} ${unit}`}</span>;
                     })}

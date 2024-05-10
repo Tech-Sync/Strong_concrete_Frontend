@@ -32,7 +32,7 @@ export const productionStatuses = {
   6: "INSUFFICIENT MATERIAL",
   7: "PRODUCED AND CANCELLED",
 };
-export const saleStatuses = {
+export const saleStatuses: { [key: string]: string } = {
   1: "PENDING",
   2: "APPROVED",
   3: "REJECTED",

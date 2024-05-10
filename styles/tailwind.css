@@ -328,7 +328,7 @@
 
     /* Badge */
     .badge {
-        @apply relative my-1 rounded border border-transparent px-1.5 pt-0.5  text-xs font-semibold text-white;
+        @apply relative my-1 rounded border border-transparent px-1.5 py-0.5  text-xs font-semibold text-white;
     }
     .badge-outline-primary {
         @apply border-primary text-primary hover:bg-primary-light dark:hover:bg-primary dark:hover:text-white-light;

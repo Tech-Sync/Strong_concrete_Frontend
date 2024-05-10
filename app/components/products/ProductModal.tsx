@@ -46,7 +46,6 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
   const [items, setItems] = useState<Item[]>([]);
   const emptyProduct = { name: "", price: '' }
 
-  console.log(items);
 
   useEffect(() => {
     dispatch(getAllMaterialAsync());
@@ -218,7 +217,7 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
                                 coloredToast("danger", res.error, "bottom-start");
                               }
                             }, 500);
-                            
+
                           }
 
                         }
@@ -246,7 +245,10 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
                                         <input
                                           type="text"
                                           name={`items[${i}].quantity`}
-                                          placeholder="Quantity Exp: 1.9"
+                                          placeholder={
+                                            item.name === 'SAND' || item.name === 'STONE' ? 'Quantity in Tone'
+                                              : item.name === 'CEMENT' ? 'Quantity in Kg'
+                                                : item.name === 'WATER' ? 'Quantity in Liter' : 'Quantity'}
                                           className={`form-input ltr:pl-10 rtl:pr-10`}
                                           onChange={(e) => changeQuantityPrice(e.target.value, item.id)}
                                           value={item.quantity}

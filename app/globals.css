@@ -7,4 +7,6 @@
     padding-right: 1.25rem/* 20px */ !important;
 }
 
-
+.fc-time-grid .fc-slats, .fc-time-grid .fc-time {
+    display: none;
+  }
