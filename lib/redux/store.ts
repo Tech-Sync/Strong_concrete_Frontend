@@ -8,13 +8,9 @@ import {
 
 /* Instruments */
 import { reducer } from './rootReducer'
-// import { middleware } from './middleware'
 
 export const store = configureStore({
   reducer,
-  // middleware: (getDefaultMiddleware) => {
-  //   return getDefaultMiddleware().concat(middleware)
-  // },
 })
 export const useDispatch = () => useReduxDispatch<AppDispatch>()
 export const useSelector: TypedUseSelectorHook<RootState> = useReduxSelector

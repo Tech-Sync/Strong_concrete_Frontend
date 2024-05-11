@@ -6,21 +6,22 @@ import { DeleteIcon, EditIcon, PlusIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
 import { productionStatuses } from "@/app/constraints/roles&status";
 import { coloredToast } from "@/lib/sweetAlerts";
-import { getAllProductionAsync, selectProductions, selectIsDarkMode, selectProductionStatus, useDispatch, useSelector, updateProduction, setProductionModal, updateProductionState, } from "@/lib/redux";
+import { getAllProductionAsync, selectIsDarkMode, useDispatch, useSelector, updateProduction, setProductionModal, updateProductionState, selectproductions, } from "@/lib/redux";
 import ProductionModal from "./ProductionModal";
 import useDeleteToasts from "@/hooks/useDeleteToasts";
-import { deleteMultiProduction, deleteProduction } from "@/lib/redux/slices/productionSlice/ProductionActions";
+import { deleteMultiProduction, deleteProduction } from "@/lib/redux/slices/productionSlice/productionActions";
 
 export default function ProductionTable() {
   const dispatch = useDispatch();
   const { deleteToast, multiDeleteToast } = useDeleteToasts();
-  const productions = useSelector(selectProductions);
+  const productions = useSelector(selectproductions);
   const isDark = useSelector(selectIsDarkMode);
+  console.log('productions table-->',productions);
 
   useEffect(() => {
     dispatch(getAllProductionAsync());
   }, []);
-  console.log(productions);
+
   const [page, setPage] = useState(1);
   const PAGE_SIZES = [10, 20, 30, 40, 50];
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);

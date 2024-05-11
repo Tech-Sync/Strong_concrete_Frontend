@@ -7,7 +7,7 @@ import FirmForm from "./ProductionForm";
 // import { addFirm, updateFirm } from "@/actions/firmActions";
 import { coloredToast } from "@/lib/sweetAlerts";
 import { useRouter } from "next/navigation";
-import { getAllFrimAsync, selectFirm, selectProductionModal, setProductionModal, useDispatch, useSelector } from "@/lib/redux";
+import { getAllFrimAsync, selectFirm, selectproductionModal, setProductionModal, useDispatch, useSelector } from "@/lib/redux";
 import { Firm } from "@/types/types";
 import { addFirm, updateFirm } from "@/lib/redux/slices/firmSlice/firmActions";
 
@@ -26,7 +26,7 @@ const firmSchema = object({
 export default function ProductionModal() {
 
 
-  const ticketModal = useSelector(selectProductionModal);
+  const ticketModal = useSelector(selectproductionModal);
   const params = useSelector(selectFirm);
 
   const dispatch = useDispatch();

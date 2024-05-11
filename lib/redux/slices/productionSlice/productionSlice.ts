@@ -1,7 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { getAllProductionAsync } from "./thunks";
 import { Production } from "@/types/types";
-
+import { getAllProductionAsync } from "./thunks";
 
 interface defaultParams {
   name: string,
@@ -14,7 +13,7 @@ interface defaultParams {
 }
 
 export interface ProductionSliceState {
-  productions: Production[];
+  productions: [];
   loading: boolean;
   error: string | null;
   status: "idle" | "loading" | "failed" | "succeeded";
@@ -38,11 +37,11 @@ const initialState: ProductionSliceState = {
   }
 };
 
-export const productionSice = createSlice({
+export const productionSlice = createSlice({
   name: "productions",
   initialState,
   reducers: {
-    updateProduction: (state, action: PayloadAction<Production[]>) => {
+    updateProduction: (state, action: PayloadAction<[]>) => {
       state.loading = false;
       state.productions = action.payload;
     },
@@ -71,4 +70,5 @@ export const productionSice = createSlice({
 });
 
 
-export const {  updateProduction, setProductionModal, updateProductionState} = productionSice.actions;
+
+export const { updateProduction, setProductionModal, updateProductionState} = productionSlice.actions;
