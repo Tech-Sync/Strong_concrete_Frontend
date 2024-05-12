@@ -4,19 +4,19 @@ import { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
 import { DeleteIcon, EditIcon, PlusIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
-import { productionStatuses } from "@/app/constraints/roles&status";
+import { productionStatuses, vehicleStatuses } from "@/app/constraints/roles&status";
 import { coloredToast } from "@/lib/sweetAlerts";
 import { getAllProductionAsync, selectIsDarkMode, useDispatch, useSelector, updateProduction, setProductionModal, updateProductionState, selectproductions, } from "@/lib/redux";
 import ProductionModal from "./ProductionModal";
 import useDeleteToasts from "@/hooks/useDeleteToasts";
-import { deleteMultiProduction, deleteProduction } from "@/lib/redux/slices/productionSlice/productionActions";
+import { deleteMultiProduction, deleteProduction, updateProductionStatus } from "@/lib/redux/slices/productionSlice/productionActions";
+import Dropdown from "../Layout/Dropdown";
 
 export default function ProductionTable() {
   const dispatch = useDispatch();
   const { deleteToast, multiDeleteToast } = useDeleteToasts();
   const productions = useSelector(selectproductions);
   const isDark = useSelector(selectIsDarkMode);
-  console.log('productions table-->',productions);
 
   useEffect(() => {
     dispatch(getAllProductionAsync());
@@ -89,14 +89,44 @@ export default function ProductionTable() {
   };
 
   const defaultParams = {
-    name: "",
-    address: "",
-    phoneNo: "",
-    tpinNo: "",
-    email: "",
-    status: "",
+    SaleId: null,
+    VehicleIds: null,
+    status: null,
+  }
+
+  enum Status { Status1, Status2, Status3, Status4, Status5, Status6, Status7 }
+
+  type BadgeClassMappings = { [key in Status]?: string; };
+
+  const statusBadgeClasses: BadgeClassMappings = {
+    [Status.Status1]: 'badge-outline-primary',
+    [Status.Status2]: 'badge-outline-secondary',
+    [Status.Status3]: 'badge-outline-info',
+    [Status.Status4]: 'badge-outline-success',
+    [Status.Status5]: 'badge-outline-danger',
+    [Status.Status6]: 'badge-outline-warning',
+    [Status.Status7]: 'badge-outline-dark',
   };
 
+
+  const vehiclestatusTextClasses = {
+    1: 'text-success',
+    2: 'text-warning',
+    3: 'text-info',
+    4: 'text-danger',
+    5: 'text-dark',
+  };
+
+
+  const handleStatusChange = async (productionId: number, statusId: number) => {
+    const res = await updateProductionStatus(productionId, statusId);
+    if (res.message) {
+      coloredToast("success", res.message, "bottom-start");
+      dispatch(getAllProductionAsync());
+    } else {
+      coloredToast("danger", res.error, "bottom-start");
+    }
+  }
 
 
   return (
@@ -111,7 +141,7 @@ export default function ProductionTable() {
               <DeleteIcon />
               Delete
             </button>
-            {/*   <button onClick={() => { dispatch(setProductionModal(true)), dispatch(updateProductionState(defaultParams)) }} className="btn btn-primary gap-2">
+            {/* <button onClick={() => { dispatch(setProductionModal(true)), dispatch(updateProductionState(defaultParams)) }} className="btn btn-primary gap-2">
               <PlusIcon />
               Add New
             </button> */}
@@ -163,10 +193,38 @@ export default function ProductionTable() {
                 ),
               },
               {
+                accessor: "Vehicles",
+                sortable: true,
+                render: ({ VehicleIds, id }) => (
+                  <div className="flex flex-col">
+                    {
+                      VehicleIds && VehicleIds.length > 0 ? (
+                        VehicleIds.map((vehicle, index) => {
+                          const { driver, plateNumber, capacity, status } = vehicle;
+                          return (
+                            <div key={index} className="flex flex-col text-sm mb-2">
+                              <span className="hover:cursor-pointer hover:font-semibold ">Driver: {driver.firstName} {driver.lastName}</span>
+                              <span className="hover:cursor-pointer hover:font-semibold ">Phone: {driver.phoneNo}</span>
+                              <span className="hover:cursor-pointer hover:font-semibold ">Plate: {plateNumber}</span>
+                              <span className="hover:cursor-pointer hover:font-semibold ">Capacity: {capacity} tons</span>
+                              <span className={`hover:cursor-pointer hover:font-semibold ${vehiclestatusTextClasses[status]} `}>Status:  {vehicleStatuses[status.toString()]}</span>
+                            </div>
+                          )
+                        })
+                      ) : (
+                        <div className="flex items-center text-red-500 font-semibold">
+                          <div>No Vehicle Assigned</div>
+                        </div>
+                      )
+                    }
+                  </div>
+                ),
+              },
+              {
                 accessor: "order date",
                 sortable: true,
                 render: ({ Sale, id }) => (
-                  <div className="flex items-center font-semibold">
+                  <div className="flex items-center ">
                     <div>{formatDate(Sale.orderDate)}</div>
                   </div>
                 ),
@@ -174,11 +232,33 @@ export default function ProductionTable() {
               {
                 accessor: "status",
                 sortable: true,
-                render: ({ status }) => (
-                  <span className={`badge badge-outline-secondary`}>
-                    {/* @ts-ignore */}
-                    {productionStatuses[String(status)]}
-                  </span>
+                render: ({ status, id }) => (
+                  <div className="dropdown ">
+                    <Dropdown
+                      placement='right-start'
+                      //@ts-ignore
+                      btnClassName={`badge btn-sm ${statusBadgeClasses[status]}`}
+                      button={
+                        <span >
+                          {productionStatuses[status.toString()]}
+                        </span>
+                      }
+                    >
+                      <ul className="!min-w-[170px]">
+                        {
+                          Object.entries(productionStatuses).map(([key, value]) => {
+                            return (
+                              <li key={key}>
+                                <button type="button" onClick={() => handleStatusChange(id, Number(key))}>
+                                  {value}
+                                </button>
+                              </li>
+                            )
+                          })
+                        }
+                      </ul>
+                    </Dropdown>
+                  </div>
                 ),
               },
               {
@@ -188,14 +268,14 @@ export default function ProductionTable() {
                 textAlignment: "center",
                 render: (production) => (
                   <div className="mx-auto flex w-max items-center gap-4">
-                    <button
+                    {/* <button
                       onClick={() => {
                         dispatch(updateProductionState(production)),
                           dispatch(setProductionModal(true))
                       }}
                       className="flex hover:text-info">
                       <EditIcon />
-                    </button>
+                    </button> */}
                     {/*     <Link
                       href="/apps/invoice/preview"
                       className="flex hover:text-primary"

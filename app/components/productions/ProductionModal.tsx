@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { getAllFrimAsync, selectFirm, selectproductionModal, setProductionModal, useDispatch, useSelector } from "@/lib/redux";
 import { Firm } from "@/types/types";
 import { addFirm, updateFirm } from "@/lib/redux/slices/firmSlice/firmActions";
+import ProductionForm from "./ProductionForm";
 
 const firmSchema = object({
   name: string().required("This field is required."),
@@ -128,7 +129,7 @@ export default function ProductionModal() {
                         }
                       }}
                       //@ts-ignore
-                      component={(props) => <FirmForm {...props} />}
+                      component={(props) => <ProductionForm {...props} />}
                     ></Formik>
                   </div>
                 </Dialog.Panel>

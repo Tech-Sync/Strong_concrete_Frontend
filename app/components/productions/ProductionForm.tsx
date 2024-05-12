@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Field, ErrorMessage, FormikProps } from "formik";
-import { firmStatuses } from "@/app/constraints/roles&status";
+import { productionStatuses } from "@/app/constraints/roles&status";
 import {
   AddressIcon,
   EmailIcon,
@@ -9,18 +9,11 @@ import {
   StatusIcon,
   TpinIcon,
 } from "./ProductionModalIcons";
-import { Firm } from "@/types/types";
+import { Production } from "@/types/types";
 
-interface FormValues {
-  name: string;
-  address: string;
-  phoneNo: string;
-  tpinNo: string;
-  email: string;
-  status: string;
-}
 
-const ProductionForm: React.FC<FormikProps<Firm>> = ({ touched, errors, isSubmitting, handleSubmit, }) => {
+
+const ProductionForm: React.FC<FormikProps<Production>> = ({ touched, errors, isSubmitting, handleSubmit, }) => {
   return (
     <Form onSubmit={handleSubmit}>
       <div className="relative mb-4">
@@ -35,10 +28,10 @@ const ProductionForm: React.FC<FormikProps<Firm>> = ({ touched, errors, isSubmit
             className=" form-select ltr:pl-10 rtl:pr-10 text-white-dark "
           >
             <option value="" disabled >
-              Describe Firm
+              Describe Production
             </option>
-            <option value={1}>{firmStatuses[1]}</option>
-            <option value={2}>{firmStatuses[2]}</option>
+            <option value={1}>{productionStatuses[1]}</option>
+            <option value={2}>{productionStatuses[2]}</option>
           </Field>
         </div>
       </div>
@@ -48,7 +41,7 @@ const ProductionForm: React.FC<FormikProps<Firm>> = ({ touched, errors, isSubmit
           <Field
             type="text"
             name="name"
-            placeholder="Firm Name"
+            placeholder="Production Name"
             className={`form-input ltr:pl-10 rtl:pr-10${touched.name && errors.name ? "border-red-500" : ""
               }`}
           />
@@ -66,7 +59,7 @@ const ProductionForm: React.FC<FormikProps<Firm>> = ({ touched, errors, isSubmit
           <Field
             type="text"
             name="address"
-            placeholder="Firm Address"
+            placeholder="Production Address"
             className={`form-input ltr:pl-10 rtl:pr-10${touched.address && errors.address ? "border-red-500" : ""
               }`}
           />
@@ -84,7 +77,7 @@ const ProductionForm: React.FC<FormikProps<Firm>> = ({ touched, errors, isSubmit
           <Field
             type="text"
             name="phoneNo"
-            placeholder="Firm Phone Number"
+            placeholder="Production Phone Number"
             className={`form-input ltr:pl-10 rtl:pr-10${touched.phoneNo && errors.phoneNo ? "border-red-500" : ""
               }`}
           />
@@ -101,7 +94,7 @@ const ProductionForm: React.FC<FormikProps<Firm>> = ({ touched, errors, isSubmit
           <Field
             type="email"
             name="email"
-            placeholder="Firm Email"
+            placeholder="Production Email"
             className={`form-input ltr:pl-10 rtl:pr-10${touched.email && errors.email ? "border-red-500" : ""
               }`}
           />
@@ -118,7 +111,7 @@ const ProductionForm: React.FC<FormikProps<Firm>> = ({ touched, errors, isSubmit
           <Field
             type="text"
             name="tpinNo"
-            placeholder="Firm Tpin Number"
+            placeholder="Production Tpin Number"
             className={`form-input ltr:pl-10 rtl:pr-10${touched.tpinNo && errors.tpinNo ? "border-red-500" : ""
               }`}
           />

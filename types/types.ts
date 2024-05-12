@@ -85,12 +85,13 @@ export interface Vehicle {
   status: number;
   isPublic: boolean;
   DriverId: number;
-  plateNumber: number;
+  plateNumber: string;
   model: number;
   capacity: number;
   driver: {
     firstName: string,
-    lastName: string
+    lastName: string,
+    phoneNo: string
   };
   createdAt: string;
   updatedAt: string | null;
@@ -163,8 +164,8 @@ export interface WeeklySale {
 
 export interface Production {
   id: number,
-  SaleId: number,
-  VehicleIds: Array<any> | null,
+  SaleId: number | null,
+  VehicleIds: Array<Vehicle> | [],
   status: number,
   createdAt: string,
   updatedAt: string | null,
@@ -180,5 +181,18 @@ export interface Production {
       id: number,
       name: string
     }
+  }
+}
+
+export interface Vehicle {
+  DriverId: number,
+  plateNumber: string,
+  model: number,
+  capacity: number,
+  status: number,
+  driver: {
+    firstName: string,
+    lastName: string,
+    phoneNo: string
   }
 }

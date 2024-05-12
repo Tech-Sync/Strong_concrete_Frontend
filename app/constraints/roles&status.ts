@@ -12,7 +12,7 @@ export const deliveryStatuses = {
   4: "DONE",
   5: "CANCELLED",
 };
-export const vehicleStatuses = {
+export const vehicleStatuses: { [key: string]: string } = {
   1: "HOME",
   2: "LOADING",
   3: "ON THE WAY",
@@ -23,7 +23,7 @@ export const firmStatuses = {
   1: "CONSUMER",
   2: "SUPPLIER",
 };
-export const productionStatuses = {
+export const productionStatuses: { [key: string]: string } = {
   1: "PLANNED",
   2: "BEING PRODUCED",
   3: "WAITING VEHICLE",
