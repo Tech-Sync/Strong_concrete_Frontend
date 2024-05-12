@@ -109,6 +109,7 @@ export default function ProductionTable() {
   };
 
 
+
   const vehiclestatusTextClasses = {
     1: 'text-success',
     2: 'text-warning',
@@ -124,6 +125,7 @@ export default function ProductionTable() {
       coloredToast("success", res.message, "bottom-start");
       dispatch(getAllProductionAsync());
     } else {
+      dispatch(getAllProductionAsync());
       coloredToast("danger", res.error, "bottom-start");
     }
   }
@@ -202,12 +204,13 @@ export default function ProductionTable() {
                         VehicleIds.map((vehicle, index) => {
                           const { driver, plateNumber, capacity, status } = vehicle;
                           return (
-                            <div key={index} className="flex flex-col text-sm mb-2">
-                              <span className="hover:cursor-pointer hover:font-semibold ">Driver: {driver.firstName} {driver.lastName}</span>
-                              <span className="hover:cursor-pointer hover:font-semibold ">Phone: {driver.phoneNo}</span>
-                              <span className="hover:cursor-pointer hover:font-semibold ">Plate: {plateNumber}</span>
-                              <span className="hover:cursor-pointer hover:font-semibold ">Capacity: {capacity} tons</span>
-                              <span className={`hover:cursor-pointer hover:font-semibold ${vehiclestatusTextClasses[status]} `}>Status:  {vehicleStatuses[status.toString()]}</span>
+                            <div key={index} className="flex flex-col text-sm mb-2 cursor-pointer transition-all duration-700 hover:scale-105 " onClick={() => dispatch(setProductionModal(true))}>
+                              <p >Driver:  {driver.firstName} {driver.lastName}</p>
+                              <p >Phone:  {driver.phoneNo}</p>
+                              <p >Plate:  {plateNumber}</p>
+                              <p >Capacity:  {capacity} tons</p>
+                              {/* @ts-ignore */}
+                              <span className={` ${vehiclestatusTextClasses[status.toString()]} `}>Status:  {vehicleStatuses[status.toString()]}</span>
                             </div>
                           )
                         })

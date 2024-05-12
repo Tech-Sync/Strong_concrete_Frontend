@@ -1,41 +1,54 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Field, ErrorMessage, FormikProps } from "formik";
-import { productionStatuses } from "@/app/constraints/roles&status";
-import {
-  AddressIcon,
-  EmailIcon,
-  NameIcon,
-  PhoneIcon,
-  StatusIcon,
-  TpinIcon,
-} from "./ProductionModalIcons";
+import { AddressIcon, EmailIcon, NameIcon, PhoneIcon, StatusIcon, TpinIcon, } from "./ProductionModalIcons";
 import { Production } from "@/types/types";
+import Select from 'react-select';
+import { getAllVehicleAsync, selectVehicles, useDispatch, useSelector } from "@/lib/redux";
+import makeAnimated from 'react-select/animated';
 
 
 
-const ProductionForm: React.FC<FormikProps<Production>> = ({ touched, errors, isSubmitting, handleSubmit, }) => {
+const ProductionForm: React.FC<FormikProps<Production>> = ({ touched, errors, isSubmitting, handleSubmit, setFieldValue, values }) => {
+
+  const dispatch = useDispatch();
+  const animatedComponents = makeAnimated();
+
+  useEffect(() => {
+    dispatch(getAllVehicleAsync())
+  }, [])
+
+
+  const vehicles = useSelector(selectVehicles);
+
+  const vehicleOp = vehicles.filter(v => v.status === 1 && v.isPublic).map(v => ({
+    label: v.plateNumber,
+    value: v.id,
+    driver: v.driver.firstName + " " + v.driver.lastName,
+    capacity: v.capacity,
+  }));
+
+
   return (
     <Form onSubmit={handleSubmit}>
       <div className="relative mb-4">
         <StatusIcon />
-        <div
-          className={`${touched.status && errors.status ? "has-error" : ""}`}
-        >
-          <Field
-            as="select"
-            name="status"
-            id="gridState"
-            className=" form-select ltr:pl-10 rtl:pr-10 text-white-dark "
-          >
-            <option value="" disabled >
-              Describe Production
-            </option>
-            <option value={1}>{productionStatuses[1]}</option>
-            <option value={2}>{productionStatuses[2]}</option>
-          </Field>
+        <div  >
+          <Select placeholder="Select The Customer" options={vehicleOp} isMulti components={animatedComponents}
+            value={vehicleOp.find(option => option.value === values.SaleId)}
+            onChange={(selectedOptions) => {
+
+              const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
+              setFieldValue('SaleId', selectedValues);
+              console.log(selectedValues);
+            }}
+          />
+          <ErrorMessage
+            name="vehicleIds"
+            component="div"
+            className="text-red-500 text-sm mt-1 " />
         </div>
       </div>
-      <div className="mb-3">
+      {/* <div className="mb-3">
         <div className="relative">
           <NameIcon />
           <Field
@@ -121,7 +134,7 @@ const ProductionForm: React.FC<FormikProps<Production>> = ({ touched, errors, is
           component="div"
           className="text-red-500 text-sm mt-1"
         />
-      </div>
+      </div> */}
 
       <button
         type="submit"
