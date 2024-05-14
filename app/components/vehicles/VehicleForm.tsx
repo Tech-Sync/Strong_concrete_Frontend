@@ -3,7 +3,7 @@ import { Form, Field, ErrorMessage, FormikProps } from "formik";
 import { AddressIcon, NameIcon, PhoneIcon } from "./VehicleModalIcons";
 import { User, Vehicle } from "@/types/types";
 import Select from 'react-select';
-import { useDispatch } from "@/lib/redux";
+import { getAllVehicleAsync, selectVehicles, useDispatch, useSelector } from "@/lib/redux";
 import { getFilteredUsers } from "@/lib/redux/slices/userSlice/userActions";
 import { vehicleStatuses } from "@/app/constraints/roles&status";
 
@@ -20,7 +20,12 @@ import { vehicleStatuses } from "@/app/constraints/roles&status";
 const VehicleForm: React.FC<FormikProps<Vehicle>> = ({ touched, errors, isSubmitting, handleSubmit, setFieldValue, values }) => {
 
   const dispatch = useDispatch()
+  const vehicles = useSelector(selectVehicles)
+
   const [drivers, setDrivers] = useState<User[]>([])
+
+
+  
 
   useEffect(() => {
     (
@@ -32,7 +37,8 @@ const VehicleForm: React.FC<FormikProps<Vehicle>> = ({ touched, errors, isSubmit
       }
     )()
 
-  }, [dispatch]);
+  }, []);
+
 
 
   const driverOptions = drivers?.map(driver => ({
@@ -60,7 +66,7 @@ const VehicleForm: React.FC<FormikProps<Vehicle>> = ({ touched, errors, isSubmit
             //@ts-ignore
             value={driverOptions.find(option => option.value === values.DriverId)}
             onChange={option => setFieldValue('DriverId', option ? Number(option.value) : '')}
-            className='form-input' placeholder="Driver" options={driverOptions} />
+             placeholder="Driver" options={driverOptions} />
         </div>
       </div>
 
@@ -71,7 +77,7 @@ const VehicleForm: React.FC<FormikProps<Vehicle>> = ({ touched, errors, isSubmit
             <Select name='isPublic'
               value={readyOptions.find(option => option.value === values.isPublic)}
               onChange={option => setFieldValue('isPublic', option ? option.value : '')}
-              className='form-input' options={readyOptions} />
+               options={readyOptions} />
           </div>
         </div>
         <div className="relative mb-3 flex-1">
@@ -81,7 +87,7 @@ const VehicleForm: React.FC<FormikProps<Vehicle>> = ({ touched, errors, isSubmit
               //@ts-ignore
               value={statusOptions.find(option => option.value === values.status)}
               onChange={option => setFieldValue('status', option ? Number(option.value) : '')}
-              className='form-input' options={statusOptions} />
+               options={statusOptions} />
           </div>
         </div>
       </div>

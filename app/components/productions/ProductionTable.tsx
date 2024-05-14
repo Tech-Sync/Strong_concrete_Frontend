@@ -102,8 +102,8 @@ export default function ProductionTable() {
     [Status.Status1]: 'badge-outline-primary',
     [Status.Status2]: 'badge-outline-secondary',
     [Status.Status3]: 'badge-outline-info',
-    [Status.Status4]: 'badge-outline-success',
-    [Status.Status5]: 'badge-outline-danger',
+    [Status.Status4]: 'badge-outline-danger',
+    [Status.Status5]: 'badge-outline-success',
     [Status.Status6]: 'badge-outline-warning',
     [Status.Status7]: 'badge-outline-dark',
   };
@@ -197,14 +197,14 @@ export default function ProductionTable() {
               {
                 accessor: "Vehicles",
                 sortable: true,
-                render: ({ VehicleIds, id }) => (
-                  <div className="flex flex-col">
+                render: (production) => (
+                  <div className="flex gap-4 ">
                     {
-                      VehicleIds && VehicleIds.length > 0 ? (
-                        VehicleIds.map((vehicle, index) => {
+                      production.VehicleIds && production.VehicleIds.length > 0 ? (
+                        production.VehicleIds.map((vehicle, index) => {
                           const { driver, plateNumber, capacity, status } = vehicle;
                           return (
-                            <div key={index} className="flex flex-col text-sm mb-2 cursor-pointer transition-all duration-700 hover:scale-105 " onClick={() => dispatch(setProductionModal(true))}>
+                            <div key={index} className="flex flex-col text-[12px] mb-2 font-sans cursor-pointer transition-all duration-700 hover:scale-110 " onClick={() => { dispatch(setProductionModal(true)), dispatch(updateProductionState(production)) }}>
                               <p >Driver:  {driver.firstName} {driver.lastName}</p>
                               <p >Phone:  {driver.phoneNo}</p>
                               <p >Plate:  {plateNumber}</p>
@@ -215,7 +215,7 @@ export default function ProductionTable() {
                           )
                         })
                       ) : (
-                        <div className="flex items-center text-red-500 font-semibold">
+                        <div className="flex items-center text-red-500 font-semibold cursor-pointer" onClick={() => { dispatch(setProductionModal(true)), dispatch(updateProductionState(production)) }}>
                           <div>No Vehicle Assigned</div>
                         </div>
                       )

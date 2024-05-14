@@ -186,6 +186,7 @@ export interface Production {
 
 export interface Vehicle {
   DriverId: number,
+  id: number,
   plateNumber: string,
   model: number,
   capacity: number,

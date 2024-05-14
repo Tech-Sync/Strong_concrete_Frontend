@@ -2,24 +2,19 @@ import { PlusIcon } from "@/app/icons";
 import { Dialog, Transition } from "@headlessui/react";
 import { Formik } from "formik";
 import React, { Fragment, useState } from "react";
-import { object, string } from "yup";
+import { array, object, string } from "yup";
 import FirmForm from "./ProductionForm";
 // import { addFirm, updateFirm } from "@/actions/firmActions";
 import { coloredToast } from "@/lib/sweetAlerts";
 import { useRouter } from "next/navigation";
-import { getAllFrimAsync, selectproduction, selectproductionModal, setProductionModal, useDispatch, useSelector } from "@/lib/redux";
+import { getAllFrimAsync, getAllProductionAsync, selectproduction, selectproductionModal, setProductionModal, useDispatch, useSelector } from "@/lib/redux";
 import { Firm } from "@/types/types";
 import { addFirm, updateFirm } from "@/lib/redux/slices/firmSlice/firmActions";
 import ProductionForm from "./ProductionForm";
+import { updateProduction } from "@/lib/redux/slices/productionSlice/productionActions";
 
 const firmSchema = object({
-  name: string().required("This field is required."),
-  phoneNo: string().required("This field is required."),
-  address: string().required("This field is required."),
-  status: string().required("This field is required."),
-  email: string()
-    .email("Please enter a valid email address!")
-    .required("Email is required!"),
+  VehicleIds: array().required("This field is required."),
 });
 
 
@@ -33,14 +28,13 @@ export default function ProductionModal() {
   const dispatch = useDispatch();
   const router = useRouter();
 
+  const formatedVehicleIds = params?.VehicleIds?.map(v => (v.id))
+
   const initialValues = {
     id: params?.id || "",
-    name: params?.name || "",
-    address: params?.address || "",
-    phoneNo: params?.phoneNo || "",
-    tpinNo: params?.tpinNo || "",
-    email: params?.email || "",
+    VehicleIds: formatedVehicleIds || [],
     status: params?.status || "",
+    SaleId: params?.SaleId || "",
   }
 
 
@@ -87,29 +81,29 @@ export default function ProductionModal() {
                     validationSchema={firmSchema}
                     onSubmit={async (values, { setSubmitting, resetForm }) => {
                       if (params.id) {
-                        //@ts-ignore
-                        const res = await updateFirm(values);
+                        const res = await updateProduction(values);
                         if (res.message) {
                           coloredToast("success", res.message, "bottom-start");
                           dispatch(setProductionModal(false))
-                          dispatch(getAllFrimAsync());
+                          dispatch(getAllProductionAsync());
                         } else {
                           coloredToast("danger", res.error, "bottom-start");
                         }
-                      } else {
-                        const { id, ...data } = values
-                        const res = await addFirm(data);
-                        setTimeout(() => {
-                          setSubmitting(false);
-                          if (res.message) {
-                            coloredToast("success", res.message, "bottom-start");
-                            dispatch(setProductionModal(false))
-                            dispatch(getAllFrimAsync());
-                          } else {
-                            coloredToast("danger", res.error, "bottom-start");
-                          }
-                        }, 500);
-                      }
+                      } 
+                      // else {
+                      //   const { id, ...data } = values
+                      //   const res = await addFirm(data);
+                      //   setTimeout(() => {
+                      //     setSubmitting(false);
+                      //     if (res.message) {
+                      //       coloredToast("success", res.message, "bottom-start");
+                      //       dispatch(setProductionModal(false))
+                      //       dispatch(getAllFrimAsync());
+                      //     } else {
+                      //       coloredToast("danger", res.error, "bottom-start");
+                      //     }
+                      //   }, 500);
+                      // }
                     }}
                     //@ts-ignore
                     component={(props) => <ProductionForm {...props} />}

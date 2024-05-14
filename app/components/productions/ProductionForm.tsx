@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Field, ErrorMessage, FormikProps } from "formik";
-import { AddressIcon, EmailIcon, NameIcon, PhoneIcon, StatusIcon, TpinIcon, } from "./ProductionModalIcons";
+import { PlaseNumber, Quantity, StatusIcon } from "./ProductionModalIcons";
 import { Production } from "@/types/types";
 import Select from 'react-select';
 import { getAllVehicleAsync, selectVehicles, useDispatch, useSelector } from "@/lib/redux";
@@ -20,26 +20,30 @@ const ProductionForm: React.FC<FormikProps<Production>> = ({ touched, errors, is
 
   const vehicles = useSelector(selectVehicles);
 
+  const initialValueVehicles = vehicles.filter(vehicle => values?.VehicleIds.includes(vehicle.id));
+
+  const [selectedVehicles, setSelectedVehicles] = useState(initialValueVehicles);
+
   const vehicleOp = vehicles.filter(v => v.status === 1 && v.isPublic).map(v => ({
-    label: v.plateNumber,
+    label: v.driver.firstName + " " + v.driver.lastName,
     value: v.id,
-    driver: v.driver.firstName + " " + v.driver.lastName,
+    driver: v.plateNumber,
     capacity: v.capacity,
   }));
 
 
   return (
     <Form onSubmit={handleSubmit}>
-      <div className="relative mb-4">
+      <div className="relative mb-6">
         <StatusIcon />
         <div  >
-          <Select placeholder="Select The Customer" options={vehicleOp} isMulti components={animatedComponents}
-            value={vehicleOp.find(option => option.value === values.SaleId)}
+          <Select placeholder="Select The Vehicle" options={vehicleOp} isMulti components={animatedComponents}
+            value={vehicleOp.filter(option => values.VehicleIds.includes(option.value))}
             onChange={(selectedOptions) => {
-
               const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
-              setFieldValue('SaleId', selectedValues);
-              console.log(selectedValues);
+              setFieldValue('VehicleIds', selectedValues);
+              const selectedVehicles = vehicles.filter(vehicle => selectedValues.includes(vehicle.id));
+              setSelectedVehicles(selectedVehicles || null);
             }}
           />
           <ErrorMessage
@@ -48,25 +52,43 @@ const ProductionForm: React.FC<FormikProps<Production>> = ({ touched, errors, is
             className="text-red-500 text-sm mt-1 " />
         </div>
       </div>
-      {/* <div className="mb-3">
-        <div className="relative">
-          <NameIcon />
-          <Field
-            type="text"
-            name="name"
-            placeholder="Production Name"
-            className={`form-input ltr:pl-10 rtl:pr-10${touched.name && errors.name ? "border-red-500" : ""
-              }`}
-          />
-        </div>
-        <ErrorMessage
-          name="name"
-          component="div"
-          className="text-red-500 text-sm mt-1 "
-        />
-      </div>
 
-      <div className="mb-3">
+      {
+        selectedVehicles?.map((vehicle, i) => {
+          return (
+            <div key={vehicle.id} className="flex gap-2 my-4">
+              <div className="panel grid place-content-center  py-1 px-2">{i + 1}</div>
+              <div >
+                <div className="relative">
+                  <PlaseNumber />
+                  <Field
+                    type="text"
+                    name="name"
+                    placeholder="Plate Number"
+                    className={`form-input ltr:pl-10 rtl:pr-10`}
+                    value={vehicle ? `${vehicle?.plateNumber} ` : ''}
+                  />
+                </div>
+              </div>
+              <div >
+                <div className="relative">
+                  <Quantity />
+                  <Field
+                    type="text"
+                    name="name"
+                    placeholder="Capacity"
+                    className={`form-input ltr:pl-10 rtl:pr-10`}
+                    value={vehicle ? `${vehicle?.capacity} m³` : ''}
+                  />
+                </div>
+              </div>
+            </div>
+          )
+        })
+      }
+      <div className="h-px border-b border-white-light dark:border-[#1b2e4b]"></div>
+
+      {/* <div className="mb-3">
         <div className="relative">
           <AddressIcon />
           <Field
@@ -138,7 +160,7 @@ const ProductionForm: React.FC<FormikProps<Production>> = ({ touched, errors, is
 
       <button
         type="submit"
-        className="btn btn-primary w-full"
+        className="btn btn-primary w-full mt-6"
         disabled={isSubmitting}
       >
         {isSubmitting && (

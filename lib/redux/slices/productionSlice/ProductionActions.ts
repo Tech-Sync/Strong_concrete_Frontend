@@ -101,10 +101,10 @@ export const addProduction = async (productionData: Object) => {
     return { error: error.message };
   }
 };
-export const updateProduction = async (productionData: Production) => {
+export const updateProduction = async (productionData:Object) => {
   const headers = await authConfig();
   try {
-    const response = await fetch(`${BASE_URL}/productions/${productionData.id}`, {
+    const response = await fetch(`${BASE_URL}/productions/${productionData?.id}`, {
       method: "PUT",
       headers,
       body: JSON.stringify(productionData),
