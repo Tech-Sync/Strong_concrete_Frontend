@@ -183,7 +183,7 @@ export default function FirmTable() {
                 accessor: "status",
                 sortable: true,
                 render: ({ status }) => (
-                  <span className={`badge badge-outline-secondary`}>
+                  <span className={`badge ${status === 1 ? 'badge-outline-secondary' : 'badge-outline-info'} `}>
                     {/* @ts-ignore */}
                     {firmStatuses[String(status)]}
                   </span>

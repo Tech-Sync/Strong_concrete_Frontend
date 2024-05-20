@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 
 import BlankLayout from "@/app/components/Layout/BlankLayout";
 import LoginForm from "@/app/components/auth/LoginForm";
@@ -10,7 +9,9 @@ const Login = () => {
     <div className="flex min-h-screen">
       <div className="hidden min-h-screen w-1/2 flex-col  items-center justify-center bg-gradient-to-t from-[#ff1361bf] to-[#44107A] p-4 text-white dark:text-black lg:flex">
         <div className="mx-auto mb-5 w-full">
-          <img
+          <Image
+            height={370}
+            width={500}
             src="/assets/images/auth-cover.svg"
             alt="coming_soon"
             className="mx-auto lg:max-w-[370px] xl:max-w-[500px]"
