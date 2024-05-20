@@ -7,16 +7,6 @@ import Select from 'react-select';
 import MaskedInput from 'react-text-mask';
 
 
-
-interface FormValues {
-  name: string;
-  address: string;
-  phoneNo: string;
-  tpinNo: string;
-  email: string;
-  status: string;
-}
-
 const FirmForm: React.FC<FormikProps<Firm>> = ({ touched, errors, isSubmitting, handleSubmit, values, setFieldValue }) => {
 
   const firmOp = [
