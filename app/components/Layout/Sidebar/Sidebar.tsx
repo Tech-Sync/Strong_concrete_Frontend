@@ -83,11 +83,11 @@ const Sidebar = () => {
             path: '/purchases',
             icon: <DashboardIcon />,
         },
-        {
-            name: "Accounts",
-            path: '/accounts',
-            icon: <DashboardIcon />,
-        },
+        // {
+        //     name: "Accounts",
+        //     path: '/accounts',
+        //     icon: <DashboardIcon />,
+        // },
         {
             name: "Materials",
             path: '/materials',
