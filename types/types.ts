@@ -130,7 +130,7 @@ export interface Sale {
   discount: number,
   requestedDate: string,
   sideContact: string,
-  orderDate: string | null,
+  orderDate: Date | null,
   orderNumber: number,
   status: number,
   createdAt?: string,
@@ -197,3 +197,51 @@ export interface Vehicle {
     phoneNo: string
   }
 }
+
+/* DELIVERY */
+
+export interface Delivery {
+  id: number;
+  status: number;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: number | null;
+  VehicleId: number;
+  creatorId: number | null;
+  updaterId: null;
+  ProductionId: number;
+  Vehicle: DeliveryVehicle;
+  Production: DeliveryProduction;
+}
+
+export interface DeliveryProduction {
+  id: number;
+  Sale: DeliverySale;
+}
+
+export interface DeliverySale {
+  id: number;
+  location: string;
+  sideContact: string;
+  orderDate: Date | null;
+  Product: DeliveryProduct;
+}
+
+export interface DeliveryProduct {
+  id: number;
+  name: string;
+}
+
+export interface DeliveryVehicle {
+  id: number;
+  plateNumber: string;
+  status: number;
+  driver: Driver;
+}
+
+export interface Driver {
+  firstName: string;
+  lastName: string;
+}
+
+

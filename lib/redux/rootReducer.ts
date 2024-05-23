@@ -1,5 +1,5 @@
 /* Instruments */
-import { counterSlice, firmSlice, materiaSlice, productSlice,  productionSlice,  purchaseSlice, saleSlice, themeConfigSlice, userSlice, vehicleSlice, } from "./slices";
+import { counterSlice, deliverySlice, firmSlice, materiaSlice, productSlice,  productionSlice,  purchaseSlice, saleSlice, themeConfigSlice, userSlice, vehicleSlice, } from "./slices";
 // import { themeConfigSlice } from "./slices/themeConfigSlice";
 
 export const reducer = {
@@ -12,5 +12,6 @@ export const reducer = {
   vehicle:vehicleSlice.reducer,
   user: userSlice.reducer,
   sale: saleSlice.reducer,
-  production: productionSlice.reducer
+  production: productionSlice.reducer,
+  delivery: deliverySlice.reducer,
 };
