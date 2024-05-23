@@ -101,7 +101,7 @@ export const addProduction = async (productionData: Object) => {
     return { error: error.message };
   }
 };
-export const updateProduction = async (productionData:Object) => {
+export const updateProduction = async (productionData:any) => {
   const headers = await authConfig();
   try {
     const response = await fetch(`${BASE_URL}/productions/${productionData?.id}`, {

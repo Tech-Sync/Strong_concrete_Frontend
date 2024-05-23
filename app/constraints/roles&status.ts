@@ -5,7 +5,7 @@ export const userRoles = {
   4: "SALER",
   5: "ADMIN",
 };
-export const deliveryStatuses = {
+export const deliveryStatuses : { [key: string]: string }= {
   1: "LOADING",
   2: "ON THE WAY",
   3: "DELIVERIED",

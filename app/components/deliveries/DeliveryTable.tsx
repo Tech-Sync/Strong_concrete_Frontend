@@ -9,8 +9,10 @@ import useDeleteToasts from '@/hooks/useDeleteToasts';
 import { getAllDeliveryAsync, selectIsDarkMode, selectdeliveries, selectdeliveryState, updateDelivery, useDispatch, useSelector } from '@/lib/redux';
 import { coloredToast } from '@/lib/sweetAlerts';
 import Flatpickr from 'react-flatpickr';
-import { deleteDelivery, deleteMultiDelivery } from '@/lib/redux/slices/deliverySlice/deliveryActions';
+import { deleteDelivery, deleteMultiDelivery, updateDeliveryStatus } from '@/lib/redux/slices/deliverySlice/deliveryActions';
 import { formatDate } from '@/utils/formatDate';
+import { deliveryStatuses } from '@/app/constraints/roles&status';
+import Dropdown from '../Layout/Dropdown';
 
 
 
@@ -71,7 +73,7 @@ const DeliveryTable = () => {
         const [startDate, endDate] = date3 ? date3.map((date: string | number | Date) => new Date(date)) : [null, null];
         setInitialRecords(() => {
             return deliveries.filter((delivery) => {
-                const deliveryDate = new Date(delivery.createdAt);
+                const deliveryDate = new Date(delivery.Production.Sale.orderDate);
                 const isInDateRange = startDate && endDate ? (deliveryDate >= startDate && deliveryDate <= endDate) : true;
                 const matchesSearch = (
                     delivery.id.toString().toLowerCase().includes(search.toLowerCase()) ||
@@ -118,7 +120,34 @@ const DeliveryTable = () => {
 
     };
 
+    const handleStatusChange = async (productionId: number, statusId: number) => {
+        const res = await updateDeliveryStatus(productionId, statusId);
+        if (res.message) {
+          coloredToast("success", res.message, "bottom-start");
+          dispatch(getAllDeliveryAsync());
+        } else {
+          dispatch(getAllDeliveryAsync());
+          coloredToast("danger", res.error, "bottom-start");
+        }
+      }
+
     if (delivertStatus.status === 'failed') coloredToast('danger', delivertStatus.error || 'Failed to fetch deliveries');
+
+    enum Status {
+        Status1 = 1,
+        Status2,
+        Status3,
+        Status4,
+    }
+
+    type BadgeClassMappings = { [key in Status]?: string; };
+
+    const statusBadgeClasses: BadgeClassMappings = {
+        [Status.Status1]: 'badge-outline-secondary',
+        [Status.Status2]: 'badge-outline-success',
+        [Status.Status3]: 'badge-outline-danger',
+        [Status.Status4]: 'badge-outline-warning',
+    };
 
 
 
@@ -139,7 +168,7 @@ const DeliveryTable = () => {
                             New Ussue
                         </button> */}
                     </div>
-                    <div className='flex justify-center items-center gap-4'>
+                    <div className='flex flex-col sm:flex-row justify-center items-center gap-4'>
                         <Flatpickr
                             options={{
                                 mode: 'range',
@@ -152,7 +181,7 @@ const DeliveryTable = () => {
 
                             }}
                             // defaultValue={''}
-                            placeholder="Please select a date range..."
+                            placeholder="Select a date range..."
                             className="form-input w-60"
                             onChange={(date3: any) => setDate3(date3)}
                         />
@@ -208,32 +237,62 @@ const DeliveryTable = () => {
                                 sortable: true,
                                 render: ({ Production }) =>
                                     <div className=" font-medium  text-white-dark ">
-                                       <span>{Production.Sale.location}</span>
+                                        <span>{Production.Sale.location}</span>
                                     </div>,
-                            }, 
+                            },
                             {
                                 accessor: 'Side Contact',
                                 title: 'Side Contact',
                                 sortable: true,
                                 render: ({ Production }) =>
                                     <div className=" font-medium  text-white-dark ">
-                                       <span>{Production.Sale.sideContact}</span>
+                                        <span>{Production.Sale.sideContact}</span>
                                     </div>,
-                            }, 
+                            },
                             {
                                 accessor: 'Delivery Date',
                                 title: 'Delivery Date',
                                 sortable: true,
                                 render: ({ Production }) => <span >{formatDate(Production.Sale.orderDate)}</span>,
                             },
+                            // {
+                            //     accessor: 'status',
+                            //     sortable: true,
+                            //     render: ({ status }) => <span className={`badge ${statusBadgeClasses[status]}`}>
+                            //         {deliveryStatuses[status.toString()]}
+                            //     </span>
+                            // },
                             {
-                                accessor: 'status',
+                                accessor: "status",
                                 sortable: true,
-                                render: ({ status }) => <span className={`badge 
-                                badge-outline-${status === 'Pending' ? 'primary'
-                                        : status === 'Active' ? 'secondary'
-                                            : status === 'Resolved' ? 'success'
-                                                : status === 'Cancelled' ? 'danger' : ''}`}>{status}</span>,
+                                render: ({ status, id }) => (
+                                    <div className="dropdown ">
+                                        <Dropdown
+                                            placement='left-start'
+                                            //@ts-ignore
+                                            btnClassName={`badge btn-sm ${statusBadgeClasses[status]}`}
+                                            button={
+                                                <span >
+                                                    {deliveryStatuses[status.toString()]}
+                                                </span>
+                                            }
+                                        >
+                                            <ul className="!min-w-[170px]">
+                                                {
+                                                    Object.entries(deliveryStatuses).map(([key, value]) => {
+                                                        return (
+                                                            <li key={key}>
+                                                                <button type="button" onClick={() => handleStatusChange(id, Number(key))}>
+                                                                    {value}
+                                                                </button>
+                                                            </li>
+                                                        )
+                                                    })
+                                                }
+                                            </ul>
+                                        </Dropdown>
+                                    </div>
+                                ),
                             },
                             {
                                 accessor: 'action',
