@@ -1,5 +1,9 @@
 import AuthLoader from "@/app/components/auth/AuthLoader";
+import { Metadata } from "next";
 import React from "react";
+
+export const metadata: Metadata = { title: "Verify Email", description: "Verify Email"};
+
 
 const VerifyEmailPage = () => {
   return (

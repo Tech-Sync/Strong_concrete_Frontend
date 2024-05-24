@@ -1,6 +1,10 @@
 import ResetPassForm from "@/app/components/auth/ResetPassForm";
+import { Metadata } from "next";
 import Link from "next/link";
 import React from "react";
+
+export const metadata: Metadata = { title: "Reset Password", description: "Reset Password"};
+
 
 const ResetPassPage = () => {
   return (

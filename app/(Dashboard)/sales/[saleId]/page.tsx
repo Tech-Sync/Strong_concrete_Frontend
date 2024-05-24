@@ -5,6 +5,20 @@ import { readSale } from '@/lib/redux/slices/saleSlice/saleActions';
 import { formatDate } from '@/utils/formatDate';
 import React from 'react'
 
+
+export async function generateMetadata({ params }: { params: { saleId: string } }) {
+    const sale = await readSale(params.saleId)
+
+
+    if (!sale.Firm?.name) {
+        return { title: 'Sale Not Found' }
+    }
+    return {
+        title: sale.Firm?.name,
+        description: `This is the Sale page of ${sale.Firm?.name}`
+    }
+}
+
 const SalePage = async ({ params }: { params: { saleId: string } }) => {
     const sale = await readSale(params.saleId)
 
@@ -128,7 +142,7 @@ const SalePage = async ({ params }: { params: { saleId: string } }) => {
                                 <td>{sale.Product?.name}</td>
                                 <td>{sale.orderDate}</td>
                                 <td>{sale.location}</td>
-                              {/*   @ts-ignore */}
+                                {/*   @ts-ignore */}
                                 <td className={`${statusTextClasses[sale.status]}`}>
                                     {saleStatuses[sale?.status?.toString()]}
                                 </td>

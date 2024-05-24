@@ -1,19 +1,18 @@
-"use client";
 
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { Metadata } from "next";
 import { useSession } from "next-auth/react";
 import React from "react";
 
+export const metadata: Metadata = { title: "Users", description: "Users"};
 
 const UsersPage = () => {
 
-  const {userInfo, accessToken, refreshToken} = useCurrentUser()
+  // const {userInfo, accessToken, refreshToken} = useCurrentUser()
 
   return (
     <div>
-      <p>USER INFO: {JSON.stringify(userInfo)}</p>
-      <p>ACCESS TOKEN: {JSON.stringify(accessToken)}</p>
-      <p>REFRESH TOKEN: {JSON.stringify(refreshToken)}</p>
+      <p>User Page</p>
     </div>
   );
 };

@@ -1,6 +1,9 @@
 import DeliveryTable from '@/app/components/deliveries/DeliveryTable'
+import { Metadata } from 'next';
 import Link from 'next/link'
 import React from 'react'
+
+export const metadata: Metadata = { title: "Deliveries", description: "Deliveries"};
 
 const DeliveryPage = () => {
   return (

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import PurchaseTable from "@/app/components/purchases/PurchaseTable";
+import { Metadata } from "next";
 
+export const metadata: Metadata = { title: "Purchases", description: "Purchases"};
 
 const PurchasesPage = async () => {
   return (

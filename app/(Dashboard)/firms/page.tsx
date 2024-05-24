@@ -1,6 +1,9 @@
 import FirmTable from "@/app/components/firms/FirmTable";
+import { Metadata } from "next";
 import Link from "next/link";
 import React from "react";
+
+export const metadata: Metadata = { title: "Firms", description: "Firms"};
 
 const FirmPage = async () => {
   return (

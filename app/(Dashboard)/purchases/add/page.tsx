@@ -2,7 +2,10 @@
 "use server"
 import AddForm from '@/app/components/purchases/add/AddForm';
 import { DownloadIcon, PreviewIcon, SendInvoiceIcon } from '@/app/icons';
+import { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = { title: "Purchase Create", description: "Purchase Create"};
 
 
 const AddPage = async () => {

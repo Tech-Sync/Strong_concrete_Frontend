@@ -1,6 +1,9 @@
 import ProductionTable from '@/app/components/productions/ProductionTable'
+import { Metadata } from 'next';
 import Link from 'next/link'
 import React from 'react'
+
+export const metadata: Metadata = { title: "Productions", description: "Productions"};
 
 const ProductionPage = () => {
   return (
