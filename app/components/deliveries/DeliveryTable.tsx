@@ -6,7 +6,7 @@ import sortBy from 'lodash/sortBy';
 import { DeleteIcon, EditIcon, PreviewIcon } from '@/app/icons';
 import 'flatpickr/dist/flatpickr.css';
 import useDeleteToasts from '@/hooks/useDeleteToasts';
-import { getAllDeliveryAsync, selectIsDarkMode, selectdeliveries, selectdeliveryState, updateDelivery, useDispatch, useSelector } from '@/lib/redux';
+import { getAllDeliveryAsync, selectIsDarkMode, selectdeliveries, selectdeliveryState, setDeliveryModal, updateDelivery, useDispatch, useSelector } from '@/lib/redux';
 import { coloredToast } from '@/lib/sweetAlerts';
 import Flatpickr from 'react-flatpickr';
 import { deleteDelivery, deleteMultiDelivery, updateDeliveryStatus } from '@/lib/redux/slices/deliverySlice/deliveryActions';
@@ -31,7 +31,7 @@ const DeliveryTable = () => {
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-    const [initialRecords, setInitialRecords] = useState(sortBy(deliveries, 'id'));
+    const [initialRecords, setInitialRecords] = useState(sortBy(deliveries, 'createdAt'));
     const [records, setRecords] = useState(initialRecords);
     const [selectedRecords, setSelectedRecords] = useState<any>([]);
     const [date3, setDate3] = useState<any>(null);
@@ -123,13 +123,13 @@ const DeliveryTable = () => {
     const handleStatusChange = async (productionId: number, statusId: number) => {
         const res = await updateDeliveryStatus(productionId, statusId);
         if (res.message) {
-          coloredToast("success", res.message, "bottom-start");
-          dispatch(getAllDeliveryAsync());
+            coloredToast("success", res.message, "bottom-start");
+            dispatch(getAllDeliveryAsync());
         } else {
-          dispatch(getAllDeliveryAsync());
-          coloredToast("danger", res.error, "bottom-start");
+            dispatch(getAllDeliveryAsync());
+            coloredToast("danger", res.error, "bottom-start");
         }
-      }
+    }
 
     if (delivertStatus.status === 'failed') coloredToast('danger', delivertStatus.error || 'Failed to fetch deliveries');
 
@@ -301,21 +301,23 @@ const DeliveryTable = () => {
                                 textAlignment: 'center',
                                 render: (delivery) => (
                                     <div className="mx-auto flex w-max items-center gap-4">
-                                        <button
+                                        {/*
+                                         <button
                                             type="button"
                                             className="flex hover:text-info"
                                             onClick={() => {
-                                                //@ts-ignore
                                                 dispatch(updateTicketState({ ...delivery, cat: delivery.cat.id })),
-                                                    dispatch(setTicketModal(true)),
-                                                    dispatch(fetchAllCategoryAsync({}))
+                                                    dispatch(setDeliveryModal(true))
                                             }}
                                         >
                                             <EditIcon />
                                         </button>
-                                        <Link href={`/delivery/${delivery.id}`} className="flex hover:text-primary">
+                                         
+                                         */}
+
+                                      {/*   <Link href={`/delivery/${delivery.id}`} className="flex hover:text-primary">
                                             <PreviewIcon />
-                                        </Link>
+                                        </Link> */}
                                         <button type="button" className="flex hover:text-danger" onClick={(e) => deleteRow(delivery?.id)}>
                                             <DeleteIcon />
                                         </button>
