@@ -73,8 +73,8 @@ const DeliveryTable = () => {
         const [startDate, endDate] = date3 ? date3.map((date: string | number | Date) => new Date(date)) : [null, null];
         setInitialRecords(() => {
             return deliveries.filter((delivery) => {
-                const deliveryDate = new Date(delivery.Production.Sale.orderDate);
-                const isInDateRange = startDate && endDate ? (deliveryDate >= startDate && deliveryDate <= endDate) : true;
+                const deliveryDate = delivery.Production.Sale.orderDate ? new Date(delivery.Production.Sale.orderDate) : null;
+                const isInDateRange = startDate && endDate ? (deliveryDate && deliveryDate >= startDate && deliveryDate <= endDate) : true;
                 const matchesSearch = (
                     delivery.id.toString().toLowerCase().includes(search.toLowerCase()) ||
                     delivery.createdAt.toString().toLowerCase().includes(search.toLowerCase()) ||

@@ -204,8 +204,8 @@ export interface Delivery {
   id: number;
   status: number;
   createdAt: Date;
-  updatedAt: Date;
-  deletedAt: number | null;
+  updatedAt: Date | null;
+  deletedAt: Date | number | null;
   VehicleId: number;
   creatorId: number | null;
   updaterId: null;
