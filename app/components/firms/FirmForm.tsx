@@ -1,3 +1,4 @@
+'use client'
 import React from "react";
 import { Form, Field, ErrorMessage, FormikProps } from "formik";
 import { firmStatuses } from "@/app/constraints/roles&status";
@@ -38,9 +39,9 @@ const FirmForm: React.FC<FormikProps<Firm>> = ({ touched, errors, isSubmitting, 
     <Form onSubmit={handleSubmit}>
       <div className="relative mb-4">
         <div className={`${touched.status && errors.status ? "has-error" : ""}`}>
-          <Select placeholder="Describe Firm" options={firmOp} id='Gender'
+          <Select placeholder="Describe Firm" options={firmOp} id='status'
             value={firmOp.find(option => option.value === values.status)}
-            onChange={option => setFieldValue('gender', option ? option.value : '')}
+            onChange={option => setFieldValue('status', option ? option.value : '')}
             className="text-white-dark "
             required />
         </div>
