@@ -1,8 +1,14 @@
+import DashboardStats from "../components/dashboard/DashboardStats";
 import DashboardMain from "./components/DashboardMain";
 
-export default function Home() {
+
+export default async function Home() {
+
+  // const dashboardStatistics = await fetch()
+
   return (
     <>
+      <DashboardStats />
       <DashboardMain />
     </>
   );
