@@ -6,3 +6,4 @@ import type { RootState } from '@/lib/redux'
 // in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
 export const selectThemeConfig = (state: RootState) => state.theme
 export const selectIsDarkMode = (state: RootState) => state.theme.isDarkMode
+export const selectRtlClass = (state: RootState) => state.theme.rtlClass

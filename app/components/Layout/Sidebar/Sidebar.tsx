@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import { useState, useEffect } from 'react';
 import { selectThemeConfig, themeConfigSlice } from '@/lib/redux/slices/themeConfigSlice';
-import { DashboardIcon, DeliveryIcon, DoubleArrowIcon, FirmIcon, MaterialIcon, ProductionIcon, PurchaseIcon, SaleIcon } from '@/app/icons'
+import { DashboardIcon, DeliveryIcon, DoubleArrowIcon, FirmIcon, MaterialIcon, ProductIcon, ProductionIcon, PurchaseIcon, SaleIcon, UserIcon, VehicleIcon } from '@/app/icons'
 
 
 const Sidebar = () => {
@@ -101,23 +101,23 @@ const Sidebar = () => {
         {
             name: "Products",
             path: '/products',
-            icon: <DashboardIcon />,
+            icon: <ProductIcon />,
         },
         {
             name: "Vehicles",
             path: '/vehicles',
-            icon: <DashboardIcon />,
+            icon: <VehicleIcon />,
         },
         {
             name: "Users",
             path: '/users',
-            icon: <DashboardIcon />,
+            icon: <UserIcon />,
         },
-        {
-            name: "Settings",
-            path: '/settings',
-            icon: <DashboardIcon />,
-        },
+        // {
+        //     name: "Settings",
+        //     path: '/settings',
+        //     icon: <DashboardIcon />,
+        // },
 
 
     ]
