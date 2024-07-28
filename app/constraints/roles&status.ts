@@ -1,11 +1,11 @@
-export const userRoles = {
+export const userRoles: { [key: string]: string } = {
   1: "DRIVER",
   2: "PRODUCER",
   3: "ACCOUNTANT",
   4: "SALER",
   5: "ADMIN",
 };
-export const deliveryStatuses : { [key: string]: string }= {
+export const deliveryStatuses: { [key: string]: string } = {
   1: "LOADING",
   2: "ON THE WAY",
   3: "DELIVERIED",

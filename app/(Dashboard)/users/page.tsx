@@ -1,4 +1,5 @@
 
+import UserTable from "@/app/components/users/UserTable";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { Metadata } from "next";
 import { useSession } from "next-auth/react";
@@ -12,7 +13,7 @@ const UsersPage = () => {
 
   return (
     <div>
-      <p>User Page</p>
+      <UserTable/>
     </div>
   );
 };

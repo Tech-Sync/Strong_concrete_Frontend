@@ -101,7 +101,7 @@ export interface Vehicle {
 }
 
 export interface User {
-  id: number;
+  id?: number;
   firstName: string,
   lastName: string
   nrcNo: string;
@@ -113,9 +113,9 @@ export interface User {
   emailToken: string;
   isActive: boolean;
   isVerified: boolean;
-  createdAt: string;
-  updatedAt: string | null;
-  deletedAt: string | null;
+  createdAt?: string;
+  updatedAt?: string | null;
+  deletedAt?: string | null;
 }
 
 export interface Sale {
