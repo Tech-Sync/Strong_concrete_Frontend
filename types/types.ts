@@ -244,4 +244,39 @@ export interface Driver {
   lastName: string;
 }
 
+export interface Stats {
+  sale: {
+    totalSale: number;
+    totalSaleLastWeek: number;
+    salePerChange: number;
+    SaleCount: number;
+  };
+  purchase: {
+    totalPurchase: number;
+    totalPurchaseLastWeek: number;
+    purchasePercChange: number;
+    purchaseCount: number;
+  };
+  profit: {
+    totalProfit: number;
+    totalProfitLastWeek: number;
+    profitPercentageChange: number;
+  };
+}
 
+export interface RevenueChart {
+  monthlySales: number[];
+  monthlyPurchases: number[];
+}
+
+export interface SalesByCategory {
+  productName: string[];
+  productQuantity: number[];
+}
+
+
+export interface DashboardData {
+  stats: Stats;
+  revenueChart: RevenueChart;
+  salesByCategory: SalesByCategory;
+}

@@ -1,20 +1,20 @@
 'use client'
+import { Stats } from '@/types/types';
 import React from 'react'
 import CountUp from 'react-countup';
 
-const DashboardStats = () => {
+const DashboardStats = ({ stats }: { stats: Stats }) => {
     return (
         <div className="mb-6 grid grid-cols-1 gap-6 text-white sm:grid-cols-2 xl:grid-cols-4">
             <div className="panel bg-gradient-to-r from-cyan-500 to-cyan-400">
                 <div className="flex justify-between">
                     <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">Total Profit</div>
-
                 </div>
                 <div className="mt-5 flex items-center">
-                    <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3"> $
-                        <CountUp start={0} end={170.46} duration={7}></CountUp>
+                    <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3"> K
+                        <CountUp start={0} end={stats?.profit.totalProfit} duration={7}></CountUp>
                     </div>
-                    <div className="badge bg-white/30">+ 2.35% </div>
+                    <div className="badge bg-white/30"> {stats?.profit.profitPercentageChange}% </div>
                 </div>
                 <div className="mt-5 flex items-center font-semibold">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="ltr:mr-2 rtl:ml-2">
@@ -26,7 +26,10 @@ const DashboardStats = () => {
                         />
                         <path d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z" stroke="currentColor" strokeWidth="1.5" />
                     </svg>
-                    Last Week 44,700
+                    Last Week 
+                    <span className='pl-2'>
+                        <CountUp start={0} end={stats?.profit.totalProfitLastWeek} duration={7}></CountUp>
+                    </span>
                 </div>
             </div>
 
@@ -37,8 +40,10 @@ const DashboardStats = () => {
 
                 </div>
                 <div className="mt-5 flex items-center">
-                    <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3"> 74,137 </div>
-                    <div className="badge bg-white/30">- 2.35% </div>
+                    <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">
+                        K<CountUp start={0} end={stats?.sale?.totalSale} duration={7}></CountUp>
+                    </div>
+                    <div className="badge bg-white/30">{stats?.sale?.salePerChange}% </div>
                 </div>
                 <div className="mt-5 flex items-center font-semibold">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="ltr:mr-2 rtl:ml-2">
@@ -50,7 +55,12 @@ const DashboardStats = () => {
                         />
                         <path d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z" stroke="currentColor" strokeWidth="1.5" />
                     </svg>
-                    Last Week 84,709
+                    
+                    Last Week
+                    <span className='pl-2'>
+                        <CountUp start={0} end={stats?.sale?.totalSaleLastWeek} duration={7}></CountUp>
+                    </span>
+                    
                 </div>
             </div>
 
@@ -58,11 +68,12 @@ const DashboardStats = () => {
             <div className="panel bg-gradient-to-r from-blue-500 to-blue-400">
                 <div className="flex justify-between">
                     <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">Total Purchase</div>
-
                 </div>
                 <div className="mt-5 flex items-center">
-                    <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3"> 38,085 </div>
-                    <div className="badge bg-white/30">+ 1.35% </div>
+                    <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">
+                        K<CountUp start={0} end={stats?.purchase?.totalPurchase} duration={7}></CountUp>
+                    </div>
+                    <div className="badge bg-white/30">{stats?.purchase?.purchasePercChange}% </div>
                 </div>
                 <div className="mt-5 flex items-center font-semibold">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="ltr:mr-2 rtl:ml-2">
@@ -74,7 +85,10 @@ const DashboardStats = () => {
                         />
                         <path d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z" stroke="currentColor" strokeWidth="1.5" />
                     </svg>
-                    Last Week 37,894
+                    Last Week 
+                    <span className='pl-2'>
+                        <CountUp start={0} end={stats?.purchase?.totalPurchaseLastWeek} duration={7}></CountUp>
+                    </span>
                 </div>
             </div>
 
