@@ -19,8 +19,8 @@ const ProductionForm: React.FC<FormikProps<Production>> = ({ touched, errors, is
 
 
   const vehicles = useSelector(selectVehicles);
-
-  const initialValueVehicles = vehicles.filter(vehicle => values?.VehicleIds.includes(vehicle.id));
+  // @ts-ignore
+  const initialValueVehicles = vehicles.filter((vehicle:any) => values?.VehicleIds.includes(vehicle.id));
 
   const [selectedVehicles, setSelectedVehicles] = useState(initialValueVehicles);
 
@@ -38,6 +38,7 @@ const ProductionForm: React.FC<FormikProps<Production>> = ({ touched, errors, is
         <StatusIcon />
         <div  >
           <Select placeholder="Select The Vehicle" options={vehicleOp} isMulti components={animatedComponents}
+            // @ts-ignore
             value={vehicleOp.filter(option => values.VehicleIds.includes(option.value))}
             onChange={(selectedOptions) => {
               const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];

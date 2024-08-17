@@ -28,7 +28,7 @@ export default function ProductionModal() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const formatedVehicleIds = params?.VehicleIds?.map(v => (v.id))
+  const formatedVehicleIds = params?.VehicleIds?.map((v:any) => (v.id))
 
   const initialValues = {
     id: params?.id || "",

@@ -46,7 +46,7 @@ const Preview = async ({ params }: { params: { purchaseId: string } }) => {
 
   return (
     <div>
-      <ActionBtnGroup />
+      <ActionBtnGroup sale={purchase} />
       <div className="panel">
         <div className="flex flex-wrap justify-between gap-4 px-4">
           <div className="text-2xl font-semibold uppercase">Purchase</div>
