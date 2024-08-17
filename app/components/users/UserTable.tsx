@@ -181,13 +181,10 @@ const UserTable = () => {
                                                 <div className="flex w-max items-center">
                                                     {user.path && (
                                                         <div className="w-max">
-                                                            <Image src={`/assets/images/profile-35.png`} className="h-8 w-8 rounded-full object-cover ltr:mr-2 rtl:ml-2" alt="avatar" />
+                                                            <Image src={`/assets/images/profile.png`} className="h-8 w-8 rounded-full object-cover ltr:mr-2 rtl:ml-2" alt="avatar" />
                                                         </div>
                                                     )}
                                                     {!user.path && user.firstName && (
-                                                        <div className="grid h-8 w-8 place-content-center rounded-full bg-primary text-sm font-semibold text-white ltr:mr-2 rtl:ml-2"></div>
-                                                    )}
-                                                    {!user.path && !user.firstName && (
                                                         <div className="rounded-full border border-gray-300 p-2 ltr:mr-2 rtl:ml-2 dark:border-gray-800">
                                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                 <circle cx="12" cy="6" r="4" stroke="currentColor" strokeWidth="1.5" />

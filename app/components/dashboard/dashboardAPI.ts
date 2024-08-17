@@ -23,7 +23,7 @@ export const getAllStatistics = async () => {
         });
         const data = await response.json();
         if (response.ok) {
-            return data;
+            return data.statistics;
         } else {
             throw new Error(
                 data.message || "Something went wrong, Please try again!"

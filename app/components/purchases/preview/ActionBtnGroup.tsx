@@ -1,13 +1,18 @@
 'use client'
 import { DownloadIcon, EditIcon, PlusIcon, PrintIcon, SendInvoiceIcon } from '@/app/icons'
+import { updateSaleState, useDispatch } from '@/lib/redux';
 import Link from 'next/link'
+import { useRouter } from 'next/navigation';
 import React from 'react'
 
-export default function ActionBtnGroup() {
+export default function ActionBtnGroup({ sale }: { sale: any }) {
 
     const exportTable = () => {
         window.print();
     };
+
+    const dispatch = useDispatch();
+    const router = useRouter();
 
     function downloadFile() {
         const fileUrl = "http://localhost:3000/purchases/preview";
@@ -30,7 +35,7 @@ export default function ActionBtnGroup() {
             <button
                 type="button"
                 className="btn btn-info gap-2"
-                onClick={() => (window.location.href = "mailto:destek@example.com")}
+                onClick={() => (window.location.href = `mailto:'company@gmail.com'`)}
             >
                 <SendInvoiceIcon />
                 Send Invoice
@@ -45,24 +50,25 @@ export default function ActionBtnGroup() {
                 Print
             </button>
 
-            <button
+            {/* <button
                 type="button"
                 className="btn btn-success gap-2"
                 onClick={downloadFile}
             >
                 <DownloadIcon />
                 Download
-            </button>
+            </button> */}
 
-            <Link href="/purchases/add" className="btn btn-secondary gap-2">
+            <button onClick={() => { router.push(`/sales/add`), dispatch(updateSaleState(null)) }} className="btn btn-secondary gap-2">
                 <PlusIcon />
                 Create
-            </Link>
+            </button>
 
-            <Link href="/purchases/edit" className="btn btn-warning gap-2">
+
+            <button onClick={() => { dispatch(updateSaleState(sale)); router.push(`/sales/add`) }} className="btn btn-warning gap-2">
                 <EditIcon />
                 Edit
-            </Link>
+            </button>
         </div>
     )
 }

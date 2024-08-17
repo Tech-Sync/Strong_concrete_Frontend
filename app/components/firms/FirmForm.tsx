@@ -31,7 +31,7 @@ const FirmForm: React.FC<FormikProps<Firm>> = ({ touched, errors, isSubmitting, 
     },
     'tpinNo': {
       mask: [/\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/],
-      placeholder: '________'
+      placeholder: 'Tpin No'
     },
   };
 

@@ -177,7 +177,7 @@ const SaleAdd = () => {
                                 <div className="flex flex-wrap justify-between px-4">
                                     <div className="mb-6 w-full lg:w-1/2">
                                         <div className="flex shrink-0 items-center text-black dark:text-white">
-                                            <Image src="/assets/images/client-link.png" alt="img" width={120} height={120} />
+                                            <Image src="/assets/images/logo.png" alt="img" width={120} height={120} />
                                         </div>
                                         <div className="mt-6 space-y-1 text-gray-500 dark:text-gray-400">
                                             <div>Mungwi, Lusaka west Mungwi road Lusaka ZM, 10101</div>

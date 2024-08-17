@@ -79,13 +79,13 @@ const SalePage = async ({ params }: { params: { saleId: string } }) => {
 
     return (
         <div>
-            <ActionBtnGroup />
-            <div className="panel">
+            <ActionBtnGroup sale={sale} />
+            <div className="panel printBody">
                 <div className="flex flex-wrap justify-between gap-4 px-4">
                     <div className="text-2xl font-semibold uppercase">Sale</div>
                     <div className="shrink-0">
                         <img
-                            src="/assets/images/logo.svg"
+                            src="/assets/images/logo.png"
                             alt="img"
                             className="w-14 ltr:ml-auto rtl:mr-auto"
                         />

@@ -53,7 +53,7 @@ const Preview = async ({ params }: { params: { purchaseId: string } }) => {
           <div className="shrink-0">
             <Image
               height={56}
-              src="/assets/images/logo.svg"
+              src="/assets/images/logo.png"
               alt="img"
               className="ltr:ml-auto rtl:mr-auto"
             />
