@@ -73,7 +73,7 @@ export default function SaleTable() {
                         (totalPrice.toLowerCase().includes(search.toLowerCase()) ?? false) ||
                         (sale.requestedDate.toLowerCase().includes(search.toLowerCase()) ?? false) ||
                         (sale.sideContact.toLowerCase().includes(search.toLowerCase()) ?? false) ||
-                        (sale.orderDate?.toDateString().toLowerCase().includes(search.toLowerCase()) ?? false) ||
+                        // (sale.orderDate?.toDateString().toLowerCase().includes(search.toLowerCase()) ?? false) ||c20
                         (unitPrice?.toLowerCase().includes(search.toLowerCase()) ?? false)
                     );
                 });

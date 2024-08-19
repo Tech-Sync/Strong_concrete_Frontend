@@ -47,11 +47,12 @@ const Preview = async ({ params }: { params: { purchaseId: string } }) => {
   return (
     <div>
       <ActionBtnGroup sale={purchase} />
-      <div className="panel">
+      <div className="panel printBody">
         <div className="flex flex-wrap justify-between gap-4 px-4">
           <div className="text-2xl font-semibold uppercase">Purchase</div>
           <div className="shrink-0">
             <Image
+              width={56}
               height={56}
               src="/assets/images/logo.png"
               alt="img"

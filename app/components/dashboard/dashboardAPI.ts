@@ -18,8 +18,8 @@ export const getAllStatistics = async () => {
     try {
         const response = await fetch(`${BASE_URL}/dashboard`, {
             headers,
-            // cache: "no-cache",
-            next: { revalidate: 1800 }
+            cache: "no-cache",
+            // next: { revalidate: 1800 }
         });
         const data = await response.json();
         if (response.ok) {

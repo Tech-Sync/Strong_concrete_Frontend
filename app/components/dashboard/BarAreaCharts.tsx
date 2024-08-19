@@ -23,11 +23,11 @@ const BarAreaCharts = ({ isDark, isMounted, isRtl, data }: BarAreaChartsProps) =
         series: [
             {
                 name: 'Sales',
-                data: [44, 55, 41, 67, 22, 43, 21],
+                data: [ 4, 3, 5, 2, 6, 3],
             },
             {
                 name: 'Last Week',
-                data: [13, 23, 20, 8, 13, 27, 33],
+                data: [ 4, 6, 3, 5, 4, 4],
             },
         ],
         options: {
@@ -65,7 +65,7 @@ const BarAreaCharts = ({ isDark, isMounted, isRtl, data }: BarAreaChartsProps) =
                 labels: {
                     show: false,
                 },
-                categories: ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
+                categories: ['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
             },
             yaxis: {
                 show: false,
@@ -332,7 +332,7 @@ const BarAreaCharts = ({ isDark, isMounted, isRtl, data }: BarAreaChartsProps) =
                             </div>
                         </div>
                         <h5 className="text-2xl font-semibold ltr:text-right rtl:text-left dark:text-white-light">
-                        {data.stats.sale.SaleCount}
+                            {data.stats.sale.SaleCount}
                             <span className="block text-sm font-normal">Total Orders</span>
                         </h5>
                     </div>

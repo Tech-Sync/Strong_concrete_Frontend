@@ -31,7 +31,7 @@ const UserTable = () => {
         address: "",
         role: 0,
         email: "",
-        password: "SC-lusaka@2024",
+        password: "SConcrete@2024.?",
         emailToken: " ",
         isActive: true,
         isVerified: false,

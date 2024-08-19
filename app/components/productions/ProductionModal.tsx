@@ -55,7 +55,7 @@ export default function ProductionModal() {
           </Transition.Child>
           <div id="slideIn_down_modal" className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto">
             <div className="flex items-start justify-center min-h-screen px-4">
-              <Dialog.Panel className="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8 text-black dark:text-white-dark animate__animated animate__slideInDown">
+              <Dialog.Panel className="panel border-0 p-0 rounded-lg  w-full max-w-lg my-8 text-black dark:text-white-dark animate__animated animate__slideInDown">
                 <div className="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
                   <h5 className="font-bold text-lg">Modal Title</h5>
                   <button onClick={() => dispatch(setProductionModal(false))} type="button" className="text-white-dark hover:text-dark">

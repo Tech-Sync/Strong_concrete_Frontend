@@ -270,8 +270,8 @@ export interface RevenueChart {
 }
 
 export interface SalesByCategory {
-  productName: string[];
-  productQuantity: number[];
+  productName: string[] | 0;
+  productQuantity: number[] | 0;
 }
 
 

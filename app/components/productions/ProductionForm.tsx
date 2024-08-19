@@ -25,7 +25,7 @@ const ProductionForm: React.FC<FormikProps<Production>> = ({ touched, errors, is
   const [selectedVehicles, setSelectedVehicles] = useState(initialValueVehicles);
 
   const vehicleOp = vehicles.filter(v => v.status === 1 && v.isPublic).map(v => ({
-    label: v.driver.firstName + " " + v.driver.lastName,
+    label: v.driver.firstName + " " + v.driver.lastName + " - " + v.plateNumber + " - " + v.capacity + " m³",
     value: v.id,
     driver: v.plateNumber,
     capacity: v.capacity,

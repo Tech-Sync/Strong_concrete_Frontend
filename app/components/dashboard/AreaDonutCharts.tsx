@@ -67,14 +67,14 @@ const AreaDonutCharts = ({ isDark, isMounted, isRtl, revenueChartData, salesByCa
                 discrete: [
                     {
                         seriesIndex: 0,
-                        dataPointIndex: 6,
+                        dataPointIndex: 7,
                         fillColor: '#1B55E2',
                         strokeColor: 'transparent',
                         size: 7,
                     },
                     {
                         seriesIndex: 1,
-                        dataPointIndex: 5,
+                        dataPointIndex: 7,
                         fillColor: '#E7515A',
                         strokeColor: 'transparent',
                         size: 7,

@@ -27,7 +27,7 @@ const NavbarProfileDrop = () => {
             width={36}
             height={36}
             className="h-9 w-9 rounded-full object-cover object-top saturate-50 group-hover:saturate-100"
-            src="/assets/images/calisan.jpg"
+            src={`${BASE_URL}/image/${userInfo?.profilePic || '/assets/images/profile.png'}`}
             alt="userProfile"
           />
         }

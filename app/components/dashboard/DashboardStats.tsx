@@ -14,7 +14,7 @@ const DashboardStats = ({ stats }: { stats: Stats }) => {
                     <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3"> K
                         <CountUp start={0} end={stats?.profit.totalProfit} duration={7}></CountUp>
                     </div>
-                    <div className="badge bg-white/30"> {stats?.profit.profitPercentageChange}% </div>
+                    <div className="badge bg-white/30"> {stats?.profit.profitPercentageChange.toFixed(2)}% </div>
                 </div>
                 <div className="mt-5 flex items-center font-semibold">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="ltr:mr-2 rtl:ml-2">
@@ -43,7 +43,7 @@ const DashboardStats = ({ stats }: { stats: Stats }) => {
                     <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">
                         K<CountUp start={0} end={stats?.sale?.totalSale} duration={7}></CountUp>
                     </div>
-                    <div className="badge bg-white/30">{stats?.sale?.salePerChange}% </div>
+                    <div className="badge bg-white/30">{stats?.sale?.salePerChange.toFixed(2)}% </div>
                 </div>
                 <div className="mt-5 flex items-center font-semibold">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="ltr:mr-2 rtl:ml-2">
@@ -73,7 +73,7 @@ const DashboardStats = ({ stats }: { stats: Stats }) => {
                     <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">
                         K<CountUp start={0} end={stats?.purchase?.totalPurchase} duration={7}></CountUp>
                     </div>
-                    <div className="badge bg-white/30">{stats?.purchase?.purchasePercChange}% </div>
+                    <div className="badge bg-white/30">{stats?.purchase?.purchasePercChange.toFixed(2)}% </div>
                 </div>
                 <div className="mt-5 flex items-center font-semibold">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="ltr:mr-2 rtl:ml-2">
