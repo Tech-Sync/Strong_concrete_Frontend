@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { createUser, updateUser } from '@/lib/redux/slices/userSlice/userActions';
 import { coloredToast } from '@/lib/sweetAlerts';
 import { getAllUsersAsync, useDispatch } from '@/lib/redux';
+import Image from 'next/image';
 
 interface UserModalProps {
     userModal: boolean;
@@ -15,11 +16,33 @@ interface UserModalProps {
 const UserModal = ({ userModal, setUserModal, params, changeValue }: UserModalProps) => {
     const dispatch = useDispatch();
 
+
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [preview, setPreview] = useState<string | null>(null);
+    const [profilePic, setProfilePic] = useState<any | null>(null);
+
+    const handleUpload = () => {
+        const fileInput = document.querySelector('.custom-file-container__custom-file__custom-file-input') as HTMLInputElement;
+        const file = fileInput.files![0];
+        setProfilePic(file);
+        setPreview(URL.createObjectURL(file));
+    }
+
+    const handleDivClick = () => {
+        fileInputRef.current?.click();
+    };
+    console.log(preview);
+
     const saveUser = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (params.id) {
+            const formData = new FormData();
+
             const { id, password, createdAt, updatedAt, isVerified, emailToken, deletedAt, ...updateFields } = params;
-            const res = await updateUser(params.id, updateFields)
+
+            Object.keys(updateFields).forEach(key => formData.append(key, updateFields[key]));
+
+            const res = await updateUser(params.id, formData);
             if (res.message) {
                 coloredToast("success", res.message, "bottom-start");
                 dispatch(getAllUsersAsync());
@@ -28,7 +51,11 @@ const UserModal = ({ userModal, setUserModal, params, changeValue }: UserModalPr
             }
 
         } else {
-            const res = await createUser(params);
+            const formData = new FormData();
+            Object.keys(params).forEach(key => formData.append(key, params[key]));
+            if (profilePic) formData.append('profilePic', profilePic);
+
+            const res = await createUser(formData);
             if (res.message) {
                 coloredToast("success", res.message, "bottom-start");
                 dispatch(getAllUsersAsync());
@@ -36,8 +63,9 @@ const UserModal = ({ userModal, setUserModal, params, changeValue }: UserModalPr
                 coloredToast("danger", res.error, "bottom-start");
             }
         }
-
+        setPreview(null)
         setUserModal(false);
+        setProfilePic(null);
     };
 
     return (
@@ -83,6 +111,44 @@ const UserModal = ({ userModal, setUserModal, params, changeValue }: UserModalPr
                                 </div>
                                 <div className="p-5">
                                     <form onSubmit={saveUser}>
+                                        <div className=''>
+                                            <input
+                                                id='profilePic'
+                                                type="file"
+                                                className="custom-file-container__custom-file__custom-file-input h-0 w-full"
+                                                accept="image/*"
+                                                ref={fileInputRef}
+                                                onChange={handleUpload}
+                                                style={{ display: 'none' }}
+                                            />
+                                            <input type="hidden" name="MAX_FILE_SIZE" value="10485760" />
+                                            <div className="upload__image-wrapper">
+                                                {
+                                                    !profilePic && (
+                                                        <div
+                                                            className="custom-file-container__custom-file__custom-file-control cursor-pointer static mb-5 h-9"
+                                                            onClick={handleDivClick}
+                                                        >
+                                                            Choose Profile Pic...
+                                                        </div>
+                                                    )
+                                                }
+                                                {preview && (
+                                                    <div className="custom-file-container__image-preview relative mb-5 ">
+                                                        <div className='absolute left-0 text-2xl cursor-pointer' onClick={() => { setProfilePic(null); setPreview(null) }}>x </div>
+                                                        <Image
+                                                            width={45}
+                                                            height={45}
+                                                            src={preview}
+                                                            alt="img"
+                                                            className="m-auto max-w-md h-24 w-24 rounded-full object-cover"
+                                                        />
+
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+
                                         <div className="flex gap-2 mb-5">
                                             <div className="">
                                                 <label htmlFor="firstName">First Name</label>

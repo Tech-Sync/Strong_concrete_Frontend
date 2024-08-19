@@ -14,6 +14,8 @@ import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 const NavbarProfileDrop = () => {
   const { userInfo } = useCurrentUser()
+  const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
+
   return (
     <div className="dropdown flex shrink-0">
       <Dropdown
@@ -37,7 +39,8 @@ const NavbarProfileDrop = () => {
                 width={36}
                 height={36}
                 className="h-10 w-10 rounded-md object-cover object-top"
-                src={userInfo?.role === 5 ? '/assets/images/calisan.jpg': '/assets/images/profile.jpeg'}
+                src={`${BASE_URL}/image/${userInfo?.profilePic || '/assets/images/profile.png'}`}
+                // src={userInfo?.role === 5 ? '/assets/images/calisan.jpg': '/assets/images/profile.jpeg'}
                 alt="userProfile"
               />
               <div className="ltr:pl-4 rtl:pr-4">

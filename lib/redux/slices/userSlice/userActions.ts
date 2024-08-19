@@ -14,6 +14,16 @@ const authConfig = async () => {
   };
 };
 
+const authConfigFormData = async () => {
+  const session = await auth();
+  const accessToken = session?.accessToken;
+
+  return {
+    Authorization: `Bearer ${accessToken}`,
+    // "Content-Type": "multipart/form-data",
+  };
+}
+
 export const getAllUsers = async () => {
   const headers = await authConfig();
   try {
@@ -80,12 +90,14 @@ export const deleteMultiUser = async (ids: any) => {
 };
 
 export const createUser = async (userData: any) => {
-  const headers = await authConfig();
+  const headers = await authConfigFormData();
+
+
   try {
     const response = await fetch(`${BASE_URL}/auth/register`, {
       method: "POST",
+      body: userData,
       headers,
-      body: JSON.stringify(userData),
     });
 
     const data = await response.json();
@@ -103,21 +115,23 @@ export const createUser = async (userData: any) => {
 };
 
 export const updateUser = async (userId: string, userData: any) => {
-  const headers = await authConfig();
+  const headers = await authConfigFormData();
+
   try {
     const response = await fetch(`${BASE_URL}/users/${userId}`, {
       method: "PUT",
       headers,
-      body: JSON.stringify(userData),
+      body: userData,
     });
 
     const data = await response.json();
+    console.log(data);
 
     if (response.ok) {
       return { message: "Successfully Updated!" };
     } else {
       throw new Error(
-        data.message || "Something went wrong, Please try again!"
+        data.error || "Something went wrong, Please try again!"
       );
     }
   } catch (error: any) {

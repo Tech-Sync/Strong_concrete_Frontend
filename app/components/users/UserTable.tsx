@@ -1,7 +1,5 @@
 'use client';
-import { useState, Fragment, useEffect } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
-import Swal from 'sweetalert2';
+import { useState, useEffect } from 'react';
 import { getAllUsersAsync, selectUsers, updateUsers, useDispatch, useSelector } from '@/lib/redux';
 import Image from 'next/image';
 import { userRoles } from '@/app/constraints/roles&status';
@@ -21,6 +19,8 @@ const UserTable = () => {
 
 
     const [userModal, setUserModal] = useState<any>(false);
+    const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
+
 
     const [value, setValue] = useState<any>('list');
     const [defaultParams] = useState({
@@ -174,24 +174,24 @@ const UserTable = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredItems.map((user: any) => {
+                                {filteredItems?.map((user: any) => {
                                     return (
                                         <tr key={user.id}>
                                             <td>
                                                 <div className="flex w-max items-center">
-                                                    {user.path && (
+                                                    {user.profilePic ? (
                                                         <div className="w-max">
-                                                            <Image src={`/assets/images/profile.png`} className="h-8 w-8 rounded-full object-cover ltr:mr-2 rtl:ml-2" alt="avatar" />
+                                                            <Image width={32} height={32} src={`${BASE_URL}/image/${user.profilePic}`} className="h-8 w-8 rounded-full object-cover ltr:mr-2 rtl:ml-2" alt="avatar" />
                                                         </div>
-                                                    )}
-                                                    {!user.path && user.firstName && (
+                                                    ) : (
                                                         <div className="rounded-full border border-gray-300 p-2 ltr:mr-2 rtl:ml-2 dark:border-gray-800">
                                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                 <circle cx="12" cy="6" r="4" stroke="currentColor" strokeWidth="1.5" />
                                                                 <ellipse opacity="0.5" cx="12" cy="17" rx="7" ry="4" stroke="currentColor" strokeWidth="1.5" />
                                                             </svg>
                                                         </div>
-                                                    )}
+                                                    )
+                                                    }
                                                     <div>{`${user.firstName} ${user.lastName}`}</div>
                                                 </div>
                                             </td>
@@ -228,7 +228,7 @@ const UserTable = () => {
                                 <div className="relative overflow-hidden rounded-md bg-white text-center shadow dark:bg-[#1c232f]">
                                     <div className="rounded-t-md bg-white/40 bg-[url('/assets/images/notification-bg.png')] bg-cover bg-center p-6 pb-0">
 
-                                        <Image className="mx-auto max-h-40 w-4/5 object-contain" width={100} height={100} src={`/assets/images/profile-35.png`} alt="contact_image" />
+                                        <Image className="mx-auto max-h-40 w-4/5 object-contain" width={100} height={100} src={`${BASE_URL}/image/${user.profilePic}`} alt="contact_image" />
 
 
                                     </div>
