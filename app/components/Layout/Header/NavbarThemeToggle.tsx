@@ -1,12 +1,12 @@
 import React from 'react'
-import { selectThemeConfig, themeConfigSlice } from '@/lib/redux/slices/themeConfigSlice';
-import { useDispatch, useSelector } from 'react-redux';
 import { ToggleThemeDarkIcon, ToggleThemeLightIcon, ToggleThemeSystemIcon } from '@/app/icons';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { selectThemeConfig, toggleTheme } from '@/lib/features/themeConfig/themeConfigSlice';
 
 
 const NavbarThemeToggle = () => {
- const themeConfig = useSelector(selectThemeConfig)
- const dispatch = useDispatch();
+ const themeConfig = useAppSelector(selectThemeConfig)
+ const dispatch = useAppDispatch();
   return (
    <div>
    {themeConfig.theme === 'light' ? (
@@ -14,7 +14,7 @@ const NavbarThemeToggle = () => {
      className={`${themeConfig.theme === 'light' &&
       'flex items-center rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60'
       }`}
-     onClick={() => dispatch(themeConfigSlice.actions.toggleTheme('dark'))}
+     onClick={() => dispatch(toggleTheme('dark'))}
     >
      <ToggleThemeLightIcon />
     </button>
@@ -26,7 +26,7 @@ const NavbarThemeToggle = () => {
      className={`${themeConfig.theme === 'dark' &&
       'flex items-center rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60'
       }`}
-     onClick={() => dispatch(themeConfigSlice.actions.toggleTheme('system'))}
+     onClick={() => dispatch(toggleTheme('system'))}
     >
      <ToggleThemeDarkIcon />
     </button>
@@ -36,7 +36,7 @@ const NavbarThemeToggle = () => {
      className={`${themeConfig.theme === 'system' &&
       'flex items-center rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60'
       }`}
-     onClick={() => dispatch(themeConfigSlice.actions.toggleTheme('light'))}
+     onClick={() => dispatch(toggleTheme('light'))}
     >
      <ToggleThemeSystemIcon />
     </button>

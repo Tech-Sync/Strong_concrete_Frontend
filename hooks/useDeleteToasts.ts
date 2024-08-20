@@ -1,4 +1,4 @@
-import { useDispatch } from "@/lib/redux";
+import { useAppDispatch } from "@/lib/hooks";
 import { Firm, Material } from "@/types/types";
 import { PayloadAction } from "@reduxjs/toolkit";
 import Swal from "sweetalert2";
@@ -10,7 +10,7 @@ const useDeleteToasts = () => {
 
   type UpdateAction<T> = (data: T) => {payload: T; type: string;};
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const deleteToast = async <T> (id: any,deletionFunction: DeletionFunction,updateAction: UpdateAction<T>): Promise<boolean> => {
     try {
