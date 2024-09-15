@@ -240,7 +240,7 @@ const BarAreaCharts = ({ isDark, isMounted, isRtl, data }: BarAreaChartsProps) =
                             <div className="flex-1">
                                 <div className="mb-2 flex font-semibold text-white-dark">
                                     <h6>Income</h6>
-                                    <p className="ltr:ml-auto rtl:mr-auto">K {data.stats.sale.totalSale}</p>
+                                    <p className="ltr:ml-auto rtl:mr-auto">K {data?.stats?.sale?.totalSale}</p>
                                 </div>
                                 <div className="h-2 rounded-full bg-dark-light shadow dark:bg-[#1b2e4b]">
                                     <div className="h-full w-11/12 rounded-full bg-gradient-to-r from-[#7579ff] to-[#b224ef]"></div>
@@ -264,7 +264,7 @@ const BarAreaCharts = ({ isDark, isMounted, isRtl, data }: BarAreaChartsProps) =
                             <div className="flex-1">
                                 <div className="mb-2 flex font-semibold text-white-dark">
                                     <h6>Profit</h6>
-                                    <p className="ltr:ml-auto rtl:mr-auto">$ {data.stats.profit.totalProfit}</p>
+                                    <p className="ltr:ml-auto rtl:mr-auto">$ {data?.stats?.profit?.totalProfit}</p>
                                 </div>
                                 <div className="h-2 w-full rounded-full bg-dark-light shadow dark:bg-[#1b2e4b]">
                                     <div className="h-full w-full rounded-full bg-gradient-to-r from-[#3cba92] to-[#0ba360]" style={{ width: '65%' }}></div>
@@ -289,7 +289,7 @@ const BarAreaCharts = ({ isDark, isMounted, isRtl, data }: BarAreaChartsProps) =
                             <div className="flex-1">
                                 <div className="mb-2 flex font-semibold text-white-dark">
                                     <h6>Expenses</h6>
-                                    <p className="ltr:ml-auto rtl:mr-auto">$ {data.stats.purchase.totalPurchase}</p>
+                                    <p className="ltr:ml-auto rtl:mr-auto">$ {data?.stats?.purchase?.totalPurchase}</p>
                                 </div>
                                 <div className="h-2 w-full rounded-full bg-dark-light shadow dark:bg-[#1b2e4b]">
                                     <div className="h-full w-full rounded-full bg-gradient-to-r from-[#f09819] to-[#ff5858]" style={{ width: '80%' }}></div>
@@ -332,7 +332,7 @@ const BarAreaCharts = ({ isDark, isMounted, isRtl, data }: BarAreaChartsProps) =
                             </div>
                         </div>
                         <h5 className="text-2xl font-semibold ltr:text-right rtl:text-left dark:text-white-light">
-                            {data.stats.sale.SaleCount}
+                            {data?.stats?.sale?.SaleCount}
                             <span className="block text-sm font-normal">Total Orders</span>
                         </h5>
                     </div>

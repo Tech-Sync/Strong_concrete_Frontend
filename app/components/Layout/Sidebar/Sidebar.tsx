@@ -60,17 +60,19 @@ const Sidebar = () => {
     const dispatch = useDispatch();
 
 
-    const moduleRoutes = [
-        {
-            name: "Overview",
-            icon: <SiderbarDashboardIcon />,
-            subMenu: [
-                { name: 'Owerview', path: '/' },
-                { name: 'Analytics', path: '/analytics' },
-                { name: 'Finance', path: '/finance' },
+    const dashboardRoute = {
+        name: "Overview",
+        icon: <SiderbarDashboardIcon />,
+        subMenu: [
+            { name: 'Owerview', path: '/' },
+            { name: 'Analytics', path: '/analytics' },
+            { name: 'Finance', path: '/finance' },
 
-            ]
-        },
+        ]
+    }
+
+    const moduleRoutes = [
+
         {
             name: "Sales",
             icon: <SiderbarSaleIcon />,
@@ -135,14 +137,6 @@ const Sidebar = () => {
             subMenu: null
 
         },
-        {
-            name: "Settings",
-            path: '/settings',
-            icon: <SiderbarDashboardIcon />,
-            subMenu: null
-
-        },
-
     ]
 
     const appRoutes = [
@@ -175,6 +169,12 @@ const Sidebar = () => {
             icon: <SidebarFaqIcon />,
             subMenu: null
         },
+        // {
+        //     name: "Settings",
+        //     path: '/settings',
+        //     icon: <SiderbarDashboardIcon />,
+        //     subMenu: null
+        // },
     ]
 
 
@@ -204,6 +204,32 @@ const Sidebar = () => {
 
                             <li className="nav-item">
                                 <ul>
+                                    <li className="menu nav-item">
+                                        <button type="button" className={`${currentMenu === dashboardRoute.name ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu(dashboardRoute.name)}>
+                                            <div className="flex items-center">
+                                                {dashboardRoute.icon}
+                                                <span className="text-black ltr:pl-3 rtl:pr-3 dark:text-white dark:group-hover:text-primary-light ">{dashboardRoute.name}</span>
+                                            </div>
+
+                                            <div className={currentMenu === dashboardRoute.name ? 'rotate-90' : 'rtl:rotate-180'}>
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M9 5L15 12L9 19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                                </svg>
+                                            </div>
+                                        </button>
+
+                                        <AnimateHeight duration={300} height={currentMenu === dashboardRoute.name ? 'auto' : 0}>
+                                            <ul className="sub-menu text-gray-500">
+                                                {
+                                                    dashboardRoute.subMenu.map((subRoute, i) => (
+                                                        <li key={i}>
+                                                            <Link href={subRoute.path}>{subRoute.name}</Link>
+                                                        </li>
+                                                    ))
+                                                }
+                                            </ul>
+                                        </AnimateHeight>
+                                    </li>
                                     <h2 className="-mx-4 mb-1 flex items-center bg-white-light/30 py-3 px-7 font-extrabold uppercase dark:bg-dark dark:bg-opacity-[0.08]">
                                         <svg className="hidden h-5 w-4 flex-none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
                                             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -213,7 +239,7 @@ const Sidebar = () => {
                                     {moduleRoutes.map((route, i) => {
                                         return (
                                             route?.subMenu ?
-                                                (<li className="menu nav-item">
+                                                (<li className="menu nav-item" key={i}>
                                                     <button type="button" className={`${currentMenu === route.name ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu(route.name)}>
                                                         <div className="flex items-center">
                                                             {route.icon}
