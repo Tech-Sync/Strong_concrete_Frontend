@@ -307,7 +307,7 @@ const AreaDonutCharts = ({ isDark, isMounted, isRtl, revenueChartData, salesByCa
                 <div className="mb-5 flex items-center">
                     <h5 className="text-lg font-semibold dark:text-white-light">Sales By Category</h5>
                 </div>
-                <div>
+                {/* <div>
                     <div className="rounded-lg bg-white dark:bg-black">
                         {isMounted ? (
                             <ReactApexChart series={salesByCategory.series} options={salesByCategory.options} type="donut" height={460} width={'100%'} />
@@ -317,7 +317,7 @@ const AreaDonutCharts = ({ isDark, isMounted, isRtl, revenueChartData, salesByCa
                             </div>
                         )}
                     </div>
-                </div>
+                </div> */}
             </div>
         </div>
     )

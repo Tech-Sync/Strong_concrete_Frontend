@@ -1,4 +1,5 @@
 'use client'
+import 'react-perfect-scrollbar/dist/css/styles.css';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
@@ -6,7 +7,9 @@ import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import { useState, useEffect } from 'react';
 import { selectThemeConfig, themeConfigSlice } from '@/lib/redux/slices/themeConfigSlice';
-import { DashboardIcon, DeliveryIcon, DoubleArrowIcon, FirmIcon, MaterialIcon, ProductIcon, ProductionIcon, PurchaseIcon, SaleIcon, UserIcon, VehicleIcon } from '@/app/icons'
+import AnimateHeight from 'react-animate-height';
+import { SideBarDoubleArrowIcon, SidebarFaqIcon, SidebarNotesIcon, SidebarTaskIcon, SiderbarDashboardIcon, SiderbarDeliveryIcon, SiderbarEmailIcon, SiderbarFirmIcon, SiderbarMaterialIcon, SiderbarProductIcon, SiderbarProductionIcon, SiderbarPurchaseIcon, SiderbarSaleIcon, SiderbarUserIcon, SiderbarVehicleIcon } from '@/app/icons';
+
 
 
 const Sidebar = () => {
@@ -57,69 +60,121 @@ const Sidebar = () => {
     const dispatch = useDispatch();
 
 
-    const routes = [
+    const moduleRoutes = [
         {
             name: "Overview",
-            path: '/',
-            icon: <DashboardIcon />,
+            icon: <SiderbarDashboardIcon />,
+            subMenu: [
+                { name: 'Owerview', path: '/' },
+                { name: 'Analytics', path: '/analytics' },
+                { name: 'Finance', path: '/finance' },
+
+            ]
         },
         {
             name: "Sales",
-            path: '/sales',
-            icon: <SaleIcon />,
+            icon: <SiderbarSaleIcon />,
+            subMenu: [
+                { name: 'Sale List', path: '/sales' },
+                { name: 'Sale Accounts', path: '/sale-accounts' },
+            ]
         },
         {
             name: "Productions",
             path: '/productions',
-            icon: <ProductionIcon />,
+            icon: <SiderbarProductionIcon />,
+            subMenu: null
+
         },
         {
             name: "Deliveries",
             path: '/deliveries',
-            icon: <DeliveryIcon />,
+            icon: <SiderbarDeliveryIcon />,
+            subMenu: null
+
         },
         {
             name: "Purchases",
-            path: '/purchases',
-            icon: <PurchaseIcon />,
+            icon: <SiderbarPurchaseIcon />,
+            subMenu: [
+                { name: 'Purchase List', path: '/sales' },
+                { name: 'Purchase Accounts', path: '/sale-accounts' },
+            ]
         },
-        // {
-        //     name: "Accounts",
-        //     path: '/accounts',
-        //     icon: <DashboardIcon />,
-        // },
         {
             name: "Materials",
             path: '/materials',
-            icon: <MaterialIcon />,
+            icon: <SiderbarMaterialIcon />,
+            subMenu: null
+
         },
         {
             name: "Firms",
             path: '/firms',
-            icon: <FirmIcon />,
+            icon: <SiderbarFirmIcon />,
+            subMenu: null
+
         },
         {
             name: "Products",
             path: '/products',
-            icon: <ProductIcon />,
+            icon: <SiderbarProductIcon />,
+            subMenu: null
+
         },
         {
             name: "Vehicles",
             path: '/vehicles',
-            icon: <VehicleIcon />,
+            icon: <SiderbarVehicleIcon />,
+            subMenu: null
         },
         {
             name: "Users",
             path: '/users',
-            icon: <UserIcon />,
+            icon: <SiderbarUserIcon />,
+            subMenu: null
+
         },
-        // {
-        //     name: "Settings",
-        //     path: '/settings',
-        //     icon: <DashboardIcon />,
-        // },
+        {
+            name: "Settings",
+            path: '/settings',
+            icon: <SiderbarDashboardIcon />,
+            subMenu: null
 
+        },
 
+    ]
+
+    const appRoutes = [
+        {
+            name: "Inbox",
+            icon: <SiderbarEmailIcon />,
+            subMenu: [
+                { name: 'Emails', path: '/email' },
+                { name: 'Whatsapp', path: '/wp' },
+                { name: 'Facebook', path: '/fb' },
+                { name: 'Instagram', path: '/itr' },
+
+            ]
+        },
+        {
+            name: "Tasks",
+            path: '/tasks',
+            icon: <SidebarTaskIcon />,
+            subMenu: null
+        },
+        {
+            name: "Notes",
+            path: '/notes',
+            icon: <SidebarNotesIcon />,
+            subMenu: null
+        },
+        {
+            name: "FAQ",
+            path: '/faq',
+            icon: <SidebarFaqIcon />,
+            subMenu: null
+        },
     ]
 
 
@@ -140,26 +195,111 @@ const Sidebar = () => {
                             className="collapse-icon flex h-8 w-8 items-center rounded-full transition duration-300 hover:bg-gray-500/10 rtl:rotate-180 dark:text-white-light dark:hover:bg-dark-light/10"
                             onClick={() => dispatch(themeConfigSlice.actions.toggleSidebar())}
                         >
-                            <DoubleArrowIcon />
+                            <SideBarDoubleArrowIcon />
                         </button>
                     </div>
+                    {/* SIDEBAR LINKS */}
                     <PerfectScrollbar className="relative h-[calc(100vh-80px)]">
                         <ul className="relative space-y-0.5 p-4 py-0 font-semibold">
 
-
                             <li className="nav-item">
                                 <ul>
-                                    {routes?.map(route => (
+                                    <h2 className="-mx-4 mb-1 flex items-center bg-white-light/30 py-3 px-7 font-extrabold uppercase dark:bg-dark dark:bg-opacity-[0.08]">
+                                        <svg className="hidden h-5 w-4 flex-none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        </svg>
+                                        <span>Modules</span>
+                                    </h2>
+                                    {moduleRoutes.map((route, i) => {
+                                        return (
+                                            route?.subMenu ?
+                                                (<li className="menu nav-item">
+                                                    <button type="button" className={`${currentMenu === route.name ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu(route.name)}>
+                                                        <div className="flex items-center">
+                                                            {route.icon}
+                                                            <span className="text-black ltr:pl-3 rtl:pr-3 dark:text-white dark:group-hover:text-primary-light ">{route.name}</span>
+                                                        </div>
 
-                                        <li className="nav-item" key={route.name}>
-                                            <Link href={route.path} className="group">
-                                                <div className="flex items-center">
-                                                    {route.icon}
-                                                    <span className="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">{route.name}</span>
-                                                </div>
-                                            </Link>
-                                        </li>
-                                    ))}
+                                                        <div className={currentMenu === route.name ? 'rotate-90' : 'rtl:rotate-180'}>
+                                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M9 5L15 12L9 19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                                            </svg>
+                                                        </div>
+                                                    </button>
+
+                                                    <AnimateHeight duration={300} height={currentMenu === route.name ? 'auto' : 0}>
+                                                        <ul className="sub-menu text-gray-500">
+                                                            {
+                                                                route.subMenu.map((subRoute, i) => (
+                                                                    <li key={i}>
+                                                                        <Link href={subRoute.path}>{subRoute.name}</Link>
+                                                                    </li>
+                                                                ))
+                                                            }
+
+
+                                                        </ul>
+                                                    </AnimateHeight>
+                                                </li>)
+                                                :
+                                                (<li className="nav-item" key={i}>
+                                                    <Link href={route.path} className="group">
+                                                        <div className="flex items-center">
+                                                            {route.icon}
+                                                            <span className="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">{route.name}</span>
+                                                        </div>
+                                                    </Link>
+                                                </li>)
+                                        )
+                                    })}
+                                    <h2 className="-mx-4 mb-1 flex items-center bg-white-light/30 py-3 px-7 font-extrabold uppercase dark:bg-dark dark:bg-opacity-[0.08]">
+                                        <svg className="hidden h-5 w-4 flex-none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        </svg>
+                                        <span>Apps</span>
+                                    </h2>
+                                    {appRoutes.map((route, i) => {
+                                        return (
+                                            route?.subMenu ?
+                                                (<li className="menu nav-item">
+                                                    <button type="button" className={`${currentMenu === route.name ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu(route.name)}>
+                                                        <div className="flex items-center">
+                                                            {route.icon}
+                                                            <span className="text-black ltr:pl-3 rtl:pr-3 dark:text-white dark:group-hover:text-primary-light ">{route.name}</span>
+                                                        </div>
+
+                                                        <div className={currentMenu === route.name ? 'rotate-90' : 'rtl:rotate-180'}>
+                                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M9 5L15 12L9 19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                                            </svg>
+                                                        </div>
+                                                    </button>
+
+                                                    <AnimateHeight duration={300} height={currentMenu === route.name ? 'auto' : 0}>
+                                                        <ul className="sub-menu text-gray-500">
+                                                            {
+                                                                route.subMenu.map((subRoute, i) => (
+                                                                    <li key={i}>
+                                                                        <Link href={subRoute.path}>{subRoute.name}</Link>
+                                                                    </li>
+                                                                ))
+                                                            }
+
+
+                                                        </ul>
+                                                    </AnimateHeight>
+                                                </li>)
+                                                :
+                                                (<li className="nav-item" key={i}>
+                                                    <Link href={route.path} className="group">
+                                                        <div className="flex items-center">
+                                                            {route.icon}
+                                                            <span className="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">{route.name}</span>
+                                                        </div>
+                                                    </Link>
+                                                </li>)
+                                        )
+                                    })}
 
                                 </ul>
                             </li>
