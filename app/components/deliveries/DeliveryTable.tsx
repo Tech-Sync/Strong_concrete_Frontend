@@ -6,26 +6,28 @@ import sortBy from 'lodash/sortBy';
 import { DeleteIcon, EditIcon, PreviewIcon } from '@/app/icons';
 import 'flatpickr/dist/flatpickr.css';
 import useDeleteToasts from '@/hooks/useDeleteToasts';
-import { getAllDeliveryAsync, selectIsDarkMode, selectdeliveries, selectdeliveryState, setDeliveryModal, updateDelivery, useDispatch, useSelector } from '@/lib/redux';
 import { coloredToast } from '@/lib/sweetAlerts';
 import Flatpickr from 'react-flatpickr';
-import { deleteDelivery, deleteMultiDelivery, updateDeliveryStatus } from '@/lib/redux/slices/deliverySlice/deliveryActions';
 import { formatDate } from '@/utils/formatDate';
 import { deliveryStatuses } from '@/app/constraints/roles&status';
 import Dropdown from '../Layout/Dropdown';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { getAllDeliveryAsync, selectdeliveries, selectdeliveryState, updateDelivery } from '@/lib/features/delivery/deliverySlice';
+import { selectIsDarkMode } from '@/lib/features/themeConfig/themeConfigSlice';
+import { deleteDelivery, deleteMultiDelivery, updateDeliveryStatus } from '@/lib/features/delivery/deliveryActions';
 
 
 
 const DeliveryTable = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const { deleteToast, multiDeleteToast } = useDeleteToasts();
 
-    const deliveries = useSelector(selectdeliveries);
-    const delivertStatus = useSelector(selectdeliveryState);
-    const isDark = useSelector(selectIsDarkMode);
+    const deliveries = useAppSelector(selectdeliveries);
+    const delivertStatus = useAppSelector(selectdeliveryState);
+    const isDark = useAppSelector(selectIsDarkMode);
 
     useEffect(() => {
-        dispatch(getAllDeliveryAsync());
+        dispatch(getAllDeliveryAsync({}));
     }, []);
 
     const [page, setPage] = useState(1);
@@ -124,9 +126,9 @@ const DeliveryTable = () => {
         const res = await updateDeliveryStatus(productionId, statusId);
         if (res.message) {
             coloredToast("success", res.message, "bottom-start");
-            dispatch(getAllDeliveryAsync());
+            dispatch(getAllDeliveryAsync({}));
         } else {
-            dispatch(getAllDeliveryAsync());
+            dispatch(getAllDeliveryAsync({}));
             coloredToast("danger", res.error, "bottom-start");
         }
     }

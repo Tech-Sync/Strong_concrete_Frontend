@@ -1,9 +1,7 @@
 'use client'
 
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { usePathname } from 'next/navigation'
-import { selectThemeConfig } from '@/lib/redux/slices/themeConfigSlice';
 import HorizontalBar from './HorizontalBar';
 import NavbarLogo from './NavbarLogo';
 import NavbarIconsLinks from './NavbarIconsLinks';
@@ -12,6 +10,8 @@ import NavbarThemeToggle from './NavbarThemeToggle';
 import NavbarMessagesDrop from './NavbarMessagesDrop';
 import NavbarNotificationDrop from './NavbarNotificationDrop';
 import NavbarProfileDrop from './NavbarProfileDrop';
+import { useAppSelector } from '@/lib/hooks';
+import { selectThemeConfig } from '@/lib/features/themeConfig/themeConfigSlice';
 
 
 const Header = () => {
@@ -45,7 +45,7 @@ const Header = () => {
 		}
 	}, [pathname]);
 
-	const themeConfig = useSelector(selectThemeConfig)
+	const themeConfig = useAppSelector(selectThemeConfig)
 
 	return (
 		<header className={themeConfig.semidark && themeConfig.menu === 'horizontal' ? 'dark' : ''}>
