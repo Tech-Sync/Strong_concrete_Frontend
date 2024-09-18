@@ -1,7 +1,7 @@
 import type { RootState } from '@/lib/redux'
 
-export const selectProductions = (state: RootState) => state.production.productions
-export const selectProduction = (state: RootState) => state.production.production
-export const selectProductionStatus = (state: RootState) => state.production.status
-export const selectProductionModal = (state: RootState) => state.production.productionModal
+export const selectproductions = (state: RootState) => state.production.productions
+export const selectproduction = (state: RootState) => state.production.production
+export const selectproductionStatus = (state: RootState) => state.production.status
+export const selectproductionModal = (state: RootState) => state.production.productionModal
 

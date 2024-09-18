@@ -1,7 +1,19 @@
-/* eslint-disable @next/next/no-img-element */
 import ActionBtnGroup from "@/app/components/purchases/preview/ActionBtnGroup";
 import { readPurchase } from "@/lib/redux/slices/purchaseSlice/purchaseActions";
 import { formatDate } from "@/utils/formatDate";
+import Image from "next/image";
+
+export async function generateMetadata({ params }: { params: { purchaseId: string } }) {
+  const purchase = await readPurchase(params.purchaseId)
+
+  if (!purchase.Firm?.name) {
+    return { title: 'Purchase Not Found' }
+  }
+  return {
+    title: purchase.Firm?.name,
+    description: `This is the Purchase page of ${purchase.Firm?.name}`
+  }
+}
 
 const Preview = async ({ params }: { params: { purchaseId: string } }) => {
 
@@ -34,15 +46,17 @@ const Preview = async ({ params }: { params: { purchaseId: string } }) => {
 
   return (
     <div>
-      <ActionBtnGroup />
-      <div className="panel">
+      <ActionBtnGroup sale={purchase} />
+      <div className="panel printBody">
         <div className="flex flex-wrap justify-between gap-4 px-4">
           <div className="text-2xl font-semibold uppercase">Purchase</div>
           <div className="shrink-0">
-            <img
-              src="/assets/images/logo.svg"
+            <Image
+              width={56}
+              height={56}
+              src="/assets/images/logo.png"
               alt="img"
-              className="w-14 ltr:ml-auto rtl:mr-auto"
+              className="ltr:ml-auto rtl:mr-auto"
             />
           </div>
         </div>

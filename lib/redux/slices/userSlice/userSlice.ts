@@ -6,7 +6,20 @@ const initialState: UserSliceState = {
   users: [],
   loading: false,
   error: null,
-  status: "idle"
+  status: "idle",
+  user: {
+    firstName: " ",
+    lastName: " ",
+    nrcNo: " ",
+    phoneNo: " ",
+    address: " ",
+    role: 0,
+    email: " ",
+    password: " ",
+    emailToken: " ",
+    isActive: false,
+    isVerified: false,
+  }
 
 };
 
@@ -14,7 +27,7 @@ export const userSlice = createSlice({
   name: "users",
   initialState,
   reducers: {
-    updateUserState: (state, action: PayloadAction<User[]>) => {
+    updateUsers: (state, action: PayloadAction<User[]>) => {
       state.loading = false;
       state.users = action.payload;
     },
@@ -41,7 +54,8 @@ export interface UserSliceState {
   loading: boolean;
   error: string | null;
   status: "idle" | "loading" | "failed" | "succeeded";
+  user: User
 
 }
 
-export const { updateUserState } = userSlice.actions;
+export const { updateUsers } = userSlice.actions;

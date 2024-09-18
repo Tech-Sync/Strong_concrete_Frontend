@@ -47,6 +47,21 @@
 
 /* Select2*/
 @import './select2.css';
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .printBody, .printBody * {
+        visibility: visible;
+    }
+    .printBody {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

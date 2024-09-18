@@ -1,3 +1,4 @@
+'use client'
 import { PlusIcon } from "@/app/icons";
 import { Dialog, Transition } from "@headlessui/react";
 import { Formik } from "formik";

@@ -109,6 +109,7 @@ export default function VehicleModal({ modal, setModal, vehicleInitials, setVehi
                             coloredToast("danger", res.error, "bottom-start");
                           }
                         } else {
+                          console.log('values--->', values);
                           const res = await createVehicle(values);
                           setTimeout(() => {
                             setSubmitting(false);

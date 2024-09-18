@@ -23,7 +23,6 @@ export const getAllProductions = async () => {
     });
 
     const data = await response.json();
-
     if (response.ok) {
       return data;
     } else {
@@ -79,14 +78,6 @@ export const deleteMultiProduction = async (ids: any) => {
   }
 };
 
-/* interface productionDataProp {
-  name: string;
-  address: string;
-  phoneNo: string;
-  tpinNo: string;
-  email: string;
-  status: string;
-} */
 
 export const addProduction = async (productionData: Object) => {
   const headers = await authConfig();
@@ -110,13 +101,34 @@ export const addProduction = async (productionData: Object) => {
     return { error: error.message };
   }
 };
-export const updateProduction = async (productionData: Production) => {
+export const updateProduction = async (productionData:any) => {
   const headers = await authConfig();
   try {
-    const response = await fetch(`${BASE_URL}/productions/${productionData.id}`, {
+    const response = await fetch(`${BASE_URL}/productions/${productionData?.id}`, {
       method: "PUT",
       headers,
       body: JSON.stringify(productionData),
+    });
+
+    const data = await response.json();
+    if (response.ok && data.isUpdated) {
+      return { message: "Successfully Updated!" };
+    } else {
+      throw new Error(
+        data.message || "Something went wrong, Please try again!"
+      );
+    }
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};
+export const updateProductionStatus = async (productionId:number, statusId:number) => {
+  const headers = await authConfig();
+  try {
+    const response = await fetch(`${BASE_URL}/productions/${productionId}`, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify({status: statusId}),
     });
 
     const data = await response.json();

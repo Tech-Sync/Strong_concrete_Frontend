@@ -85,12 +85,13 @@ export interface Vehicle {
   status: number;
   isPublic: boolean;
   DriverId: number;
-  plateNumber: number;
+  plateNumber: string;
   model: number;
   capacity: number;
   driver: {
     firstName: string,
-    lastName: string
+    lastName: string,
+    phoneNo: string
   };
   createdAt: string;
   updatedAt: string | null;
@@ -100,7 +101,7 @@ export interface Vehicle {
 }
 
 export interface User {
-  id: number;
+  id?: number;
   firstName: string,
   lastName: string
   nrcNo: string;
@@ -112,9 +113,9 @@ export interface User {
   emailToken: string;
   isActive: boolean;
   isVerified: boolean;
-  createdAt: string;
-  updatedAt: string | null;
-  deletedAt: string | null;
+  createdAt?: string;
+  updatedAt?: string | null;
+  deletedAt?: string | null;
 }
 
 export interface Sale {
@@ -129,7 +130,7 @@ export interface Sale {
   discount: number,
   requestedDate: string,
   sideContact: string,
-  orderDate: string | null,
+  orderDate: Date | null,
   orderNumber: number,
   status: number,
   createdAt?: string,
@@ -163,8 +164,8 @@ export interface WeeklySale {
 
 export interface Production {
   id: number,
-  SaleId: number,
-  VehicleIds: Array<any> | null,
+  SaleId: number | null,
+  VehicleIds: Array<Vehicle> | [],
   status: number,
   createdAt: string,
   updatedAt: string | null,
@@ -181,4 +182,101 @@ export interface Production {
       name: string
     }
   }
+}
+
+export interface Vehicle {
+  DriverId: number,
+  id: number,
+  plateNumber: string,
+  model: number,
+  capacity: number,
+  status: number,
+  driver: {
+    firstName: string,
+    lastName: string,
+    phoneNo: string
+  }
+}
+
+/* DELIVERY */
+
+export interface Delivery {
+  id: number;
+  status: number;
+  createdAt: Date;
+  updatedAt: Date | null;
+  deletedAt: Date | number | null;
+  VehicleId: number;
+  creatorId: number | null;
+  updaterId: null;
+  ProductionId: number;
+  Vehicle: DeliveryVehicle;
+  Production: DeliveryProduction;
+}
+
+export interface DeliveryProduction {
+  id: number;
+  Sale: DeliverySale;
+}
+
+export interface DeliverySale {
+  id: number;
+  location: string;
+  sideContact: string;
+  orderDate: Date | null;
+  Product: DeliveryProduct;
+}
+
+export interface DeliveryProduct {
+  id: number;
+  name: string;
+}
+
+export interface DeliveryVehicle {
+  id: number;
+  plateNumber: string;
+  status: number;
+  driver: Driver;
+}
+
+export interface Driver {
+  firstName: string;
+  lastName: string;
+}
+
+export interface Stats {
+  sale: {
+    totalSale: number;
+    totalSaleLastWeek: number;
+    salePerChange: number;
+    SaleCount: number;
+  };
+  purchase: {
+    totalPurchase: number;
+    totalPurchaseLastWeek: number;
+    purchasePercChange: number;
+    purchaseCount: number;
+  };
+  profit: {
+    totalProfit: number;
+    totalProfitLastWeek: number;
+    profitPercentageChange: number;
+  };
+}
+
+export interface RevenueChart {
+  monthlySales: number[];
+  monthlyPurchases: number[];
+}
+
+export interface SalesByCategory {
+  productName: string[] | 0;
+  productQuantity: number[] | 0;
+}
+
+
+export interface DashboardData {
+  stats: Stats;
+  revenueChart: RevenueChart;
+  salesByCategory: SalesByCategory;
 }

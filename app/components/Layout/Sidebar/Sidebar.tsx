@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import { useState, useEffect } from 'react';
 import { selectThemeConfig, themeConfigSlice } from '@/lib/redux/slices/themeConfigSlice';
-import { DashboardIcon, DoubleArrowIcon } from '@/app/icons'
+import { DashboardIcon, DeliveryIcon, DoubleArrowIcon, FirmIcon, MaterialIcon, ProductIcon, ProductionIcon, PurchaseIcon, SaleIcon, UserIcon, VehicleIcon } from '@/app/icons'
 
 
 const Sidebar = () => {
@@ -66,58 +66,58 @@ const Sidebar = () => {
         {
             name: "Sales",
             path: '/sales',
-            icon: <DashboardIcon />,
+            icon: <SaleIcon />,
         },
         {
             name: "Productions",
             path: '/productions',
-            icon: <DashboardIcon />,
+            icon: <ProductionIcon />,
         },
         {
             name: "Deliveries",
             path: '/deliveries',
-            icon: <DashboardIcon />,
+            icon: <DeliveryIcon />,
         },
         {
             name: "Purchases",
             path: '/purchases',
-            icon: <DashboardIcon />,
+            icon: <PurchaseIcon />,
         },
-        {
-            name: "Accounts",
-            path: '/accounts',
-            icon: <DashboardIcon />,
-        },
+        // {
+        //     name: "Accounts",
+        //     path: '/accounts',
+        //     icon: <DashboardIcon />,
+        // },
         {
             name: "Materials",
             path: '/materials',
-            icon: <DashboardIcon />,
+            icon: <MaterialIcon />,
         },
         {
             name: "Firms",
             path: '/firms',
-            icon: <DashboardIcon />,
+            icon: <FirmIcon />,
         },
         {
             name: "Products",
             path: '/products',
-            icon: <DashboardIcon />,
+            icon: <ProductIcon />,
         },
         {
             name: "Vehicles",
             path: '/vehicles',
-            icon: <DashboardIcon />,
+            icon: <VehicleIcon />,
         },
         {
             name: "Users",
             path: '/users',
-            icon: <DashboardIcon />,
+            icon: <UserIcon />,
         },
-        {
-            name: "Settings",
-            path: '/settings',
-            icon: <DashboardIcon />,
-        },
+        // {
+        //     name: "Settings",
+        //     path: '/settings',
+        //     icon: <DashboardIcon />,
+        // },
 
 
     ]
@@ -131,8 +131,8 @@ const Sidebar = () => {
                 <div className="h-full bg-white dark:bg-black">
                     <div className="flex items-center justify-between px-4 py-3">
                         <Link href="/" className="main-logo flex shrink-0 items-center">
-                            <Image className="ml-[5px] w-8 flex-none" src="/assets/images/logo.svg" alt="logo" width={32} height={28} />
-                            <span className="align-middle text-2xl font-semibold ltr:ml-1.5 rtl:mr-1.5 dark:text-white-light lg:inline">SC</span>
+                            <Image className="ml-[5px] w-8 flex-none" src="/assets/images/logo.png" alt="logo" width={32} height={28} />
+                            <span className="align-middle text-xl font-semibold ltr:ml-1.5 rtl:mr-1.5 dark:text-white-light lg:inline">Strong Concrete</span>
                         </Link>
 
                         <button

@@ -1,6 +1,6 @@
 "use server";
 import { auth } from "@/auth";
-import { Product } from "@/types/types";
+import { User } from "@/types/types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
@@ -14,7 +14,17 @@ const authConfig = async () => {
   };
 };
 
-export const getAllUsers= async () => {
+const authConfigFormData = async () => {
+  const session = await auth();
+  const accessToken = session?.accessToken;
+
+  return {
+    Authorization: `Bearer ${accessToken}`,
+    // "Content-Type": "multipart/form-data",
+  };
+}
+
+export const getAllUsers = async () => {
   const headers = await authConfig();
   try {
     const response = await fetch(`${BASE_URL}/users`, {
@@ -49,7 +59,7 @@ export const deleteUser = async (id: any) => {
     if (!data.error && response.status === 202) {
       return { message: data.message, remainingData: data.data };
     } else {
-      throw new Error( data.message ?? "Something went wrong, Please try again!");
+      throw new Error(data.message ?? "Something went wrong, Please try again!");
     }
 
   } catch (error: any) {
@@ -71,21 +81,23 @@ export const deleteMultiUser = async (ids: any) => {
     if (!data.error && response.status === 202) {
       return { message: data.message, remainingData: data.data };
     } else {
-      throw new Error( data.message ?? "Something went wrong, Please try again!");
+      throw new Error(data.message ?? "Something went wrong, Please try again!");
     }
-    
+
   } catch (error: any) {
     return { error: error.message };
   }
 };
 
-export const createUser = async (vehicleData: Object) => {
-  const headers = await authConfig();
+export const createUser = async (userData: any) => {
+  const headers = await authConfigFormData();
+
+
   try {
-    const response = await fetch(`${BASE_URL}/users`, {
+    const response = await fetch(`${BASE_URL}/auth/register`, {
       method: "POST",
+      body: userData,
       headers,
-      body: JSON.stringify(vehicleData),
     });
 
     const data = await response.json();
@@ -102,21 +114,24 @@ export const createUser = async (vehicleData: Object) => {
   }
 };
 
-export const updateUser = async (vehicleData: Product) => {
-  const headers = await authConfig();
+export const updateUser = async (userId: string, userData: any) => {
+  const headers = await authConfigFormData();
+
   try {
-    const response = await fetch(`${BASE_URL}/users/${vehicleData.id}`, {
+    const response = await fetch(`${BASE_URL}/users/${userId}`, {
       method: "PUT",
       headers,
-      body: JSON.stringify(vehicleData),
+      body: userData,
     });
 
     const data = await response.json();
-    if (response.ok && data.isUpdated) {
+    console.log(data);
+
+    if (response.ok) {
       return { message: "Successfully Updated!" };
     } else {
       throw new Error(
-        data.message || "Something went wrong, Please try again!"
+        data.error || "Something went wrong, Please try again!"
       );
     }
   } catch (error: any) {
@@ -125,7 +140,7 @@ export const updateUser = async (vehicleData: Product) => {
 };
 
 
-export const getFilteredUsers= async (filter:string) => {
+export const getFilteredUsers = async (filter: string) => {
   const headers = await authConfig();
   try {
     const response = await fetch(`${BASE_URL}/users?${filter}`, {

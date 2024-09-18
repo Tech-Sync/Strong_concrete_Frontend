@@ -122,3 +122,25 @@ export const updateVehicle = async (vehicleData: Product) => {
     return { error: error.message };
   }
 };
+
+export const updateVehicleStatus = async (VehicleId: number, statusId: number) => {
+  const headers = await authConfig();
+  try {
+    const response = await fetch(`${BASE_URL}/vehicles/${VehicleId}`, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify({ status: statusId }),
+    });
+
+    const data = await response.json();
+    if (response.ok && data.isUpdated) {
+      return { message: "Successfully Updated!" };
+    } else {
+      throw new Error(
+        data.message || "Something went wrong, Please try again!"
+      );
+    }
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};

@@ -73,7 +73,7 @@ export default function SaleTable() {
                         (totalPrice.toLowerCase().includes(search.toLowerCase()) ?? false) ||
                         (sale.requestedDate.toLowerCase().includes(search.toLowerCase()) ?? false) ||
                         (sale.sideContact.toLowerCase().includes(search.toLowerCase()) ?? false) ||
-                        (sale.orderDate?.toLowerCase().includes(search.toLowerCase()) ?? false) ||
+                        // (sale.orderDate?.toDateString().toLowerCase().includes(search.toLowerCase()) ?? false) ||c20
                         (unitPrice?.toLowerCase().includes(search.toLowerCase()) ?? false)
                     );
                 });
@@ -199,7 +199,7 @@ export default function SaleTable() {
                                 sortable: true,
                                 render: ({ orderDate, id, status }) => (
                                     <div className="flex items-center">
-                                        <div className={orderDate ? "" : "text-gray-800"}>{orderDate ?? 'Not confirmed yet'}</div>
+                                        <div className={orderDate ? "" : "text-gray-800"}>{orderDate ? orderDate.toString() : 'Not confirmed yet'}</div>
                                     </div>
                                 ),
                             },

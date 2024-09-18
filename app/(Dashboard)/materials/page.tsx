@@ -1,5 +1,9 @@
 import MaterialsTable from "@/app/components/materials/materialsTable";
+import { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = { title: "Materials", description: "Materials"};
+
 const MaterialsPage = async () => {
   return (
     <div className="flex flex-col space-y-5">

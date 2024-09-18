@@ -171,7 +171,7 @@ export const updateOrder = async (orderId: string, updateOrderBody: object) => {
 
 
 
-export const updateSale = async (saleData:Sale) => {
+export const updateSale = async (saleData:any) => {
   const headers = await authConfig();
   try {
     const response = await fetch(`${BASE_URL}/sales/${saleData.id}`, {
