@@ -16,7 +16,8 @@ import {
 } from "@/lib/redux";
 import VehicleModal from "./VehicleModal";
 import useDeleteToasts from "@/hooks/useDeleteToasts";
-import { deleteMultiVehicle, deleteVehicle } from "@/lib/redux/slices/vehicleSlice/vehicleActions";
+import { deleteMultiVehicle, deleteVehicle, updateVehicleStatus } from "@/lib/redux/slices/vehicleSlice/vehicleActions";
+import Dropdown from "../Layout/Dropdown";
 
 export default function VehicleTable() {
   const dispatch = useDispatch();
@@ -31,7 +32,7 @@ export default function VehicleTable() {
   const [page, setPage] = useState(1);
   const PAGE_SIZES = [10, 20, 30, 40, 50];
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-  const [initialRecords, setInitialRecords] = useState(sortBy(vehicles, "id"));
+  const [initialRecords, setInitialRecords] = useState(sortBy(vehicles, "plateNumber"));
   const [records, setRecords] = useState(initialRecords);
   const [selectedRecords, setSelectedRecords] = useState<any>([]);
   const [search, setSearch] = useState("");
@@ -118,7 +119,37 @@ export default function VehicleTable() {
     }
   };
 
+  if (vehicleStatuses.status === 'failed') coloredToast('danger', vehicleStatuses.error || 'Failed to fetch deliveries');
 
+  enum Status {
+    Status1 = 1,
+    Status2,
+    Status3,
+    Status4,
+    Status5,
+  }
+
+  type BadgeClassMappings = { [key in Status]?: string; };
+
+  const statusBadgeClasses: BadgeClassMappings = {
+    [Status.Status1]: 'badge-outline-secondary',
+    [Status.Status2]: 'badge-outline-success',
+    [Status.Status3]: 'badge-outline-danger',
+    [Status.Status4]: 'badge-outline-warning',
+    [Status.Status5]: 'badge-outline-primary',
+  };
+
+
+  const handleStatusChange = async (productionId: number, statusId: number) => {
+    const res = await updateVehicleStatus(productionId, statusId);
+    if (res.message) {
+      coloredToast("success", res.message, "bottom-start");
+      dispatch(getAllVehicleAsync());
+    } else {
+      // dispatch(getAllVehicleAsync());
+      coloredToast("danger", res.error, "bottom-start");
+    }
+  }
   return (
     <div className="panel border-white-light px-0 dark:border-[#1b2e4b]">
       <div className="invoice-table">
@@ -185,7 +216,7 @@ export default function VehicleTable() {
                 sortable: true,
                 render: ({ isPublic, id }) => (
                   <div className="flex items-center font-semibold">
-                    <div>{isPublic ? 'Good':"Fixing"}</div>
+                    <div>{isPublic ? 'Good' : "Fixing"}</div>
                   </div>
                 ),
               },
@@ -208,11 +239,33 @@ export default function VehicleTable() {
               {
                 accessor: "status",
                 sortable: true,
-                render: ({ status }) => (
-                  <span className={`badge badge-outline-secondary`}>
-                    {/* @ts-ignore */}
-                    {vehicleStatuses[String(status)]}
-                  </span>
+                render: ({ status, id }) => (
+                  <div className="dropdown ">
+                    <Dropdown
+                      placement='left-start'
+                      //@ts-ignore
+                      btnClassName={`badge btn-sm ${statusBadgeClasses[status]}`}
+                      button={
+                        <span >
+                          {vehicleStatuses[status.toString()]}
+                        </span>
+                      }
+                    >
+                      <ul className="!min-w-[170px]">
+                        {
+                          Object.entries(vehicleStatuses).map(([key, value]) => {
+                            return (
+                              <li key={key}>
+                                <button type="button" onClick={() => handleStatusChange(id, Number(key))}>
+                                  {value}
+                                </button>
+                              </li>
+                            )
+                          })
+                        }
+                      </ul>
+                    </Dropdown>
+                  </div>
                 ),
               },
               {

@@ -1,8 +1,8 @@
 import { createAppAsyncThunk } from "../../createAppAsyncThunk";
-import { getAllProductions } from "./ProductionActions";
+import { getAllProductions } from "./productionActions";
 
 export const getAllProductionAsync = createAppAsyncThunk(
-  "production/getAllProductions",
+  "Production/getAllProductions",
   async () => {
     const response = await getAllProductions();
     return response.data;

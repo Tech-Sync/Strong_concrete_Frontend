@@ -1,6 +1,9 @@
 import SaleTabs from '@/app/components/sales/SaleTabs'
+import { Metadata } from 'next';
 import Link from 'next/link'
 import React from 'react'
+
+export const metadata: Metadata = { title: "Sales", description: "Sales"};
 
 
 const SalePage = () => {

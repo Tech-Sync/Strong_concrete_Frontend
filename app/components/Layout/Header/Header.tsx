@@ -52,11 +52,11 @@ const Header = () => {
 			<div className="shadow-sm">
 				<div className="relative flex w-full items-center bg-white px-5 py-2.5 dark:bg-black">
 					<NavbarLogo />
-					<NavbarIconsLinks />
+					{/* <NavbarIconsLinks /> */}
 					<div className="flex items-center space-x-1.5 ltr:ml-auto rtl:mr-auto rtl:space-x-reverse dark:text-[#d0d2d6] sm:flex-1 ltr:sm:ml-0 sm:rtl:mr-0 lg:space-x-2">
 						<NavbarSearchForm />
 						<NavbarThemeToggle />
-						<NavbarMessagesDrop />
+						{/* <NavbarMessagesDrop /> */}
 						<NavbarNotificationDrop />
 						<NavbarProfileDrop />
 					</div>

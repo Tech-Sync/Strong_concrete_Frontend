@@ -1,6 +1,10 @@
 import VehicleTable from '@/app/components/vehicles/VehicleTable'
+import { Metadata } from 'next';
 import Link from 'next/link'
 import React from 'react'
+
+export const metadata: Metadata = { title: "Vehicles", description: "Vehicles"};
+
 
 const VehiclesPage = () => {
   return (

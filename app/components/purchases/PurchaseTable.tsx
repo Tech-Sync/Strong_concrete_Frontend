@@ -169,13 +169,14 @@ export default function PurchaseTable() {
               {
                 accessor: "unitPrice",
                 sortable: true,
+                render: ({ unitPrice }) => <div>K{unitPrice.toLocaleString()}</div>
               },
               {
                 accessor: "totalPrice",
                 sortable: true,
                 render: ({ totalPrice, id }) => (
                   <div className="flex items-center font-semibold">
-                    <div>{totalPrice}</div>
+                    K <div>{totalPrice.toLocaleString()}</div>
                   </div>
                 ),
               },

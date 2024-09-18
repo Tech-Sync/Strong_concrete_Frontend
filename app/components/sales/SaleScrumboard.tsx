@@ -6,7 +6,7 @@ import ScrumboardEditIcon from '@/app/icons/scrumboardIcons/ScrumboardEditIcon';
 import ScrumboardDeleteIcon from '@/app/icons/scrumboardIcons/ScrumboardDeleteIcon';
 import ScrumboardTagIcon from '@/app/icons/scrumboardIcons/ScrumboardTagIcon';
 import ScrumboardDateIcon from '@/app/icons/scrumboardIcons/ScrumboardDateIcon';
-import { getWeeklySaleAsync, selectWeeklySales, useDispatch, useSelector } from '@/lib/redux';
+import { getWeeklySaleAsync, selectWeeklySales, updateSaleState, useDispatch, useSelector } from '@/lib/redux';
 import { getWeeklySale, updateOrder } from '@/lib/redux/slices/saleSlice/saleActions';
 import { coloredToast } from '@/lib/sweetAlerts';
 import { PreviewIcon } from '@/app/icons';
@@ -198,9 +198,14 @@ const SaleScrumboard = () => {
                                                                     <span>{order.date}</span>
                                                                 </div>
                                                                 <div className="flex items-center">
-                                                                    <button type="button" className="hover:text-info">
+                                                                    {/* <button type="button" className="hover:text-info"
+                                                                        onClick={() => {
+                                                                            router.push(`/sales/add`);
+                                                                            dispatch(updateSaleState(order))
+                                                                        }}
+                                                                    >
                                                                         <ScrumboardEditIcon />
-                                                                    </button>
+                                                                    </button> */}
                                                                     <button type="button" className="hover:text-danger" onClick={() => router.push(`/sales/${order.id}`)}>
                                                                         <PreviewIcon />
                                                                     </button>

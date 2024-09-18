@@ -19,15 +19,9 @@ const NavbarNotificationDrop = () => {
 			time: '45 min ago',
 		},
 		{
-			id: 2,
-			profile: 'user-profile.jpeg',
-			message: '<strong class="text-sm mr-1">Adam Nolan</strong>mentioned you to <strong>UX Basics</strong>',
-			time: '9h Ago',
-		},
-		{
 			id: 3,
 			profile: 'user-profile.jpeg',
-			message: '<strong class="text-sm mr-1">Anna Morgan</strong>Upload a file',
+			message: '<strong class="text-sm mr-1">Anna</strong> made a new <strong>sale</strong>',
 			time: '9h Ago',
 		},
 	]);

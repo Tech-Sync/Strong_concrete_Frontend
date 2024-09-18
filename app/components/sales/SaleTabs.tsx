@@ -16,7 +16,21 @@ export default function SaleTabs() {
                         {({ selected }) => (
                             <button
                                 className={`${selected ? 'text-secondary !outline-none before:!w-full' : ''}
-                                 relative -mb-[1px] flex items-center p-5 py-3 before:absolute before:bottom-0 before:left-0 before:right-0 before:m-auto before:inline-block before:h-[1px] before:w-0 before:bg-secondary before:transition-all before:duration-700 hover:text-secondary hover:before:w-full`}>
+                                relative -mb-[1px] flex items-center p-5 py-3 before:absolute before:bottom-0 before:left-0 before:right-0 before:m-auto  before:inline-block before:h-[1px] before:w-0 before:bg-secondary before:transition-all before:duration-700 hover:text-secondary hover:before:w-full`}
+                            >
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ltr:mr-2 rtl:ml-2">
+                                    <circle cx="12" cy="6" r="4" stroke="currentColor" strokeWidth="1.5"></circle>
+                                    <ellipse opacity="0.5" cx="12" cy="17" rx="7" ry="4" stroke="currentColor" strokeWidth="1.5"></ellipse>
+                                </svg>
+                                List All Sales
+                            </button>
+                        )}
+                    </Tab>
+                    <Tab as={Fragment}>
+                        {({ selected }) => (
+                            <button
+                                className={`${selected ? 'text-secondary !outline-none before:!w-full' : ''}
+                            relative -mb-[1px] flex items-center p-5 py-3 before:absolute before:bottom-0 before:left-0 before:right-0 before:m-auto before:inline-block before:h-[1px] before:w-0 before:bg-secondary before:transition-all before:duration-700 hover:text-secondary hover:before:w-full`}>
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ltr:mr-2 rtl:ml-2">
                                     <path
                                         opacity="0.5"
@@ -27,20 +41,6 @@ export default function SaleTabs() {
                                     <path d="M12 15L12 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                                 </svg>
                                 Weekly Sales
-                            </button>
-                        )}
-                    </Tab>
-                    <Tab as={Fragment}>
-                        {({ selected }) => (
-                            <button
-                                className={`${selected ? 'text-secondary !outline-none before:!w-full' : ''}
-                                relative -mb-[1px] flex items-center p-5 py-3 before:absolute before:bottom-0 before:left-0 before:right-0 before:m-auto  before:inline-block before:h-[1px] before:w-0 before:bg-secondary before:transition-all before:duration-700 hover:text-secondary hover:before:w-full`}
-                            >
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ltr:mr-2 rtl:ml-2">
-                                    <circle cx="12" cy="6" r="4" stroke="currentColor" strokeWidth="1.5"></circle>
-                                    <ellipse opacity="0.5" cx="12" cy="17" rx="7" ry="4" stroke="currentColor" strokeWidth="1.5"></ellipse>
-                                </svg>
-                                List All Sales
                             </button>
                         )}
                     </Tab>
@@ -78,12 +78,13 @@ export default function SaleTabs() {
                 <Tab.Panels>
                     <Tab.Panel>
                         <div className="active pt-5">
-                            <SaleScrumboard />
+                            <SaleTable />
                         </div>
+
                     </Tab.Panel>
                     <Tab.Panel>
-                        <div className=" pt-5">
-                            <SaleTable />
+                        <div className="pt-5">
+                            <SaleScrumboard />
                         </div>
                     </Tab.Panel>
                     <Tab.Panel>

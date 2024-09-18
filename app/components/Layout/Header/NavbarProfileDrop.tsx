@@ -10,8 +10,12 @@ import {
   UserProfileIcon,
 } from "@/app/icons";
 import { signOut } from "next-auth/react";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 const NavbarProfileDrop = () => {
+  const { userInfo } = useCurrentUser()
+  const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
+
   return (
     <div className="dropdown flex shrink-0">
       <Dropdown
@@ -22,8 +26,8 @@ const NavbarProfileDrop = () => {
           <Image
             width={36}
             height={36}
-            className="h-9 w-9 rounded-full object-cover saturate-50 group-hover:saturate-100"
-            src="/assets/images/user-profile.jpeg"
+            className="h-9 w-9 rounded-full object-cover object-top saturate-50 group-hover:saturate-100"
+            src={`${BASE_URL}/image/${userInfo?.profilePic || '/assets/images/profile.png'}`}
             alt="userProfile"
           />
         }
@@ -34,39 +38,41 @@ const NavbarProfileDrop = () => {
               <Image
                 width={36}
                 height={36}
-                className="h-10 w-10 rounded-md object-cover"
-                src="/assets/images/user-profile.jpeg"
+                className="h-10 w-10 rounded-md object-cover object-top"
+                src={`${BASE_URL}/image/${userInfo?.profilePic || '/assets/images/profile.png'}`}
+                // src={userInfo?.role === 5 ? '/assets/images/calisan.jpg': '/assets/images/profile.jpeg'}
                 alt="userProfile"
               />
               <div className="ltr:pl-4 rtl:pr-4">
                 <h4 className="text-base">
-                  John Doe
+                  {userInfo?.firstName} {userInfo?.lastName}
                   <span className="rounded bg-success-light px-1 text-xs text-success ltr:ml-2 rtl:ml-2">
-                    Pro
+                    {userInfo?.role}
                   </span>
                 </h4>
                 <button
                   type="button"
                   className="text-black/60 hover:text-primary dark:text-dark-light/60 dark:hover:text-white"
                 >
-                  johndoe@gmail.com
+                  {userInfo?.email}
                 </button>
               </div>
             </div>
           </li>
           <li>
-            <Link href="/users/profile" className="dark:hover:text-white">
+            <Link href="/#" className="dark:hover:text-white">
               <UserProfileIcon />
               Profile
             </Link>
           </li>
+          {/*
           <li>
             <Link href="/apps/mailbox" className="dark:hover:text-white">
               <ProfileMailBoxIcon />
               Inbox
             </Link>
           </li>
-          <li>
+                <li>
             <Link
               href="/auth/boxed-lockscreen"
               className="dark:hover:text-white"
@@ -74,7 +80,7 @@ const NavbarProfileDrop = () => {
               <ProfileLockScreen />
               Lock Screen
             </Link>
-          </li>
+          </li> */}
           <li className="border-t border-white-light dark:border-white-light/10">
             <div className="w-[230px] !py-0 font-semibold text-dark dark:text-white-dark dark:text-white-light/90">
               <button className="!py-3 !pl-4 text-danger flex" onClick={() => signOut()}>

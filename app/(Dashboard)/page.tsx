@@ -1,7 +1,12 @@
-export default function Home() {
+import { getAllStatistics } from "../components/dashboard/dashboardAPI";
+import DashboardMain from "../components/dashboard/DashboardMain";
+
+
+export default async function Home() {
+  const data = await getAllStatistics()
   return (
     <>
-      <div className="text-black dark:text-red-600">OVERVIEW PAGE</div>
+      <DashboardMain data={data} />
     </>
   );
 }

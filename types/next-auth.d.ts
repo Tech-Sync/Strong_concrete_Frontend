@@ -22,6 +22,7 @@ declare module "next-auth" {
       phoneNo: string;
       role: number;
       updatedAt: string;
+      profilePic: string;
     };
   }
 
@@ -39,6 +40,7 @@ declare module "next-auth/jwt" {
     expiresAt: number;
     error?: string;
     userInfo: {
+      profilePic: string;
       id: number;
       firstName: string;
       lastName: string;
@@ -65,6 +67,7 @@ declare module "next-auth/jwt" {
 
 interface userInfo extends JwtPayload {
   id: number;
+  profilePic: string;
   firstName: string;
   lastName: string;
   nrcNo: string;
