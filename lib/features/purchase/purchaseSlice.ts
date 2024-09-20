@@ -1,73 +1,56 @@
 import { createAppSlice } from "@/lib/createAppSlice";
-import { Production } from "@/types/types";
+import { Purchase } from "@/types/types";
 
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { getAllProductions } from "./productionActions";
+import { getAllPurchases } from "./purchaseActions";
 
 
-interface defaultParams {
-    SaleId: number | null,
-    VehicleIds: Array<number> | null,
-    status: number | null,
-    id?: number,
-}
-
-export interface ProductionSliceState {
-    productions: Production[];
+interface PurchaseSliceState {
+    purchases: Purchase[];
+    purchase: Purchase | null;
     loading: boolean;
     error: string | null;
     status: "idle" | "loading" | "failed" | "succeeded";
-    productionModal: boolean;
-    production: Production | defaultParams;
 }
 
-const initialState: ProductionSliceState = {
-    productions: [],
+const initialState: PurchaseSliceState = {
+    purchases: [],
     loading: false,
     error: null,
     status: "idle",
-    productionModal: false,
-    production: {
-        SaleId: null,
-        VehicleIds: null,
-        status: null,
-    }
+    purchase: null
 };
 
 
-export const productionSlice = createAppSlice({
-    name: 'production',
+export const purchaseSlice = createAppSlice({
+    name: 'purchase',
     initialState,
     reducers: ({ reducer, asyncThunk }) => ({
 
-        fetchStartProduction: reducer((state => {
+        fetchStartPurchase: reducer((state => {
             state.status = 'loading';
             state.error = null
         })),
 
-        fetchFailProduction: reducer((state, action: PayloadAction<string>) => {
+        fetchFailPurchase: reducer((state, action: PayloadAction<string>) => {
             state.status = 'failed';
             state.error = action.payload
         }),
 
-        updateProduction: reducer((state, action: PayloadAction<Production[]>) => {
+        updatePurchase: reducer((state, action: PayloadAction<Purchase[]>) => {
             state.status = 'idle';
-            state.productions = action.payload;
+            state.purchases = action.payload;
         }),
 
-        updateProductionState: reducer((state, action: PayloadAction<Production | defaultParams>) => {
+        updatePurchaseState: reducer((state, action: PayloadAction<Purchase | null>) => {
             state.status = 'idle';
-            state.production = action.payload;
+            state.purchase = action.payload;
         }),
 
-        setProductionModal: reducer((state, action: PayloadAction<boolean>) => {
-            state.productionModal = action.payload;
-        }),
-
-        getAllProductionAsync: asyncThunk(
+        getAllPurchaseAsync: asyncThunk(
             async () => {
                 try {
-                    const response = await getAllProductions();
+                    const response = await getAllPurchases();
                     if (response.error) {
                         throw new Error(response.error);
                     }
@@ -77,19 +60,18 @@ export const productionSlice = createAppSlice({
                 }
             }, {
             pending: (state) => { state.status = "loading"; },
-            fulfilled: (state, action) => { state.status = "idle"; state.productions = action.payload; },
+            fulfilled: (state, action) => { state.status = "idle"; state.purchases = action.payload; },
             rejected: (state, action) => { state.status = "failed"; state.error = action.error.message || null; },
         }
         )
     }),
-    
+
     selectors: {
-        selectProductions: (production) => production.productions,
-        selectProductionStatus: (production) => production.status,
-        selectProduction: (production) => production.production,
-        selectProductionModal: (production) => production.productionModal,
+        selectPurchases: (purchase) => purchase.purchases,
+        selectPurchaseStatus: (purchase) => purchase.status,
+        selectPurchase: (purchase) => purchase.purchase,
     }
 })
 
-export const { fetchStartProduction, fetchFailProduction, updateProduction, getAllProductionAsync, setProductionModal, updateProductionState } = productionSlice.actions
-export const { selectProductions, selectProductionStatus, selectProductionModal, selectProduction } = productionSlice.selectors
+export const { fetchStartPurchase, fetchFailPurchase, updatePurchase, getAllPurchaseAsync, updatePurchaseState } = purchaseSlice.actions
+export const { selectPurchases, selectPurchaseStatus, selectPurchase } = purchaseSlice.selectors
