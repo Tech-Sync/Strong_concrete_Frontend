@@ -6,20 +6,22 @@ import { DeleteIcon, EditIcon, PlusIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
 import { productionStatuses, vehicleStatuses } from "@/app/constraints/roles&status";
 import { coloredToast } from "@/lib/sweetAlerts";
-import { getAllProductionAsync, selectIsDarkMode, useDispatch, useSelector, updateProduction, setProductionModal, updateProductionState, selectproductions, } from "@/lib/redux";
 import ProductionModal from "./ProductionModal";
 import useDeleteToasts from "@/hooks/useDeleteToasts";
-import { deleteMultiProduction, deleteProduction, updateProductionStatus } from "@/lib/redux/slices/productionSlice/productionActions";
 import Dropdown from "../Layout/Dropdown";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { getAllProductionAsync, selectProductions, setProductionModal, updateProduction, updateProductionState } from "@/lib/features/production/productionSlice";
+import { selectIsDarkMode } from "@/lib/features/themeConfig/themeConfigSlice";
+import { deleteMultiProduction, deleteProduction, updateProductionStatus } from "@/lib/features/production/productionActions";
 
 export default function ProductionTable() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { deleteToast, multiDeleteToast } = useDeleteToasts();
-  const productions = useSelector(selectproductions);
-  const isDark = useSelector(selectIsDarkMode);
+  const productions = useAppSelector(selectProductions);
+  const isDark = useAppSelector(selectIsDarkMode);
 
   useEffect(() => {
-    dispatch(getAllProductionAsync());
+    dispatch(getAllProductionAsync({}));
   }, []);
 
   const [page, setPage] = useState(1);
@@ -123,9 +125,9 @@ export default function ProductionTable() {
     const res = await updateProductionStatus(productionId, statusId);
     if (res.message) {
       coloredToast("success", res.message, "bottom-start");
-      dispatch(getAllProductionAsync());
+      dispatch(getAllProductionAsync({}));
     } else {
-      dispatch(getAllProductionAsync());
+      dispatch(getAllProductionAsync({}));
       coloredToast("danger", res.error, "bottom-start");
     }
   }
@@ -181,7 +183,7 @@ export default function ProductionTable() {
                 sortable: true,
                 render: ({ Sale, id }) => (
                   <div className="flex items-center font-semibold">
-                    <div>{Sale.Product.name}</div>
+                    <div>{Sale?.Product.name}</div>
                   </div>
                 ),
               },
@@ -190,7 +192,7 @@ export default function ProductionTable() {
                 sortable: true,
                 render: ({ Sale, id }) => (
                   <div className="flex items-center font-semibold">
-                    <div>{Sale.quantity}</div>
+                    <div>{Sale?.quantity}</div>
                   </div>
                 ),
               },
@@ -228,7 +230,7 @@ export default function ProductionTable() {
                 sortable: true,
                 render: ({ Sale, id }) => (
                   <div className="flex items-center ">
-                    <div>{formatDate(Sale.orderDate)}</div>
+                    <div>{formatDate(Sale?.orderDate)}</div>
                   </div>
                 ),
               },

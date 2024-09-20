@@ -7,10 +7,12 @@ import { coloredToast } from "@/lib/sweetAlerts";
 import { useRouter } from "next/navigation";
 import { Product } from "@/types/types";
 import Select, { SingleValue } from 'react-select';
-import { getAllMaterialAsync, getAllProductAsync, selectMaterials, useDispatch, useSelector } from "@/lib/redux";
 import { AddressIcon, NameIcon, PhoneIcon } from "./ProductModalIcon";
 import { ModalCloseIcon } from "@/app/icons/modal";
-import { createProduct, updateProduct } from "@/lib/redux/slices/productSlice/productAction";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { getAllMaterialAsync, selectMaterials } from "@/lib/features/material/materialSlice";
+import { createProduct, updateProduct } from "@/lib/features/product/productActions";
+import { getAllProductAsync } from "@/lib/features/product/productSlice";
 
 const ProductSchema = object({
   name: string().required("This field is required."),
@@ -35,7 +37,7 @@ interface Item {
 export default function ProductModal({ modal, setModal, productInitials, setProductInitials, }: firmModalProps) {
 
   const router = useRouter();
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const defaultItems = [
     { id: 1, name: 'STONE', quantity: '', },
@@ -48,7 +50,7 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
 
 
   useEffect(() => {
-    dispatch(getAllMaterialAsync());
+    dispatch(getAllMaterialAsync({}));
     if (productInitials.materials) {
       const initialItems: Item[] = Object.entries(productInitials?.materials)?.map(([name, quantity], index) => ({
         id: index + 1,
@@ -60,7 +62,7 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
     }
   }, [dispatch, productInitials]);
 
-  const materials = useSelector(selectMaterials);
+  const materials = useAppSelector(selectMaterials);
 
   const materialOptions = materials?.map(material => ({ value: material.id, label: material.name, }))
 
@@ -194,7 +196,7 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
                           if (res.message) {
                             coloredToast("success", res.message, "bottom-start");
                             setModal(false);
-                            dispatch(getAllProductAsync());
+                            dispatch(getAllProductAsync({}));
                           } else {
                             coloredToast("danger", res.error, "bottom-start");
                           }
@@ -212,7 +214,7 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
                                 coloredToast("success", res.message, "bottom-start");
                                 setItems([{ id: 1, name: '', quantity: '', }])
                                 setModal(false);
-                                dispatch(getAllProductAsync());
+                                dispatch(getAllProductAsync({}));
                               } else {
                                 coloredToast("danger", res.error, "bottom-start");
                               }

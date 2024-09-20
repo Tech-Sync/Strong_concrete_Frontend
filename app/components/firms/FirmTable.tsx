@@ -7,8 +7,12 @@ import { formatDate } from "@/utils/formatDate";
 import { firmStatuses } from "@/app/constraints/roles&status";
 import { coloredToast } from "@/lib/sweetAlerts";
 import FirmModal from "./FirmModal";
-import { deleteFirm, deleteMultiFirm } from "@/lib/redux/slices/firmSlice/firmActions";
 import useDeleteToasts from "@/hooks/useDeleteToasts";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { getAllFirmAsync, selectFirms, setFirmModal, updateFirm, updateFirmState } from "@/lib/features/firm/firmSlice";
+import { selectIsDarkMode } from "@/lib/features/themeConfig/themeConfigSlice";
+import { getAllProductionAsync } from "@/lib/features/production/productionSlice";
+import { deleteFirm, deleteMultiFirm } from "@/lib/features/firm/firmActions";
 
 export default function FirmTable() {
   const dispatch = useAppDispatch();
@@ -17,8 +21,8 @@ export default function FirmTable() {
   const isDark = useAppSelector(selectIsDarkMode);
 
   useEffect(() => {
-    dispatch(getAllFrimAsync());
-    dispatch(getAllProductionAsync());
+    dispatch(getAllFirmAsync({}));
+    dispatch(getAllProductionAsync({}));
   }, []);
 
   const [page, setPage] = useState(1);

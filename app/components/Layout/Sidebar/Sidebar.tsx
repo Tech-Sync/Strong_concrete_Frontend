@@ -99,8 +99,8 @@ const Sidebar = () => {
             name: "Purchases",
             icon: <SiderbarPurchaseIcon />,
             subMenu: [
-                { name: 'Purchase List', path: '/sales' },
-                { name: 'Purchase Accounts', path: '/sale-accounts' },
+                { name: 'Purchase List', path: '/purchases' },
+                { name: 'Purchase Accounts', path: '/purchase-accounts' },
             ]
         },
         {

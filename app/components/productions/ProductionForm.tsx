@@ -3,22 +3,23 @@ import { Form, Field, ErrorMessage, FormikProps } from "formik";
 import { PlaseNumber, Quantity, StatusIcon } from "./ProductionModalIcons";
 import { Production } from "@/types/types";
 import Select from 'react-select';
-import { getAllVehicleAsync, selectVehicles, useDispatch, useSelector } from "@/lib/redux";
 import makeAnimated from 'react-select/animated';
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { getAllVehicleAsync, selectVehicles } from "@/lib/features/vehicle/vehicleSlice";
 
 
 
 const ProductionForm: React.FC<FormikProps<Production>> = ({ touched, errors, isSubmitting, handleSubmit, setFieldValue, values }) => {
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const animatedComponents = makeAnimated();
 
   useEffect(() => {
-    dispatch(getAllVehicleAsync())
+    dispatch(getAllVehicleAsync({}))
   }, [])
 
 
-  const vehicles = useSelector(selectVehicles);
+  const vehicles = useAppSelector(selectVehicles);
   // @ts-ignore
   const initialValueVehicles = vehicles.filter((vehicle:any) => values?.VehicleIds.includes(vehicle.id));
 

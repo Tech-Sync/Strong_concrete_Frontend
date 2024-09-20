@@ -7,8 +7,10 @@ import MaterialForm from "./MaterialForm";
 import { coloredToast } from "@/lib/sweetAlerts";
 import { useRouter } from "next/navigation";
 import { Material } from "@/types/types";
-import { addMaterial, updateMaterial } from "@/lib/redux/slices/materialSlice/materialActions";
 import { ModalCloseIcon } from "@/app/icons/modal";
+import { useAppDispatch } from "@/lib/hooks";
+import { addMaterial, updateMaterial } from "@/lib/features/material/materialActions";
+import { getAllMaterialAsync } from "@/lib/features/material/materialSlice";
 
 const materialSchema = object({
   name: string().required("Material name is required!"),
@@ -88,7 +90,7 @@ export default function MaterialModal({ modal, setModal, materialInitials, setMa
                           if (res.message) {
                             coloredToast("success", res.message, "bottom-start");
                             setModal(false);
-                            dispatch(getAllMaterialAsync());
+                            dispatch(getAllMaterialAsync({}));
                           } else {
                             coloredToast("danger", res.error, "bottom-start");
                           }
@@ -100,7 +102,7 @@ export default function MaterialModal({ modal, setModal, materialInitials, setMa
                             if (res.message) {
                               coloredToast("success", res.message, "bottom-start");
                               setModal(false);
-                              dispatch(getAllMaterialAsync());
+                              dispatch(getAllMaterialAsync({}));
                             } else {
                               coloredToast("danger", res.error, "bottom-start");
                             }
