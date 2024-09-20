@@ -6,27 +6,23 @@ import { DeleteIcon, EditIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
 import { vehicleStatuses } from "@/app/constraints/roles&status";
 import { coloredToast } from "@/lib/sweetAlerts";
-import {
-  selectIsDarkMode,
-  useDispatch,
-  useSelector,
-  getAllVehicleAsync,
-  selectVehicles,
-  updateVehicleState,
-} from "@/lib/redux";
+
 import VehicleModal from "./VehicleModal";
 import useDeleteToasts from "@/hooks/useDeleteToasts";
-import { deleteMultiVehicle, deleteVehicle, updateVehicleStatus } from "@/lib/redux/slices/vehicleSlice/vehicleActions";
 import Dropdown from "../Layout/Dropdown";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { getAllVehicleAsync, selectVehicles, updateVehicleState } from "@/lib/features/vehicle/vehicleSlice";
+import { selectIsDarkMode } from "@/lib/features/themeConfig/themeConfigSlice";
+import { deleteMultiVehicle, deleteVehicle, updateVehicleStatus } from "@/lib/features/vehicle/vehicleActions";
 
 export default function VehicleTable() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { deleteToast, multiDeleteToast } = useDeleteToasts();
-  const vehicles = useSelector(selectVehicles);
-  const isDark = useSelector(selectIsDarkMode);
+  const vehicles = useAppSelector(selectVehicles);
+  const isDark = useAppSelector(selectIsDarkMode);
 
   useEffect(() => {
-    dispatch(getAllVehicleAsync());
+    dispatch(getAllVehicleAsync({}));
   }, []);
 
   const [page, setPage] = useState(1);
@@ -144,7 +140,7 @@ export default function VehicleTable() {
     const res = await updateVehicleStatus(productionId, statusId);
     if (res.message) {
       coloredToast("success", res.message, "bottom-start");
-      dispatch(getAllVehicleAsync());
+      dispatch(getAllVehicleAsync({}));
     } else {
       // dispatch(getAllVehicleAsync());
       coloredToast("danger", res.error, "bottom-start");

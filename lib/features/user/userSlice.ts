@@ -50,7 +50,7 @@ export const userSlice = createAppSlice({
             state.error = action.payload
         }),
 
-        updateUser: reducer((state, action: PayloadAction<User[]>) => {
+        updateUsers: reducer((state, action: PayloadAction<User[]>) => {
             state.status = 'idle';
             state.users = action.payload;
         }),
@@ -80,5 +80,5 @@ export const userSlice = createAppSlice({
     }
 })
 
-export const { fetchStartUser, fetchFailUser, updateUser, getAllUserAsync } = userSlice.actions
+export const { fetchStartUser, fetchFailUser, updateUsers, getAllUserAsync } = userSlice.actions
 export const { selectUsers, selectUserStatus } = userSlice.selectors

@@ -1,20 +1,21 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { getAllUsersAsync, selectUsers, updateUsers, useDispatch, useSelector } from '@/lib/redux';
 import Image from 'next/image';
 import { userRoles } from '@/app/constraints/roles&status';
 import useDeleteToasts from '@/hooks/useDeleteToasts';
-import { deleteUser } from '@/lib/redux/slices/userSlice/userActions';
 import UserModal from './UserModal';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { getAllUserAsync, selectUsers, updateUsers } from '@/lib/features/user/userSlice';
+import { deleteUser } from '@/lib/features/user/userActions';
 
 const UserTable = () => {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const { deleteToast } = useDeleteToasts();
 
-    const users = useSelector(selectUsers);
+    const users = useAppSelector(selectUsers);
 
     useEffect(() => {
-        dispatch(getAllUsersAsync());
+        dispatch(getAllUserAsync({}));
     }, [])
 
 

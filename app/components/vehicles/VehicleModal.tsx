@@ -1,16 +1,16 @@
 import { PlusIcon } from "@/app/icons";
 import { Dialog, Transition } from "@headlessui/react";
 import { Formik } from "formik";
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import { boolean, number, object, string } from "yup";
 import { coloredToast } from "@/lib/sweetAlerts";
 import { useRouter } from "next/navigation";
-import { getAllFrimAsync, getAllVehicleAsync, useDispatch } from "@/lib/redux";
 import { Firm } from "@/types/types";
-import { addFirm, updateFirm } from "@/lib/redux/slices/firmSlice/firmActions";
 import VehicleForm from "./VehicleForm";
 import { ModalCloseIcon } from "@/app/icons/modal";
-import { createVehicle, updateVehicle } from "@/lib/redux/slices/vehicleSlice/vehicleActions";
+import { useAppDispatch } from "@/lib/hooks";
+import { getAllVehicleAsync } from "@/lib/features/vehicle/vehicleSlice";
+import { createVehicle } from "@/lib/features/vehicle/vehicleActions";
 
 const firmSchema = object({
   DriverId: string().required("This field is required."),
@@ -38,7 +38,7 @@ export default function VehicleModal({ modal, setModal, vehicleInitials, setVehi
     status: 1,
     isPublic: true
   };
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter();
   return (
     <div>
@@ -104,7 +104,7 @@ export default function VehicleModal({ modal, setModal, vehicleInitials, setVehi
                           if (res.message) {
                             coloredToast("success", res.message, "bottom-start");
                             setModal(false);
-                            dispatch(getAllVehicleAsync());
+                            dispatch(getAllVehicleAsync({}));
                           } else {
                             coloredToast("danger", res.error, "bottom-start");
                           }
@@ -116,7 +116,7 @@ export default function VehicleModal({ modal, setModal, vehicleInitials, setVehi
                             if (res.message) {
                               coloredToast("success", res.message, "bottom-start");
                               setModal(false);
-                              dispatch(getAllVehicleAsync());
+                              dispatch(getAllVehicleAsync({}));
                             } else {
                               coloredToast("danger", res.error, "bottom-start");
                             }

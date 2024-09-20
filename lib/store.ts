@@ -2,9 +2,17 @@ import type { Action, ThunkAction } from "@reduxjs/toolkit";
 import { combineSlices, configureStore } from "@reduxjs/toolkit";
 import { themeConfigSlice } from "./features/themeConfig/themeConfigSlice";
 import { deliverySlice } from "./features/delivery/deliverySlice";
+import { firmSlice } from "./features/firm/firmSlice";
+import { materialSlice } from "./features/material/materialSlice";
+import { productSlice } from "./features/product/productSlice";
+import { productionSlice } from "./features/production/productionSlice";
+import { purchaseSlice } from "./features/purchase/purchaseSlice";
+import { saleSlice } from "./features/sale/saleSlice";
+import { userSlice } from "./features/user/userSlice";
+import { vehicleSlice } from "./features/vehicle/vehicleSlice";
 
 
-const rootReducer = combineSlices(themeConfigSlice, deliverySlice);
+const rootReducer = combineSlices(themeConfigSlice, deliverySlice, firmSlice, materialSlice, productSlice, productionSlice, purchaseSlice, saleSlice, userSlice, vehicleSlice);
 
 export type RootState = ReturnType<typeof rootReducer>;
 

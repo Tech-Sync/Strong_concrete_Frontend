@@ -10,7 +10,7 @@ import { selectThemeConfig, toggleAnimation, toggleLayout, toggleMenu, toggleNav
 function AppContainer({ children }: PropsWithChildren) {
 
     const themeConfig = useAppSelector(selectThemeConfig)
-    // const themeConfig = useSelector((state: IRootState) => state.themeConfig);
+    // const themeConfig = useAppSelector((state: IRootState) => state.themeConfig);
     const dispatch = useAppDispatch();
     // const { i18n } = useTranslation();
 

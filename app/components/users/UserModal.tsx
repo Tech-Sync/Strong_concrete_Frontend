@@ -1,10 +1,11 @@
 import React, { useRef, useState } from 'react'
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { createUser, updateUser } from '@/lib/redux/slices/userSlice/userActions';
 import { coloredToast } from '@/lib/sweetAlerts';
-import { getAllUsersAsync, useDispatch } from '@/lib/redux';
 import Image from 'next/image';
+import { useAppDispatch } from '@/lib/hooks';
+import { createUser, updateUser } from '@/lib/features/user/userActions';
+import { getAllUserAsync } from '@/lib/features/user/userSlice';
 
 interface UserModalProps {
     userModal: boolean;
@@ -14,7 +15,7 @@ interface UserModalProps {
 }
 
 const UserModal = ({ userModal, setUserModal, params, changeValue }: UserModalProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
 
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -45,7 +46,7 @@ const UserModal = ({ userModal, setUserModal, params, changeValue }: UserModalPr
             const res = await updateUser(params.id, formData);
             if (res.message) {
                 coloredToast("success", res.message, "bottom-start");
-                dispatch(getAllUsersAsync());
+                dispatch(getAllUserAsync({}));
             } else {
                 coloredToast("danger", res.error, "bottom-start");
             }
@@ -58,7 +59,7 @@ const UserModal = ({ userModal, setUserModal, params, changeValue }: UserModalPr
             const res = await createUser(formData);
             if (res.message) {
                 coloredToast("success", res.message, "bottom-start");
-                dispatch(getAllUsersAsync());
+                dispatch(getAllUserAsync({}));
             } else {
                 coloredToast("danger", res.error, "bottom-start");
             }

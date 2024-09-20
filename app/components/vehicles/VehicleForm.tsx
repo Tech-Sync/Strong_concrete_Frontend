@@ -3,9 +3,10 @@ import { Form, Field, ErrorMessage, FormikProps } from "formik";
 import { AddressIcon, NameIcon, PhoneIcon } from "./VehicleModalIcons";
 import { User, Vehicle } from "@/types/types";
 import Select from 'react-select';
-import { getAllVehicleAsync, selectVehicles, useDispatch, useSelector } from "@/lib/redux";
-import { getFilteredUsers } from "@/lib/redux/slices/userSlice/userActions";
 import { vehicleStatuses } from "@/app/constraints/roles&status";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { selectVehicles } from "@/lib/features/vehicle/vehicleSlice";
+import { getFilteredUsers } from "@/lib/features/user/userActions";
 
 
 /* interface FormValues {
@@ -19,8 +20,8 @@ import { vehicleStatuses } from "@/app/constraints/roles&status";
 
 const VehicleForm: React.FC<FormikProps<Vehicle>> = ({ touched, errors, isSubmitting, handleSubmit, setFieldValue, values }) => {
 
-  const dispatch = useDispatch()
-  const vehicles = useSelector(selectVehicles)
+  const dispatch = useAppDispatch()
+  const vehicles = useAppSelector(selectVehicles)
 
   const [drivers, setDrivers] = useState<User[]>([])
 
