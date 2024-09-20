@@ -5,12 +5,15 @@ import { useRouter } from 'next/navigation';
 import Select from 'react-select';
 import { useEffect, useState } from 'react';
 import MaskedInput from 'react-text-mask';
-import { getAllFrimAsync, getAllProductAsync, getAllSaleAsync, selectFirms, selectProducts, selectSale, setFirmModal, updateFirmState, updateSaleState, useDispatch, useSelector } from '@/lib/redux';
 import { coloredToast } from '@/lib/sweetAlerts';
-import { addSale, updateSale } from '@/lib/redux/slices/saleSlice/saleActions';
 import { PlusIcon } from '@/app/icons';
 import FirmModal from '../firms/FirmModal';
 import { number, object, string } from 'yup';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { getAllProductAsync, selectProducts } from '@/lib/features/product/productSlice';
+import { getAllFirmAsync, selectFirms, setFirmModal, updateFirmState } from '@/lib/features/firm/firmSlice';
+import { getAllSaleAsync, selectSale, updateSaleState } from '@/lib/features/sale/saleSlice';
+import { addSale, updateSale } from '@/lib/features/sale/saleActions';
 
 const baseTicketSchema = object({
     FirmId: number().required("Firm is required."),
@@ -25,15 +28,15 @@ const baseTicketSchema = object({
 });
 
 const SaleAdd = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const router = useRouter()
-    const products = useSelector(selectProducts);
-    const firms = useSelector(selectFirms);
-    const sale = useSelector(selectSale);
+    const products = useAppSelector(selectProducts);
+    const firms = useAppSelector(selectFirms);
+    const sale = useAppSelector(selectSale);
 
     useEffect(() => {
-        dispatch(getAllFrimAsync())
-        dispatch(getAllProductAsync())
+        dispatch(getAllFirmAsync({}))
+        dispatch(getAllProductAsync({}))
     }, [])
 
 
@@ -160,7 +163,7 @@ const SaleAdd = () => {
                                 coloredToast("success", res.message, "bottom-start");
                                 router.replace('/sales')
                                 resetForm();
-                                dispatch(getAllSaleAsync());
+                                dispatch(getAllSaleAsync({}));
                             } else {
                                 coloredToast("danger", res.error, "bottom-start");
                             }

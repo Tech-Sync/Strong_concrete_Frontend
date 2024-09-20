@@ -80,7 +80,6 @@ export default function SaleTabs() {
                         <div className="active pt-5">
                             <SaleTable />
                         </div>
-
                     </Tab.Panel>
                     <Tab.Panel>
                         <div className="pt-5">

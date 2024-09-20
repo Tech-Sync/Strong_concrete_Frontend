@@ -5,7 +5,6 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import { Fragment, useEffect, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import Swal from 'sweetalert2';
-import { useDispatch } from 'react-redux';
 
 const SaleCalendar = () => {
 
