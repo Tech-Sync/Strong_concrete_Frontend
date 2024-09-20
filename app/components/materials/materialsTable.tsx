@@ -5,21 +5,23 @@ import sortBy from 'lodash/sortBy';
 import { formatDate } from '@/utils/formatDate';
 import { DeleteIcon, EditIcon } from '@/app/icons';
 import { coloredToast } from "@/lib/sweetAlerts";
-import { getAllMaterialAsync, selectIsDarkMode, selectMaterialStatus, selectMaterials, updateMaterial, useDispatch, useSelector } from '@/lib/redux';
-import { deleteMaterial, deleteMultiMaterial } from '@/lib/redux/slices/materialSlice/materialActions';
 import MaterialModal from './MaterialModal';
 import useDeleteToasts from '@/hooks/useDeleteToasts';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { getAllMaterialAsync, selectMaterials, selectMaterialStatus, updateMaterial } from '@/lib/features/material/materialSlice';
+import { selectIsDarkMode } from '@/lib/features/themeConfig/themeConfigSlice';
+import { deleteMaterial, deleteMultiMaterial } from '@/lib/features/material/materialActions';
 
 const MaterialsTable = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const { deleteToast, multiDeleteToast } = useDeleteToasts();
-    const materials = useSelector(selectMaterials);
-    const materialStatus = useSelector(selectMaterialStatus);
-    const isDark = useSelector(selectIsDarkMode);
+    const materials = useAppSelector(selectMaterials);
+    const materialStatus = useAppSelector(selectMaterialStatus);
+    const isDark = useAppSelector(selectIsDarkMode);
 
 
     useEffect(() => {
-        dispatch(getAllMaterialAsync());
+        dispatch(getAllMaterialAsync({}));
     }, []);
 
     const [page, setPage] = useState(1);

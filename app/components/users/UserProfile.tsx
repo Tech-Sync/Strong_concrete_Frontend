@@ -1,4 +1,3 @@
-import { selectRtlClass, useDispatch, useSelector } from '@/lib/redux';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import Dropdown from '../Layout/Dropdown';
@@ -6,7 +5,7 @@ import Dropdown from '../Layout/Dropdown';
 const UserProfile = () => {
   
 
-    const isRtl = useSelector(selectRtlClass) === 'rtl' ? true : false;
+    const isRtl = useAppSelector(selectRtlClass) === 'rtl' ? true : false;
     return (
         <div>
             <ul className="flex space-x-2 rtl:space-x-reverse">

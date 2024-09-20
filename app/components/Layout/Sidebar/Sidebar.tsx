@@ -1,21 +1,21 @@
 'use client'
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import { useState, useEffect } from 'react';
-import { selectThemeConfig, themeConfigSlice } from '@/lib/redux/slices/themeConfigSlice';
 import AnimateHeight from 'react-animate-height';
 import { SideBarDoubleArrowIcon, SidebarFaqIcon, SidebarNotesIcon, SidebarTaskIcon, SiderbarDashboardIcon, SiderbarDeliveryIcon, SiderbarEmailIcon, SiderbarFirmIcon, SiderbarMaterialIcon, SiderbarProductIcon, SiderbarProductionIcon, SiderbarPurchaseIcon, SiderbarSaleIcon, SiderbarUserIcon, SiderbarVehicleIcon } from '@/app/icons';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { selectThemeConfig, toggleSidebar } from '@/lib/features/themeConfig/themeConfigSlice';
 
 
 
 const Sidebar = () => {
     const pathname: string = usePathname()
     const [currentMenu, setCurrentMenu] = useState<string>('');
-    const themeConfig = useSelector(selectThemeConfig)
+    const themeConfig = useAppSelector(selectThemeConfig)
     const semidark = themeConfig.semidark
     const toggleMenu = (value: string) => {
         setCurrentMenu((oldValue) => {
@@ -43,7 +43,7 @@ const Sidebar = () => {
     useEffect(() => {
         setActiveRoute();
         if (window.innerWidth < 1024 && themeConfig.sidebar) {
-            dispatch(themeConfigSlice.actions.toggleSidebar());
+            dispatch(toggleSidebar());
         }
     }, [pathname]);
 
@@ -57,7 +57,7 @@ const Sidebar = () => {
         selector?.classList.add('active');
     };
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
 
     const dashboardRoute = {
@@ -99,8 +99,8 @@ const Sidebar = () => {
             name: "Purchases",
             icon: <SiderbarPurchaseIcon />,
             subMenu: [
-                { name: 'Purchase List', path: '/sales' },
-                { name: 'Purchase Accounts', path: '/sale-accounts' },
+                { name: 'Purchase List', path: '/purchases' },
+                { name: 'Purchase Accounts', path: '/purchase-accounts' },
             ]
         },
         {
@@ -193,7 +193,7 @@ const Sidebar = () => {
                         <button
                             type="button"
                             className="collapse-icon flex h-8 w-8 items-center rounded-full transition duration-300 hover:bg-gray-500/10 rtl:rotate-180 dark:text-white-light dark:hover:bg-dark-light/10"
-                            onClick={() => dispatch(themeConfigSlice.actions.toggleSidebar())}
+                            onClick={() => dispatch(toggleSidebar())}
                         >
                             <SideBarDoubleArrowIcon />
                         </button>

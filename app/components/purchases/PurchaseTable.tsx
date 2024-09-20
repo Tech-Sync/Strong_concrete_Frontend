@@ -3,27 +3,28 @@ import Link from "next/link";
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
 import { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
-import { useSelector } from "react-redux";
 import { Purchase } from "@/types/types";
 import { DeleteIcon, EditIcon, PlusIcon, PreviewIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
 import { coloredToast } from "@/lib/sweetAlerts";
-import { getAllPurchaseAsync, updatePurchaseState, selectIsDarkMode, selectPurchases, updatePurchases, useDispatch } from "@/lib/redux";
 import useDeleteToasts from "@/hooks/useDeleteToasts";
-import { deleteMultiPurchase, deletePurchase } from "@/lib/redux/slices/purchaseSlice/purchaseActions";
 import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { getAllPurchaseAsync, selectPurchases, updatePurchase, updatePurchaseState } from "@/lib/features/purchase/purchaseSlice";
+import { selectIsDarkMode } from "@/lib/features/themeConfig/themeConfigSlice";
+import { deleteMultiPurchase, deletePurchase } from "@/lib/features/purchase/purchaseActions";
 
 
 
 export default function PurchaseTable() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter()
   const { deleteToast, multiDeleteToast } = useDeleteToasts();
-  const purchases = useSelector(selectPurchases);
-  const isDark = useSelector(selectIsDarkMode);
+  const purchases = useAppSelector(selectPurchases);
+  const isDark = useAppSelector(selectIsDarkMode);
 
   useEffect(() => {
-    dispatch(getAllPurchaseAsync());
+    dispatch(getAllPurchaseAsync({}));
     dispatch(updatePurchaseState(null))
   }, []);
 
@@ -82,7 +83,7 @@ export default function PurchaseTable() {
 
   const deleteRow = async (id: any = null) => {
     if (id) {
-      const deletionSuccess = await deleteToast(id, deletePurchase, updatePurchases);
+      const deletionSuccess = await deleteToast(id, deletePurchase, updatePurchase);
       if (deletionSuccess) {
         setSelectedRecords([]);
         setSearch("");
@@ -94,7 +95,7 @@ export default function PurchaseTable() {
         return;
       }
       const ids = selectedRows?.map((d: any) => { return d.id; });
-      const deletionSuccess = await multiDeleteToast(ids, deleteMultiPurchase, updatePurchases);
+      const deletionSuccess = await multiDeleteToast(ids, deleteMultiPurchase, updatePurchase);
       if (deletionSuccess) {
         setSelectedRecords([]);
         setSearch("");

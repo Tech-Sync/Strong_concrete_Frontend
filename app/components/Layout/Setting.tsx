@@ -1,11 +1,11 @@
+import { selectThemeConfig, toggleAnimation, toggleLayout, toggleMenu, toggleNavbar, toggleRTL, toggleSemidark, toggleTheme } from '@/lib/features/themeConfig/themeConfigSlice';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
-import { selectThemeConfig, themeConfigSlice } from '@/lib/redux/slices/themeConfigSlice';
 
 const Setting = () => {
-    const themeConfig = useSelector(selectThemeConfig)
-    const dispatch = useDispatch();
+    const themeConfig = useAppSelector(selectThemeConfig)
+    const dispatch = useAppDispatch();
 
     const [showCustomizer, setShowCustomizer] = useState(false);
 
@@ -60,7 +60,7 @@ const Setting = () => {
                         <h5 className="mb-1 text-base leading-none dark:text-white">Color Scheme</h5>
                         <p className="text-xs text-white-dark">Overall light or dark presentation.</p>
                         <div className="mt-3 grid grid-cols-3 gap-2">
-                            <button type="button" className={`${themeConfig.theme === 'light' ? 'btn-primary' : 'btn-outline-primary'} btn`} onClick={() => dispatch(themeConfigSlice.actions.toggleTheme('light'))}>
+                            <button type="button" className={`${themeConfig.theme === 'light' ? 'btn-primary' : 'btn-outline-primary'} btn`} onClick={() => dispatch(toggleTheme('light'))}>
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 shrink-0 ltr:mr-2 rtl:ml-2">
                                     <circle cx="12" cy="12" r="5" stroke="currentColor" strokeWidth="1.5"></circle>
                                     <path d="M12 2V4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
@@ -75,7 +75,7 @@ const Setting = () => {
                                 Light
                             </button>
 
-                            <button type="button" className={`${themeConfig.theme === 'dark' ? 'btn-primary' : 'btn-outline-primary'} btn`} onClick={() => dispatch(themeConfigSlice.actions.toggleTheme('dark'))}>
+                            <button type="button" className={`${themeConfig.theme === 'dark' ? 'btn-primary' : 'btn-outline-primary'} btn`} onClick={() => dispatch(toggleTheme('dark'))}>
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 shrink-0 ltr:mr-2 rtl:ml-2">
                                     <path
                                         d="M21.0672 11.8568L20.4253 11.469L21.0672 11.8568ZM12.1432 2.93276L11.7553 2.29085V2.29085L12.1432 2.93276ZM21.25 12C21.25 17.1086 17.1086 21.25 12 21.25V22.75C17.9371 22.75 22.75 17.9371 22.75 12H21.25ZM12 21.25C6.89137 21.25 2.75 17.1086 2.75 12H1.25C1.25 17.9371 6.06294 22.75 12 22.75V21.25ZM2.75 12C2.75 6.89137 6.89137 2.75 12 2.75V1.25C6.06294 1.25 1.25 6.06294 1.25 12H2.75ZM15.5 14.25C12.3244 14.25 9.75 11.6756 9.75 8.5H8.25C8.25 12.5041 11.4959 15.75 15.5 15.75V14.25ZM20.4253 11.469C19.4172 13.1373 17.5882 14.25 15.5 14.25V15.75C18.1349 15.75 20.4407 14.3439 21.7092 12.2447L20.4253 11.469ZM9.75 8.5C9.75 6.41182 10.8627 4.5828 12.531 3.57467L11.7553 2.29085C9.65609 3.5593 8.25 5.86509 8.25 8.5H9.75ZM12 2.75C11.9115 2.75 11.8077 2.71008 11.7324 2.63168C11.6686 2.56527 11.6538 2.50244 11.6503 2.47703C11.6461 2.44587 11.6482 2.35557 11.7553 2.29085L12.531 3.57467C13.0342 3.27065 13.196 2.71398 13.1368 2.27627C13.0754 1.82126 12.7166 1.25 12 1.25V2.75ZM21.7092 12.2447C21.6444 12.3518 21.5541 12.3539 21.523 12.3497C21.4976 12.3462 21.4347 12.3314 21.3683 12.2676C21.2899 12.1923 21.25 12.0885 21.25 12H22.75C22.75 11.2834 22.1787 10.9246 21.7237 10.8632C21.286 10.804 20.7293 10.9658 20.4253 11.469L21.7092 12.2447Z"
@@ -85,7 +85,7 @@ const Setting = () => {
                                 Dark
                             </button>
 
-                            <button type="button" className={`${themeConfig.theme === 'system' ? 'btn-primary' : 'btn-outline-primary'} btn`} onClick={() => dispatch(themeConfigSlice.actions.toggleTheme('system'))}>
+                            <button type="button" className={`${themeConfig.theme === 'system' ? 'btn-primary' : 'btn-outline-primary'} btn`} onClick={() => dispatch(toggleTheme('system'))}>
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 shrink-0 ltr:mr-2 rtl:ml-2">
                                     <path
                                         opacity="0.5"
@@ -109,25 +109,25 @@ const Setting = () => {
                         <h5 className="mb-1 text-base leading-none dark:text-white">Navigation Position</h5>
                         <p className="text-xs text-white-dark">Select the primary navigation paradigm for your app.</p>
                         <div className="mt-3 grid grid-cols-3 gap-2">
-                            <button type="button" className={`${themeConfig.menu === 'horizontal' ? 'btn-primary' : 'btn-outline-primary'} btn`} onClick={() => dispatch(themeConfigSlice.actions.toggleMenu('horizontal'))}>
+                            <button type="button" className={`${themeConfig.menu === 'horizontal' ? 'btn-primary' : 'btn-outline-primary'} btn`} onClick={() => dispatch(toggleMenu('horizontal'))}>
                                 Horizontal
                             </button>
 
-                            <button type="button" className={`${themeConfig.menu === 'vertical' ? 'btn-primary' : 'btn-outline-primary'} btn`} onClick={() => dispatch(themeConfigSlice.actions.toggleMenu('vertical'))}>
+                            <button type="button" className={`${themeConfig.menu === 'vertical' ? 'btn-primary' : 'btn-outline-primary'} btn`} onClick={() => dispatch(toggleMenu('vertical'))}>
                                 Vertical
                             </button>
 
                             <button
                                 type="button"
                                 className={`${themeConfig.menu === 'collapsible-vertical' ? 'btn-primary' : 'btn-outline-primary'} btn`}
-                                onClick={() => dispatch(themeConfigSlice.actions.toggleMenu('collapsible-vertical'))}
+                                onClick={() => dispatch(toggleMenu('collapsible-vertical'))}
                             >
                                 Collapsible
                             </button>
                         </div>
                         <div className="mt-5 text-primary">
                             <label className="mb-0 inline-flex">
-                                <input type="checkbox" className="form-checkbox" checked={themeConfig.semidark} onChange={(e) => dispatch(themeConfigSlice.actions.toggleSemidark(e.target.checked))} />
+                                <input type="checkbox" className="form-checkbox" checked={themeConfig.semidark} onChange={(e) => dispatch(toggleSemidark(e.target.checked))} />
                                 <span>Semi Dark (Sidebar & Header)</span>
                             </label>
                         </div>
@@ -140,12 +140,12 @@ const Setting = () => {
                             <button
                                 type="button"
                                 className={`${themeConfig.layout === 'boxed-layout' ? 'btn-primary' : 'btn-outline-primary'} btn flex-auto`}
-                                onClick={() => dispatch(themeConfigSlice.actions.toggleLayout('boxed-layout'))}
+                                onClick={() => dispatch(toggleLayout('boxed-layout'))}
                             >
                                 Box
                             </button>
 
-                            <button type="button" className={`${themeConfig.layout === 'full' ? 'btn-primary' : 'btn-outline-primary'} btn flex-auto`} onClick={() => dispatch(themeConfigSlice.actions.toggleLayout('full'))}>
+                            <button type="button" className={`${themeConfig.layout === 'full' ? 'btn-primary' : 'btn-outline-primary'} btn flex-auto`} onClick={() => dispatch(toggleLayout('full'))}>
                                 Full
                             </button>
                         </div>
@@ -155,11 +155,11 @@ const Setting = () => {
                         <h5 className="mb-1 text-base leading-none dark:text-white">Direction</h5>
                         <p className="text-xs text-white-dark">Select the direction for your app.</p>
                         <div className="mt-3 flex gap-2">
-                            <button type="button" className={`${themeConfig.rtlClass === 'ltr' ? 'btn-primary' : 'btn-outline-primary'} btn flex-auto`} onClick={() => dispatch(themeConfigSlice.actions.toggleRTL('ltr'))}>
+                            <button type="button" className={`${themeConfig.rtlClass === 'ltr' ? 'btn-primary' : 'btn-outline-primary'} btn flex-auto`} onClick={() => dispatch(toggleRTL('ltr'))}>
                                 LTR
                             </button>
 
-                            <button type="button" className={`${themeConfig.rtlClass === 'rtl' ? 'btn-primary' : 'btn-outline-primary'} btn flex-auto`} onClick={() => dispatch(themeConfigSlice.actions.toggleRTL('rtl'))}>
+                            <button type="button" className={`${themeConfig.rtlClass === 'rtl' ? 'btn-primary' : 'btn-outline-primary'} btn flex-auto`} onClick={() => dispatch(toggleRTL('rtl'))}>
                                 RTL
                             </button>
                         </div>
@@ -175,7 +175,7 @@ const Setting = () => {
                                     checked={themeConfig.navbar === 'navbar-sticky'}
                                     value="navbar-sticky"
                                     className="form-radio"
-                                    onChange={() => dispatch(themeConfigSlice.actions.toggleNavbar('navbar-sticky'))}
+                                    onChange={() => dispatch(toggleNavbar('navbar-sticky'))}
                                 />
                                 <span>Sticky</span>
                             </label>
@@ -185,7 +185,7 @@ const Setting = () => {
                                     checked={themeConfig.navbar === 'navbar-floating'}
                                     value="navbar-floating"
                                     className="form-radio"
-                                    onChange={() => dispatch(themeConfigSlice.actions.toggleNavbar('navbar-floating'))}
+                                    onChange={() => dispatch(toggleNavbar('navbar-floating'))}
                                 />
                                 <span>Floating</span>
                             </label>
@@ -195,7 +195,7 @@ const Setting = () => {
                                     checked={themeConfig.navbar === 'navbar-static'}
                                     value="navbar-static"
                                     className="form-radio"
-                                    onChange={() => dispatch(themeConfigSlice.actions.toggleNavbar('navbar-static'))}
+                                    onChange={() => dispatch(toggleNavbar('navbar-static'))}
                                 />
                                 <span>Static</span>
                             </label>
@@ -206,7 +206,7 @@ const Setting = () => {
                         <h5 className="mb-1 text-base leading-none dark:text-white">Router Transition</h5>
                         <p className="text-xs text-white-dark">Animation of main content.</p>
                         <div className="mt-3">
-                            <select className="form-select border-primary text-primary" value={themeConfig.animation} onChange={(e) => dispatch(themeConfigSlice.actions.toggleAnimation(e.target.value))}>
+                            <select className="form-select border-primary text-primary" value={themeConfig.animation} onChange={(e) => dispatch(toggleAnimation(e.target.value))}>
                                 <option value=" ">Select Animation</option>
                                 <option value="animate__fadeIn">Fade</option>
                                 <option value="animate__fadeInDown">Fade Down</option>

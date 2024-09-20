@@ -6,10 +6,11 @@ import { object, string } from "yup";
 import MaterialForm from "./MaterialForm";
 import { coloredToast } from "@/lib/sweetAlerts";
 import { useRouter } from "next/navigation";
-import { getAllMaterialAsync, useDispatch } from "@/lib/redux";
 import { Material } from "@/types/types";
-import { addMaterial, updateMaterial } from "@/lib/redux/slices/materialSlice/materialActions";
 import { ModalCloseIcon } from "@/app/icons/modal";
+import { useAppDispatch } from "@/lib/hooks";
+import { addMaterial, updateMaterial } from "@/lib/features/material/materialActions";
+import { getAllMaterialAsync } from "@/lib/features/material/materialSlice";
 
 const materialSchema = object({
   name: string().required("Material name is required!"),
@@ -26,7 +27,7 @@ interface materialModalProps {
 export default function MaterialModal({ modal, setModal, materialInitials, setMaterialInitials, }: materialModalProps) {
 
   const emptyMaterial = { name: "", unitType: "" };
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter();
   return (
     <div>
@@ -89,7 +90,7 @@ export default function MaterialModal({ modal, setModal, materialInitials, setMa
                           if (res.message) {
                             coloredToast("success", res.message, "bottom-start");
                             setModal(false);
-                            dispatch(getAllMaterialAsync());
+                            dispatch(getAllMaterialAsync({}));
                           } else {
                             coloredToast("danger", res.error, "bottom-start");
                           }
@@ -101,7 +102,7 @@ export default function MaterialModal({ modal, setModal, materialInitials, setMa
                             if (res.message) {
                               coloredToast("success", res.message, "bottom-start");
                               setModal(false);
-                              dispatch(getAllMaterialAsync());
+                              dispatch(getAllMaterialAsync({}));
                             } else {
                               coloredToast("danger", res.error, "bottom-start");
                             }

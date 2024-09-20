@@ -3,14 +3,15 @@ import React, { Suspense, useEffect, useState } from 'react'
 import BarAreaCharts from './BarAreaCharts'
 import AreaDonutCharts from './AreaDonutCharts'
 import DashboardStats from './DashboardStats'
-import { selectIsDarkMode, selectRtlClass, useSelector } from '@/lib/redux'
 import { getAllStatistics } from './dashboardAPI'
 import { DashboardData } from '@/types/types'
+import { useAppSelector } from '@/lib/hooks'
+import { selectIsDarkMode, selectRtlClass } from '@/lib/features/themeConfig/themeConfigSlice'
 
 const DashboardMain = ({ data }: { data: DashboardData }) => {
 
-    const isDark = useSelector(selectIsDarkMode)
-    const isRtl = useSelector(selectRtlClass) === 'rtl' ? true : false;
+    const isDark = useAppSelector(selectIsDarkMode)
+    const isRtl = useAppSelector(selectRtlClass) === 'rtl' ? true : false;
 
     const [isMounted, setIsMounted] = useState(false);
 

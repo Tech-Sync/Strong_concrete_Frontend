@@ -5,26 +5,22 @@ import sortBy from "lodash/sortBy";
 import { DeleteIcon, EditIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
 import { coloredToast } from "@/lib/sweetAlerts";
-import {
-  selectIsDarkMode,
-  useDispatch,
-  useSelector,
-  selectProducts,
-  getAllProductAsync,
-  updateProductState,
-} from "@/lib/redux";
+
 import useDeleteToasts from "@/hooks/useDeleteToasts";
-import { deleteMultiProduct, deleteProduct } from "@/lib/redux/slices/productSlice/productAction";
 import ProductModal from "./ProductModal";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { getAllProductAsync, selectProducts, updateProductState } from "@/lib/features/product/productSlice";
+import { selectIsDarkMode } from "@/lib/features/themeConfig/themeConfigSlice";
+import { deleteMultiProduct, deleteProduct } from "@/lib/features/product/productActions";
 
 export default function ProductTable() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { deleteToast, multiDeleteToast } = useDeleteToasts();
-  const products = useSelector(selectProducts);
-  const isDark = useSelector(selectIsDarkMode);
+  const products = useAppSelector(selectProducts);
+  const isDark = useAppSelector(selectIsDarkMode);
 
   useEffect(() => {
-    dispatch(getAllProductAsync());
+    dispatch(getAllProductAsync({}));
   }, []);
 
   const [page, setPage] = useState(1);

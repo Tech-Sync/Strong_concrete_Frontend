@@ -1,6 +1,5 @@
 "use client"
 import { PropsWithChildren, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import Footer from './Footer';
 import Header from './Header/Header';
@@ -9,15 +8,16 @@ import Setting from './Setting';
 import Portals from './Portals';
 import { usePathname } from 'next/navigation'
 import AppContainer from '@/container/AppContainer';
-import { selectThemeConfig, themeConfigSlice } from '@/lib/redux/slices/themeConfigSlice';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { selectThemeConfig, toggleSidebar } from '@/lib/features/themeConfig/themeConfigSlice';
 
 const DefaultLayout = ({ children }: PropsWithChildren) => {
     const pathname = usePathname()
     const [showLoader, setShowLoader] = useState(true);
     const [showTopButton, setShowTopButton] = useState(false);
-    const themeConfig = useSelector(selectThemeConfig)
+    const themeConfig = useAppSelector(selectThemeConfig)
     const [animation, setAnimation] = useState(themeConfig.animation);
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const goToTop = () => {
         document.body.scrollTop = 0;
@@ -87,7 +87,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                     </div>
                 )}
                 {/* sidebar menu overlay */}
-                <div className={`${(!themeConfig.sidebar && 'hidden') || ''} fixed inset-0 z-50 bg-[black]/60 lg:hidden`} onClick={() => dispatch(themeConfigSlice.actions.toggleSidebar())}></div>
+                <div className={`${(!themeConfig.sidebar && 'hidden') || ''} fixed inset-0 z-50 bg-[black]/60 lg:hidden`} onClick={() => dispatch(toggleSidebar())}></div>
                 <div className="fixed bottom-6 z-50 ltr:right-6 rtl:left-6">
                     {showTopButton && (
                         <button type="button" className="btn btn-outline-primary animate-pulse rounded-full bg-[#fafafa] p-2 dark:bg-[#060818] dark:hover:bg-primary" onClick={goToTop}>

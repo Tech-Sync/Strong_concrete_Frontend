@@ -8,9 +8,10 @@ import FirmForm from "./FirmForm";
 // import { addFirm, updateFirm } from "@/actions/firmActions";
 import { coloredToast } from "@/lib/sweetAlerts";
 import { useRouter } from "next/navigation";
-import { getAllFrimAsync, selectFirm, selectFirmModal, setFirmModal, useDispatch, useSelector } from "@/lib/redux";
 import { Firm } from "@/types/types";
-import { addFirm, updateFirm } from "@/lib/redux/slices/firmSlice/firmActions";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { getAllFirmAsync, selectFirm, selectFirmModal, setFirmModal } from "@/lib/features/firm/firmSlice";
+import { addFirm } from "@/lib/features/firm/firmActions";
 
 const firmSchema = object({
   name: string().required("This field is required."),
@@ -27,10 +28,10 @@ const firmSchema = object({
 export default function FirmModal() {
 
 
-  const ticketModal = useSelector(selectFirmModal);
-  const params = useSelector(selectFirm);
+  const ticketModal = useAppSelector(selectFirmModal);
+  const params = useAppSelector(selectFirm);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter();
 
   const initialValues = {
@@ -109,7 +110,7 @@ export default function FirmModal() {
                           if (res.message) {
                             coloredToast("success", res.message, "bottom-start");
                             dispatch(setFirmModal(false))
-                            dispatch(getAllFrimAsync());
+                            dispatch(getAllFirmAsync({}));
                           } else {
                             coloredToast("danger", res.error, "bottom-start");
                           }
@@ -121,7 +122,7 @@ export default function FirmModal() {
                             if (res.message) {
                               coloredToast("success", res.message, "bottom-start");
                               dispatch(setFirmModal(false))
-                              dispatch(getAllFrimAsync());
+                              dispatch(getAllFirmAsync({}));
                             } else {
                               coloredToast("danger", res.error, "bottom-start");
                             }

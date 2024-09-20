@@ -6,18 +6,18 @@ import ScrumboardEditIcon from '@/app/icons/scrumboardIcons/ScrumboardEditIcon';
 import ScrumboardDeleteIcon from '@/app/icons/scrumboardIcons/ScrumboardDeleteIcon';
 import ScrumboardTagIcon from '@/app/icons/scrumboardIcons/ScrumboardTagIcon';
 import ScrumboardDateIcon from '@/app/icons/scrumboardIcons/ScrumboardDateIcon';
-import { getWeeklySaleAsync, selectWeeklySales, updateSaleState, useDispatch, useSelector } from '@/lib/redux';
-import { getWeeklySale, updateOrder } from '@/lib/redux/slices/saleSlice/saleActions';
 import { coloredToast } from '@/lib/sweetAlerts';
 import { PreviewIcon } from '@/app/icons';
 import { useRouter } from 'next/navigation';
 import moment from 'moment';
+import { useAppDispatch } from '@/lib/hooks';
+import { getWeeklySale, updateOrder } from '@/lib/features/sale/saleActions';
 
 const SaleScrumboard = () => {
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const router = useRouter()
-    // const sales = useSelector(selectWeeklySales);
+    // const sales = useAppSelector(selectWeeklySales);
     const [projectList, setProjectList] = useState<any>([]);
 
     const [weekRange, setWeekRange] = useState({

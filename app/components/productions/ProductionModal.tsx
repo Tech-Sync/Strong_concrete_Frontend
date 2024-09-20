@@ -1,17 +1,13 @@
-import { PlusIcon } from "@/app/icons";
 import { Dialog, Transition } from "@headlessui/react";
 import { Formik } from "formik";
-import React, { Fragment, useState } from "react";
-import { array, object, string } from "yup";
-import FirmForm from "./ProductionForm";
-// import { addFirm, updateFirm } from "@/actions/firmActions";
+import React, { Fragment } from "react";
+import { array, object, } from "yup";
 import { coloredToast } from "@/lib/sweetAlerts";
 import { useRouter } from "next/navigation";
-import { getAllFrimAsync, getAllProductionAsync, selectproduction, selectproductionModal, setProductionModal, useDispatch, useSelector } from "@/lib/redux";
-import { Firm } from "@/types/types";
-import { addFirm, updateFirm } from "@/lib/redux/slices/firmSlice/firmActions";
 import ProductionForm from "./ProductionForm";
-import { updateProduction } from "@/lib/redux/slices/productionSlice/productionActions";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { getAllProductionAsync, selectProduction, selectProductionModal, setProductionModal } from "@/lib/features/production/productionSlice";
+import { updateProduction } from "@/lib/features/production/productionActions";
 
 const firmSchema = object({
   VehicleIds: array().required("This field is required."),
@@ -22,13 +18,13 @@ const firmSchema = object({
 export default function ProductionModal() {
 
 
-  const ticketModal = useSelector(selectproductionModal);
-  const params = useSelector(selectproduction);
+  const ticketModal = useAppSelector(selectProductionModal);
+  const params = useAppSelector(selectProduction);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const formatedVehicleIds = params?.VehicleIds?.map((v:any) => (v.id))
+  const formatedVehicleIds = params?.VehicleIds?.map((v: any) => (v.id))
 
   const initialValues = {
     id: params?.id || "",
@@ -85,11 +81,11 @@ export default function ProductionModal() {
                         if (res.message) {
                           coloredToast("success", res.message, "bottom-start");
                           dispatch(setProductionModal(false))
-                          dispatch(getAllProductionAsync());
+                          dispatch(getAllProductionAsync({}));
                         } else {
                           coloredToast("danger", res.error, "bottom-start");
                         }
-                      } 
+                      }
                       // else {
                       //   const { id, ...data } = values
                       //   const res = await addFirm(data);

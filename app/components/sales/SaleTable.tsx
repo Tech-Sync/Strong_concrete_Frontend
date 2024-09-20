@@ -3,27 +3,28 @@ import Link from "next/link";
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
 import { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
-import { useSelector } from "react-redux";
 import { DeleteIcon, EditIcon, PlusIcon, PreviewIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
 import { coloredToast } from "@/lib/sweetAlerts";
-import { selectIsDarkMode, useDispatch, selectSales, updateSaleState, getAllSaleAsync, updateSales } from "@/lib/redux";
 import useDeleteToasts from "@/hooks/useDeleteToasts";
 import { useRouter } from "next/navigation";
-import { deleteMultiSale, deleteSale } from "@/lib/redux/slices/saleSlice/saleActions";
 import { saleStatuses } from "@/app/constraints/roles&status";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { getAllSaleAsync, selectSales, updateSales, updateSaleState } from "@/lib/features/sale/saleSlice";
+import { selectIsDarkMode } from "@/lib/features/themeConfig/themeConfigSlice";
+import { deleteMultiSale, deleteSale } from "@/lib/features/sale/saleActions";
 
 
 export default function SaleTable() {
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const router = useRouter()
     const { deleteToast, multiDeleteToast } = useDeleteToasts();
-    const sales = useSelector(selectSales);
-    const isDark = useSelector(selectIsDarkMode);
+    const sales = useAppSelector(selectSales);
+    const isDark = useAppSelector(selectIsDarkMode);
 
     useEffect(() => {
-        dispatch(getAllSaleAsync());
+        dispatch(getAllSaleAsync({}));
         dispatch(updateSaleState(null))
     }, []);
 
