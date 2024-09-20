@@ -6,16 +6,15 @@ import { DeleteIcon, EditIcon, PlusIcon } from "@/app/icons";
 import { formatDate } from "@/utils/formatDate";
 import { firmStatuses } from "@/app/constraints/roles&status";
 import { coloredToast } from "@/lib/sweetAlerts";
-import { getAllFrimAsync, selectFirms, selectIsDarkMode, selectFirmStatus, useDispatch, useSelector, updateFirm, setFirmModal, updateFirmState, getAllProductionAsync, } from "@/lib/redux";
 import FirmModal from "./FirmModal";
 import { deleteFirm, deleteMultiFirm } from "@/lib/redux/slices/firmSlice/firmActions";
 import useDeleteToasts from "@/hooks/useDeleteToasts";
 
 export default function FirmTable() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { deleteToast, multiDeleteToast } = useDeleteToasts();
-  const firms = useSelector(selectFirms);
-  const isDark = useSelector(selectIsDarkMode);
+  const firms = useAppSelector(selectFirms);
+  const isDark = useAppSelector(selectIsDarkMode);
 
   useEffect(() => {
     dispatch(getAllFrimAsync());

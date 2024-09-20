@@ -6,7 +6,6 @@ import { object, string } from "yup";
 import MaterialForm from "./MaterialForm";
 import { coloredToast } from "@/lib/sweetAlerts";
 import { useRouter } from "next/navigation";
-import { getAllMaterialAsync, useDispatch } from "@/lib/redux";
 import { Material } from "@/types/types";
 import { addMaterial, updateMaterial } from "@/lib/redux/slices/materialSlice/materialActions";
 import { ModalCloseIcon } from "@/app/icons/modal";
@@ -26,7 +25,7 @@ interface materialModalProps {
 export default function MaterialModal({ modal, setModal, materialInitials, setMaterialInitials, }: materialModalProps) {
 
   const emptyMaterial = { name: "", unitType: "" };
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter();
   return (
     <div>

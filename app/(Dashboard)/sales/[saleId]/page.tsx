@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-import ActionBtnGroup from '@/app/components/purchases/preview/ActionBtnGroup';
+import ActionBtnGroup from '@/app/components/purchases/ActionBtnGroup';
 import { saleStatuses } from '@/app/constraints/roles&status';
-import { readSale } from '@/lib/redux/slices/saleSlice/saleActions';
+import { readSale } from '@/lib/features/sale/saleActions';
 import { formatDate } from '@/utils/formatDate';
 import React from 'react'
 

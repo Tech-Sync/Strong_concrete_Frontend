@@ -1,5 +1,5 @@
-import ActionBtnGroup from "@/app/components/purchases/preview/ActionBtnGroup";
-import { readPurchase } from "@/lib/redux/slices/purchaseSlice/purchaseActions";
+import ActionBtnGroup from "@/app/components/purchases/ActionBtnGroup";
+import { readPurchase } from "@/lib/features/purchase/purchaseActions";
 import { formatDate } from "@/utils/formatDate";
 import Image from "next/image";
 

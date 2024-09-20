@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import AddForm from '@/app/components/purchases/add/AddForm';
+import AddForm from '@/app/components/purchases/AddForm';
 import { DownloadIcon, PreviewIcon, SendInvoiceIcon } from '@/app/icons';
 import { Metadata } from 'next';
 import Link from 'next/link';
