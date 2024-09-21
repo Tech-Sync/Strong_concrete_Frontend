@@ -199,7 +199,6 @@ export interface Vehicle {
 }
 
 /* DELIVERY */
-
 export interface Delivery {
   id: number;
   status: number;
@@ -361,3 +360,24 @@ export interface Folder {
   isHidden: boolean
 }
 /* EMAIL ENDS */
+
+/* CHAT START */
+
+export interface ChatRoom {
+  id: number;
+  chat_name: string;
+  is_group_chat: boolean;
+  preview: null;
+  group_admin: GroupAdmin;
+  members: GroupAdmin[];
+  created_at: Date;
+}
+
+export interface GroupAdmin {
+  id: number;
+  first_name: string;
+  last_name: string;
+  phone_number: null | string;
+  email: string;
+  profile_pic: null | string;
+}

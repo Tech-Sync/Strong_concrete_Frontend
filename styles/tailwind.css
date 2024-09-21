@@ -48,6 +48,8 @@
 /* Select2*/
 @import './select2.css';
 
+/* Custom Css */
+
 @media print {
     body * {
         visibility: hidden;
@@ -61,6 +63,16 @@
         top: 0;
     }
 }
+
+.datatables.pagination-padding .mantine-lrzwoq {
+    padding-left: 1.25rem/* 20px */ !important;
+    padding-right: 1.25rem/* 20px */ !important;
+}
+
+.fc-time-grid .fc-slats, .fc-time-grid .fc-time {
+    display: none;
+  }
+
 
 @tailwind base;
 @tailwind components;

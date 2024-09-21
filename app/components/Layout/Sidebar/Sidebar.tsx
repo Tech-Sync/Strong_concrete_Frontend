@@ -145,7 +145,7 @@ const Sidebar = () => {
             icon: <SiderbarEmailIcon />,
             subMenu: [
                 { name: 'Emails', path: '/emails' },
-                { name: 'Whatsapp', path: '/wp' },
+                { name: 'Chats', path: '/chats' },
                 { name: 'Facebook', path: '/fb' },
                 { name: 'Instagram', path: '/itr' },
 
