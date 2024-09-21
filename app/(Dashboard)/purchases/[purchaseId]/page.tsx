@@ -1,4 +1,4 @@
-import ActionBtnGroup from "@/app/components/purchases/ActionBtnGroup";
+import ActionBtnGroup from "@/app/(Dashboard)/purchases/_components/ActionBtnGroup";
 import { readPurchase } from "@/lib/features/purchase/purchaseActions";
 import { formatDate } from "@/utils/formatDate";
 import Image from "next/image";

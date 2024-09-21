@@ -1,7 +1,7 @@
-import SaleAdd from '@/app/components/sales/SaleAdd'
 import { Metadata } from 'next';
 import Link from 'next/link'
 import React from 'react'
+import SaleAdd from '../_components/SaleAdd';
 
 export const metadata: Metadata = { title: "Sale Create", description: "Sale Create"};
 
