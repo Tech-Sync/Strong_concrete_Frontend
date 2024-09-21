@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { coloredToast } from '@/lib/sweetAlerts';
+import { coloredToast } from '@/utils/sweetAlerts';
 import Image from 'next/image';
 import { useAppDispatch } from '@/lib/hooks';
 import { createUser, updateUser } from '@/lib/features/user/userActions';

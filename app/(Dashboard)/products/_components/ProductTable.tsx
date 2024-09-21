@@ -3,8 +3,8 @@ import { DataTable, DataTableSortStatus } from "mantine-datatable";
 import { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
 import { DeleteIcon, EditIcon } from "@/app/icons";
-import { formatDate } from "@/utils/formatDate";
-import { coloredToast } from "@/lib/sweetAlerts";
+import { formatDate } from "@/utils/helperFunctions";
+import { coloredToast } from "@/utils/sweetAlerts";
 
 import useDeleteToasts from "@/hooks/useDeleteToasts";
 import ProductModal from "./ProductModal";

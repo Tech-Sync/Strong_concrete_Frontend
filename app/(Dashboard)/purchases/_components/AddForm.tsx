@@ -5,7 +5,7 @@ import { getAllMaterialAsync, selectMaterials } from '@/lib/features/material/ma
 import { addPurchase, updatePurchase } from '@/lib/features/purchase/purchaseActions';
 import { selectPurchase, updatePurchaseState } from '@/lib/features/purchase/purchaseSlice';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { coloredToast } from '@/lib/sweetAlerts';
+import { coloredToast } from '@/utils/sweetAlerts';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, } from 'react'

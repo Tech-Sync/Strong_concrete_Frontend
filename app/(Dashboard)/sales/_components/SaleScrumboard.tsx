@@ -2,7 +2,7 @@
 'use client'
 import { ReactSortable } from 'react-sortablejs';
 import { useState, useEffect } from 'react';
-import { coloredToast } from '@/lib/sweetAlerts';
+import { coloredToast } from '@/utils/sweetAlerts';
 import { PreviewIcon, ScrumboardDateIcon, ScrumboardTagIcon } from '@/app/icons';
 import { useRouter } from 'next/navigation';
 import moment from 'moment';

@@ -67,7 +67,7 @@ const NavbarProfileDrop = () => {
           </li>
           {/*
           <li>
-            <Link href="/apps/mailbox" className="dark:hover:text-white">
+            <Link href="/apps/emails" className="dark:hover:text-white">
               <ProfileMailBoxIcon />
               Inbox
             </Link>

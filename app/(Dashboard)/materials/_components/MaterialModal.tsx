@@ -4,7 +4,7 @@ import { Formik } from "formik";
 import React, { Fragment, useState } from "react";
 import { object, string } from "yup";
 import MaterialForm from "./MaterialForm";
-import { coloredToast } from "@/lib/sweetAlerts";
+import { coloredToast } from "@/utils/sweetAlerts";
 import { useRouter } from "next/navigation";
 import { Material } from "@/types/types";
 import { useAppDispatch } from "@/lib/hooks";

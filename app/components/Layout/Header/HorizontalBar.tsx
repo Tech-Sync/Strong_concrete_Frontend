@@ -57,7 +57,7 @@ const HorizontalBar = () => {
             <Link href="/apps/chat">{t('chat')}</Link>
           </li>
           <li>
-            <Link href="/apps/mailbox">{t('mailbox')}</Link>
+            <Link href="/apps/emails">{t('emails')}</Link>
           </li>
           <li>
             <Link href="/apps/todolist">{t('todo_list')}</Link>

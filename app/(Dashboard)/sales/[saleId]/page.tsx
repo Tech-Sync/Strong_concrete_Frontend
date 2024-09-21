@@ -2,7 +2,7 @@
 import ActionBtnGroup from '@/app/(Dashboard)/purchases/_components/ActionBtnGroup';
 import { saleStatuses } from '@/app/constraints/roles&status';
 import { readSale } from '@/lib/features/sale/saleActions';
-import { formatDate } from '@/utils/formatDate';
+import { formatDate } from '@/utils/helperFunctions';
 import React from 'react'
 
 

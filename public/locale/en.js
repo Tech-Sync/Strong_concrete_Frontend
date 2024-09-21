@@ -23,7 +23,7 @@ export  const lang ={
     "finance": "Finance",
     "crypto": "Crypto",
     "chat": "Chat",
-    "mailbox": "Mailbox",
+    "emails": "Mailbox",
     "todo_list": "Todo List",
     "notes": "Notes",
     "scrumboard": "Scrumboard",

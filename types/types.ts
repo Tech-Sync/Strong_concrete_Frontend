@@ -280,3 +280,84 @@ export interface DashboardData {
   revenueChart: RevenueChart;
   salesByCategory: SalesByCategory;
 }
+
+/* EMAIL START */
+export interface Email {
+  "@odata.etag": string;
+  id: string;
+  type: string;
+  createdDateTime: string;
+  lastModifiedDateTime: string;
+  changeKey: string;
+  categories: string[];
+  receivedDateTime: string;
+  sentDateTime: string;
+  hasAttachments: boolean;
+  internetMessageId: string;
+  subject: string;
+  bodyPreview: string;
+  importance: string;
+  parentFolderId: string;
+  conversationId: string;
+  conversationIndex: string;
+  isDeliveryReceiptRequested: boolean;
+  isReadReceiptRequested: boolean;
+  isRead: boolean;
+  isDraft: boolean;
+  webLink: string;
+  inferenceClassification: string;
+  body: Body;
+  sender: Sender;
+  from: From;
+  toRecipients: ToRecipient[];
+  ccRecipients: any[];
+  bccRecipients: any[];
+  replyTo: any[];
+  flag: Flag;
+}
+
+interface Flag {
+  flagStatus: string;
+}
+
+export interface ToRecipient {
+  emailAddress: {
+    name: string;
+    address: string;
+  };
+}
+
+
+interface From {
+  emailAddress: EmailAddress1;
+}
+
+interface EmailAddress1 {
+  name: string;
+  address: string;
+}
+
+interface Sender {
+  emailAddress: EmailAddress;
+}
+
+interface EmailAddress {
+  name: string;
+  address: string;
+}
+
+interface Body {
+  contentType: string;
+  content: string;
+}
+
+export interface Folder {
+  id: string,
+  displayName: string,
+  parentFolderId: string,
+  childFolderCount: number,
+  unreadItemCount: number,
+  totalItemCount: number,
+  isHidden: boolean
+}
+/* EMAIL ENDS */

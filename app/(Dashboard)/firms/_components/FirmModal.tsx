@@ -6,7 +6,7 @@ import React, { Fragment, useState } from "react";
 import { object, string } from "yup";
 import FirmForm from "./FirmForm";
 // import { addFirm, updateFirm } from "@/actions/firmActions";
-import { coloredToast } from "@/lib/sweetAlerts";
+import { coloredToast } from "@/utils/sweetAlerts";
 import { useRouter } from "next/navigation";
 import { Firm } from "@/types/types";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";

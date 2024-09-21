@@ -10,9 +10,10 @@ import { purchaseSlice } from "./features/purchase/purchaseSlice";
 import { saleSlice } from "./features/sale/saleSlice";
 import { userSlice } from "./features/user/userSlice";
 import { vehicleSlice } from "./features/vehicle/vehicleSlice";
+import { emailSlice } from "./features/email/emailSlice";
 
 
-const rootReducer = combineSlices(themeConfigSlice, deliverySlice, firmSlice, materialSlice, productSlice, productionSlice, purchaseSlice, saleSlice, userSlice, vehicleSlice);
+const rootReducer = combineSlices(themeConfigSlice, deliverySlice, firmSlice, materialSlice, productSlice, productionSlice, purchaseSlice, saleSlice, userSlice, vehicleSlice, emailSlice);
 
 export type RootState = ReturnType<typeof rootReducer>;
 

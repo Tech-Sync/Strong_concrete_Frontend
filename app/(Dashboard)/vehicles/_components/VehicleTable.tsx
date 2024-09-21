@@ -3,9 +3,9 @@ import { DataTable, DataTableSortStatus } from "mantine-datatable";
 import { useState, useEffect } from "react";
 import sortBy from "lodash/sortBy";
 import { DeleteIcon, EditIcon } from "@/app/icons";
-import { formatDate } from "@/utils/formatDate";
+import { formatDate } from "@/utils/helperFunctions";
 import { vehicleStatuses } from "@/app/constraints/roles&status";
-import { coloredToast } from "@/lib/sweetAlerts";
+import { coloredToast } from "@/utils/sweetAlerts";
 
 import VehicleModal from "./VehicleModal";
 import useDeleteToasts from "@/hooks/useDeleteToasts";

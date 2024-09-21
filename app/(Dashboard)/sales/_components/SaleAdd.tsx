@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Select from 'react-select';
 import { useEffect, useState } from 'react';
 import MaskedInput from 'react-text-mask';
-import { coloredToast } from '@/lib/sweetAlerts';
+import { coloredToast } from '@/utils/sweetAlerts';
 import { PlusIcon } from '@/app/icons';
 import { number, object, string } from 'yup';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';

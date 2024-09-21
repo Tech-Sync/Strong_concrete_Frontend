@@ -3,7 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Formik } from "formik";
 import React, { Fragment } from "react";
 import { boolean, number, object, string } from "yup";
-import { coloredToast } from "@/lib/sweetAlerts";
+import { coloredToast } from "@/utils/sweetAlerts";
 import { useRouter } from "next/navigation";
 import { Firm } from "@/types/types";
 import VehicleForm from "./VehicleForm";

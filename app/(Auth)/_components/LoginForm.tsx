@@ -4,7 +4,7 @@ import {
   coloredToast,
   forgetPasswordToast,
   successToast,
-} from "@/lib/sweetAlerts";
+} from "@/utils/sweetAlerts";
 import { Form, Formik, Field, ErrorMessage } from "formik";
 import { useRouter } from "next/navigation";
 import React from "react";

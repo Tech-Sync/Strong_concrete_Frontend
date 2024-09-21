@@ -3,7 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import React, { Fragment, useEffect, useState } from "react";
 import { number, object, string } from "yup";
-import { coloredToast } from "@/lib/sweetAlerts";
+import { coloredToast } from "@/utils/sweetAlerts";
 import { useRouter } from "next/navigation";
 import { Product } from "@/types/types";
 import Select, { SingleValue } from 'react-select';
