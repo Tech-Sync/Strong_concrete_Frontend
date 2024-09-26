@@ -4,46 +4,67 @@ import Dropdown from '@/app/components/Layout/Dropdown';
 import Image from 'next/image';
 import { Tab } from '@headlessui/react';
 import { Fragment } from 'react';
-import WpContacts from './ChatContacts';
 import WpChatList from './ChatList';
 import WpChatBox from './ChatBox';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
-import { ChatsIcon, SettingIcon, SignOutIcon, StartChatIcon } from './ChatIcons';
-import { ChatRoom } from '@/types/types';
+import { CallsIcon, ChatsIcon, ContactIcon, NotiIcon, PhoneChatIcon, SettingIcon, SignOutIcon, StartChatIcon } from './ChatIcons';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { fetchAllChatsAsync, selectChats, selectChatStates, setChats } from '@/lib/features/chat/chatSlice';
+import { Chat } from '@/types/types';
+import { coloredToast } from '@/utils/sweetAlerts';
+import { useCallback } from 'react';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import { selectIsDarkMode } from '@/lib/features/themeConfig/themeConfigSlice';
 
 
 type ChatMainProps = {
-    chatRooms: ChatRoom[];
     chatTitle: string;
     image: string;
+    chats: Chat[];
 };
 
-const ChatMain = ({ chatTitle, image, chatRooms }: ChatMainProps) => {
-
+const ChatMain = ({ chatTitle, image, chats }: ChatMainProps) => {
     const { userInfo } = useCurrentUser()
-
-
+    const dispatch = useAppDispatch()
+    const { status, error } = useAppSelector(selectChatStates)
 
     const [isShowChatMenu, setIsShowChatMenu] = useState(false);
     const [searchUser, setSearchUser] = useState('');
     const [isShowUserChat, setIsShowUserChat] = useState(false);
-    const [selectedUser, setSelectedUser] = useState<any>(null);
-    const [filteredItems, setFilteredItems] = useState<ChatRoom[]>(chatRooms);
+    const [selectedChat, setSelectedChat] = useState<any>(null);
+    const [filteredItems, setFilteredItems] = useState<Chat[]>(chats);
+    const isDark = useAppSelector(selectIsDarkMode)
+
+    useEffect(() => {
+        dispatch(setChats(chats))
+    }, [])
+
+    useEffect(() => {
+        if (error) {
+            coloredToast('danger', error);
+        }
+    }, [error]);
+
+
+    useEffect(() => {
+        setFilteredItems(chats);
+    }, [chats]);
+
 
     useEffect(() => {
         setFilteredItems(() => {
-            return chatRooms.filter((chat: any) => {
+            return chats.filter((chat: any) => {
 
                 const searchTerm = searchUser.toLowerCase();
 
                 let isChatNameMatch;
-                if (chat.chat_name) {
-                    // Check if chat_name matches the search term
-                    isChatNameMatch = chat.chat_name ? chat.chat_name.toLowerCase().includes(searchTerm) : false;
+                if (chat.chatName) {
+                    // Check if chatName matches the search term
+                    isChatNameMatch = chat.chatName ? chat.chatName.toLowerCase().includes(searchTerm) : false;
                 }
 
-                const isMemberMatch = chat.members?.some((member: any) => {
-                    const fullName = `${member.first_name} ${member.last_name}`.toLowerCase();
+                const isMemberMatch = chat.chatUsers?.some((member: any) => {
+                    const fullName = `${member.firstName} ${member.lastName}`.toLowerCase();
                     const email = member.email ? member.email.toLowerCase() : '';
 
                     return fullName.includes(searchTerm) || email.includes(searchTerm);
@@ -52,7 +73,7 @@ const ChatMain = ({ chatTitle, image, chatRooms }: ChatMainProps) => {
                 return isChatNameMatch || isMemberMatch;
             });
         });
-    }, [searchUser, chatRooms]);
+    }, [searchUser, chats]);
 
     const scrollToBottom = () => {
         if (isShowUserChat) {
@@ -64,24 +85,27 @@ const ChatMain = ({ chatTitle, image, chatRooms }: ChatMainProps) => {
         }
     };
     const selectUser = (user: any) => {
-        setSelectedUser(user);
+        setSelectedChat(user);
         setIsShowUserChat(true);
         scrollToBottom();
         setIsShowChatMenu(false);
     };
 
+    if (status === 'loading') {
+        return <div>Loading...</div>;
+    }
+
     return (
-        // sm:h-[calc(100vh_-_150px)]
-        <div className={`relative flex h-full gap-5 sm:h-[calc(100vh_-_150px)] sm:min-h-0 pt-5 ${isShowChatMenu ? 'min-h-[999px]' : ''}`}>
+        <div className={`mt-5 relative flex h-full gap-5 sm:h-[calc(100vh_-_150px)] sm:min-h-0 ${isShowChatMenu ? 'min-h-[999px]' : ''}`}>
             <div className={`panel absolute z-10 hidden w-full max-w-xs flex-none space-y-4 overflow-hidden p-4 xl:relative xl:block xl:h-full ${isShowChatMenu ? '!block' : ''}`}>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center">
                         <div className="flex-none">
-                            <Image height={50} width={100} src="/assets/images/onelife-logo.png" className="rounded-full object-cover" alt="" />
+                            <img src="/assets/images/profile-34.jpeg" className="h-12 w-12 rounded-full object-cover" alt="" />
                         </div>
                         <div className="mx-3">
-                            {/* <p className="mb-1 font-semibold">United Bank for Africa</p> */}
-                            <p className="text-xs text-white-dark">{chatTitle} Chat</p>
+                            <p className="mb-1 font-semibold">{userInfo?.firstName} {userInfo?.lastName}</p>
+                            <p className="text-xs text-white-dark">--------------</p>
                         </div>
                     </div>
                     <div className="dropdown">
@@ -151,19 +175,7 @@ const ChatMain = ({ chatTitle, image, chatRooms }: ChatMainProps) => {
                         <Tab as={Fragment}>
                             {({ selected }) => (
                                 <button type="button" className={`${selected ? 'text-primary' : 'hover:text-primary'}`}>
-                                    <svg className="mx-auto mb-1" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M5.00659 6.93309C5.04956 5.7996 5.70084 4.77423 6.53785 3.93723C7.9308 2.54428 10.1532 2.73144 11.0376 4.31617L11.6866 5.4791C12.2723 6.52858 12.0372 7.90533 11.1147 8.8278M17.067 18.9934C18.2004 18.9505 19.2258 18.2992 20.0628 17.4622C21.4558 16.0692 21.2686 13.8468 19.6839 12.9624L18.5209 12.3134C17.4715 11.7277 16.0947 11.9628 15.1722 12.8853"
-                                            stroke="currentColor"
-                                            strokeWidth="1.5"
-                                        />
-                                        <path
-                                            opacity="0.5"
-                                            d="M5.00655 6.93311C4.93421 8.84124 5.41713 12.0817 8.6677 15.3323C11.9183 18.5829 15.1588 19.0658 17.0669 18.9935M15.1722 12.8853C15.1722 12.8853 14.0532 14.0042 12.0245 11.9755C9.99578 9.94676 11.1147 8.82782 11.1147 8.82782"
-                                            stroke="currentColor"
-                                            strokeWidth="1.5"
-                                        />
-                                    </svg>
+                                    <CallsIcon />
                                     Calls
                                 </button>
                             )}
@@ -171,16 +183,7 @@ const ChatMain = ({ chatTitle, image, chatRooms }: ChatMainProps) => {
                         <Tab as={Fragment}>
                             {({ selected }) => (
                                 <button type="button" className={`${selected ? 'text-primary' : 'hover:text-primary'}`}>
-                                    <svg className="mx-auto mb-1" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <circle cx="10" cy="6" r="4" stroke="currentColor" strokeWidth="1.5" />
-                                        <path
-                                            opacity="0.5"
-                                            d="M18 17.5C18 19.9853 18 22 10 22C2 22 2 19.9853 2 17.5C2 15.0147 5.58172 13 10 13C14.4183 13 18 15.0147 18 17.5Z"
-                                            stroke="currentColor"
-                                            strokeWidth="1.5"
-                                        />
-                                        <path d="M21 10H19M19 10H17M19 10L19 8M19 10L19 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                                    </svg>
+                                    <ContactIcon />
                                     Contacts
                                 </button>
                             )}
@@ -188,14 +191,7 @@ const ChatMain = ({ chatTitle, image, chatRooms }: ChatMainProps) => {
                         <Tab as={Fragment}>
                             {({ selected }) => (
                                 <button type="button" className={`${selected ? 'text-primary' : 'hover:text-primary'}`}>
-                                    <svg className="mx-auto mb-1" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M19.0001 9.7041V9C19.0001 5.13401 15.8661 2 12.0001 2C8.13407 2 5.00006 5.13401 5.00006 9V9.7041C5.00006 10.5491 4.74995 11.3752 4.28123 12.0783L3.13263 13.8012C2.08349 15.3749 2.88442 17.5139 4.70913 18.0116C9.48258 19.3134 14.5175 19.3134 19.291 18.0116C21.1157 17.5139 21.9166 15.3749 20.8675 13.8012L19.7189 12.0783C19.2502 11.3752 19.0001 10.5491 19.0001 9.7041Z"
-                                            stroke="currentColor"
-                                            strokeWidth="1.5"
-                                        />
-                                        <path opacity="0.5" d="M7.5 19C8.15503 20.7478 9.92246 22 12 22C14.0775 22 15.845 20.7478 16.5 19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                                    </svg>
+                                    <NotiIcon />
                                     Notification
                                 </button>
                             )}
@@ -205,19 +201,19 @@ const ChatMain = ({ chatTitle, image, chatRooms }: ChatMainProps) => {
                     <div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b]"></div>
                     <Tab.Panels>
                         <Tab.Panel>
-                            <WpChatList selectUser={selectUser} selectedUser={selectedUser} filteredItems={filteredItems} />
+                            <WpChatList selectUser={selectUser} selectedChat={selectedChat} filteredItems={filteredItems} />
                         </Tab.Panel>
                         <Tab.Panel>
-
+                            <div>1</div>
                         </Tab.Panel>
                         <Tab.Panel>
-
+                            <div>2</div>
                         </Tab.Panel>
                     </Tab.Panels>
                 </Tab.Group>
 
             </div>
-            <div className={`absolute z-[5] hidden h-full w-full rounded-md bg-black/60 ${isShowChatMenu ? '!block xl:!hidden' : ''}`} onClick={() => setIsShowChatMenu(!isShowChatMenu)}></div>
+            <div className={`absolute z-[5] hidden h-full w-full rounded-md bg-black/10 ${isShowChatMenu ? '!block xl:!hidden' : ''}`} onClick={() => setIsShowChatMenu(!isShowChatMenu)}></div>
             <div className="panel flex-1 p-0">
                 {!isShowUserChat && (
                     <div className="relative flex h-full items-center justify-center p-4">
@@ -228,10 +224,9 @@ const ChatMain = ({ chatTitle, image, chatRooms }: ChatMainProps) => {
                                 <path d="M20 17L4 17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                             </svg>
                         </button>
-
                         <div className="flex flex-col items-center justify-center py-8">
                             <div className="mb-8 h-[calc(100vh_-_320px)] min-h-[120px] w-[280px] text-white dark:text-black md:w-[430px]">
-                                <Image src={`/assets/images/${image}.png`} height={500} width={500} alt="Empty Chat" objectFit="contain" />
+                                <PhoneChatIcon isDark={isDark} />
                             </div>
                             <p className="mx-auto flex max-w-[190px] justify-center rounded-md bg-white-dark/20 p-2 font-semibold">
                                 <StartChatIcon />
@@ -240,19 +235,20 @@ const ChatMain = ({ chatTitle, image, chatRooms }: ChatMainProps) => {
                         </div>
                     </div>
                 )}
-                {isShowUserChat && selectedUser ? (
+                {isShowUserChat && selectedChat ? (
                     <WpChatBox
                         setIsShowChatMenu={setIsShowChatMenu}
                         isShowChatMenu={isShowChatMenu}
-                        selectedUser={selectedUser}
+                        selectedChat={selectedChat}
                         scrollToBottom={scrollToBottom}
                         setFilteredItems={setFilteredItems}
-                        chatRooms={chatRooms} />
+                        chatRooms={chats} />
                 ) : (
                     ''
                 )}
             </div>
         </div>
+    
     );
 };
 

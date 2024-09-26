@@ -1,5 +1,4 @@
 'use client'
-import 'react-perfect-scrollbar/dist/css/styles.css';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'

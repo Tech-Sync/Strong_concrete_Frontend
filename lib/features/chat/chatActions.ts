@@ -15,25 +15,47 @@ const authConfig = async () => {
 };
 
 
-export const getAllChatRooms = async () => {
+export const getAllChats = async () => {
     const headers = await authConfig();
     try {
-        const response = await fetch(`${BASE_URL}chats/`, {
+        const response = await fetch(`${BASE_URL}/chats/`, {
             cache: "no-cache",
             headers,
         });
         const data = await response.json();
+
         if (response.ok) {
-            return data;
+            return data.userChats;
         } else {
-            throw new Error(data.detail || "Something went wrong, Please try again!");
+            throw new Error(data.message || "Something went wrong, Please try again!");
         }
+
     } catch (error: any) {
         return { error: error.message };
     }
 };
 
-export const deleteRoom = async (id: any) => {
+export const getMessagesForChat = async (chatId: string) => {
+    const headers = await authConfig();
+    try {
+        const response = await fetch(`${BASE_URL}/chats/message/${chatId}`, {
+            cache: "no-cache",
+            headers,
+        });
+        const data = await response.json();
+
+        if (response.ok) {
+            return data.messages;
+        } else {
+            throw new Error(data.message || "Something went wrong, Please try again!");
+        }
+
+    } catch (error: any) {
+        return { error: error.message };
+    }
+};
+
+export const deleteChat = async (id: any) => {
     const headers = await authConfig();
     try {
         const response = await fetch(`${BASE_URL}ticket-room/${id}/`, {
@@ -77,7 +99,7 @@ export const deleteRoom = async (id: any) => {
 //     }
 // };
 
-export const readRoom = async (id: string) => {
+export const readChat = async (id: string) => {
     const headers = await authConfig();
 
     try {
@@ -99,7 +121,7 @@ export const readRoom = async (id: string) => {
 
 }
 
-export const updateRoom = async (roomData:any) => {
+export const updateChat = async (roomData: any) => {
     const headers = await authConfig();
     try {
         const response = await fetch(`${BASE_URL}ticket-room/${roomData.id}`, {
@@ -121,7 +143,7 @@ export const updateRoom = async (roomData:any) => {
     }
 };
 
-export const createRoom = async (roomData:any) => {
+export const createChat = async (roomData: any) => {
     const headers = await authConfig();
     try {
         const response = await fetch(`${BASE_URL}ticket-categories/`, {

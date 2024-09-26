@@ -1,58 +1,63 @@
 import { createAppSlice } from "@/lib/createAppSlice"
 import { PayloadAction } from "@reduxjs/toolkit";
+import { getAllChats } from "./chatActions";
+import { Chat } from "@/types/types";
 
 export interface ChatSliceState {
-    chatRooms: any[],
-    status: "idle" | "loading" | "failed",
-    error: null | string,
-    chatRoom: null | any
+    chats: Chat[];
+    status: "idle" | "loading" | "failed";
+    error: string | null
+    chat: null | Chat;
 }
 
-const initialState = {
-    chatRooms: [],
+const initialState: ChatSliceState = {
+    chats: [],
     status: "idle",
     error: null,
-    chatRoom: null
+    chat: null
 }
 
 
 export const chatSlice = createAppSlice({
     name: 'chat',
     initialState,
-    reducers: ({ reducer }) => ({
-        setChatRoom: reducer((state, action: PayloadAction<any>) => {
+    reducers: ({ reducer, asyncThunk }) => ({
+        setChat: reducer((state, action: PayloadAction<Chat>) => {
             state.status = 'idle';
-            state.chatRoom = action.payload;
+            state.chat = action.payload;
         }),
-        setChatRooms: reducer((state, action: PayloadAction<[]>) => {
+        setChats: reducer((state, action: PayloadAction<Chat[]>) => {
             state.status = 'idle';
-            state.chatRooms = action.payload;
+            state.chats = action.payload;
         }),
-        // fetchAllChatRoomsAsync: asyncThunk(
-        //     async () => {
-        //         try {
-        //             const response = await 
-        //             if (response.error) {
-        //                 throw new Error(response.error);
-        //             }
-        //             return response;
-        //         } catch (error) {
-        //             throw new Error("Data fetch failed: " + (error as Error).message);
-        //         }
-        //     },
-        //     {
-        //         pending: (state) => { state.status = "loading"; },
-        //         fulfilled: (state, action) => { state.status = "idle"; state.chatRooms = action.payload; },
-        //         rejected: (state, action) => { state.status = "failed"; state.error = action.error.message || null; },
-        //     },
-        // ),
+        fetchAllChatsAsync: asyncThunk(
+            async () => {
+                try {
+                    const response = await getAllChats();
+
+                    if (response.error) {
+                        throw new Error(response.error);
+                    }
+
+                    return response;
+                } catch (error) {
+                    throw new Error("Data fetch failed: " + (error as Error).message);
+                }
+            },
+            {
+                pending: (state) => { state.status = "loading"; },
+                fulfilled: (state, action) => { state.status = "idle"; state.chats = action.payload; },
+                rejected: (state, action) => { state.status = "failed"; state.error = action.error.message || null; },
+            },
+        ),
     }),
     selectors: {
-        selectChatRooms: (chat) => chat.chatRooms,
-        selectChatRoom: (chat) => chat.chatRoom,
-        selectChatStatus: (chat) => chat.status
+        selectChats: (chat) => chat.chats,
+        selectChat: (chat) => chat.chat,
+        selectChatStatus: (chat) => chat.status,
+        selectChatStates: (chat) => chat
     }
 })
 
-export const { setChatRoom, setChatRooms } = chatSlice.actions;
-export const { selectChatRooms, selectChatRoom, selectChatStatus } = chatSlice.selectors
+export const { setChat, setChats, fetchAllChatsAsync } = chatSlice.actions;
+export const { selectChats, selectChat, selectChatStatus, selectChatStates } = chatSlice.selectors

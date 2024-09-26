@@ -363,21 +363,39 @@ export interface Folder {
 
 /* CHAT START */
 
-export interface ChatRoom {
+
+export interface Chat {
   id: number;
-  chat_name: string;
-  is_group_chat: boolean;
-  preview: null;
-  group_admin: GroupAdmin;
-  members: GroupAdmin[];
-  created_at: Date;
+  latestMessageId: null | number;
+  chatName: string | null;
+  isGroupChat: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: null | Date;
+  groupAdminId: number | null;
+  chatUsers: GroupAdmin[];
+  latestMessage: null | LatestMessage;
+  groupAdmin: GroupAdmin | null;
 }
 
 export interface GroupAdmin {
   id: number;
-  first_name: string;
-  last_name: string;
-  phone_number: null | string;
+  firstName: string;
+  lastName: string;
   email: string;
-  profile_pic: null | string;
+  profilePic: string;
+  phoneNo: string;
+  role: number;
 }
+
+
+export interface LatestMessage {
+  id: number;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: null | Date;
+  chatId: number;
+  senderId: number;
+}
+

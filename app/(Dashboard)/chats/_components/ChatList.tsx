@@ -1,39 +1,40 @@
 'use client'
 import { useCurrentUser } from '@/hooks/useCurrentUser';
-import { ChatRoom } from '@/types/types';
+import { Chat } from '@/types/types';
+import { formatDate } from '@/utils/helperFunctions';
+import Image from 'next/image';
 import React from 'react'
-
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 interface ChatListProps {
-    filteredItems: ChatRoom[];
+    filteredItems: Chat[];
     selectUser: (chat: any) => void;
-    selectedUser: any;
+    selectedChat: any;
 
 }
 
-const ChatList = ({ filteredItems, selectUser, selectedUser }: ChatListProps) => {
+const ChatList = ({ filteredItems, selectUser, selectedChat }: ChatListProps) => {
     const { userInfo } = useCurrentUser()
-    
+
     return (
         <div className="!mt-0">
             <PerfectScrollbar className="chat-users relative -mr-3.5 h-full min-h-[100px] space-y-0.5 pr-3.5 sm:h-[calc(100vh_-_357px)]">
-                {filteredItems.map((chat: any) => {
+                {filteredItems.map((chat: Chat, i: number) => {
                     // @ts-ignore
-                    const member = chat.members.filter((member: any) => member.id !== userInfo?.user_id);
+                    const member = chat.chatUsers.filter((member: any) => member.id !== userInfo?.user_id);
                     return (
                         <div key={chat.id}>
                             <button
                                 type="button"
-                                className={`flex w-full items-center justify-between rounded-md p-2 hover:bg-gray-100 hover:text-primary dark:hover:bg-[#050b14] dark:hover:text-primary ${selectedUser && selectedUser.id === chat.id ? 'bg-gray-100 text-primary dark:bg-[#050b14] dark:text-primary' : ''
+                                className={`flex w-full items-center justify-between rounded-md p-2 hover:bg-gray-100 hover:text-primary dark:hover:bg-[#050b14] dark:hover:text-primary ${selectedChat && selectedChat.id === chat.id ? 'bg-gray-100 text-primary dark:bg-[#050b14] dark:text-primary' : ''
                                     }`}
-                                onClick={() => selectUser(chat)}
+                                onClick={() => { selectUser(chat) }}
                             >
 
                                 <div className="flex-1">
                                     <div className="flex items-center">
                                         <div className="relative flex-shrink-0">
-                                            <img src={`/assets/images/${member[0].profile_pic}`} className="h-12 w-12 rounded-full object-cover" alt="" />
+                                            <Image width={48} height={48} src={`/assets/images/${member[0].profilePic}`} className="h-12 w-12 rounded-full object-cover" alt="" />
                                             <div>
                                                 <div className="absolute bottom-0 ltr:right-0 rtl:left-0">
                                                     <div className="h-4 w-4 rounded-full bg-success"></div>
@@ -42,17 +43,17 @@ const ChatList = ({ filteredItems, selectUser, selectedUser }: ChatListProps) =>
                                         </div>
                                         <div className="mx-3 ltr:text-left rtl:text-right">
                                             {
-                                                chat.is_group_chat
-                                                    ? <p className="mb-1 font-semibold">{chat.chat_name}</p>
-                                                    : <p className="mb-1 font-semibold">{member[0].first_name} {member[0].last_name}</p>
+                                                chat.isGroupChat
+                                                    ? <p className="mb-1 font-semibold">{chat.chatName}</p>
+                                                    : <p className="mb-1 font-semibold">{member[0].firstName} {member[0].lastName}</p>
 
                                             }
-                                            <p className="max-w-[185px] truncate text-xs text-white-dark">{chat.preview?.content}</p>
+                                            <p className="max-w-[185px] truncate text-xs text-white-dark">{chat.latestMessage?.content}</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="whitespace-nowrap text-xs font-semibold">
-                                    <p>{chat.preview?.created_at}</p>
+                                    <p>{chat.latestMessage && formatDate(chat?.latestMessage.createdAt)}</p>
                                 </div>
                             </button>
                         </div>

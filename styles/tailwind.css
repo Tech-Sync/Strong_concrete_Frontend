@@ -48,6 +48,9 @@
 /* Select2*/
 @import './select2.css';
 
+/* perfect scrollbar */
+@import 'react-perfect-scrollbar/dist/css/styles.css';
+
 /* Custom Css */
 
 @media print {

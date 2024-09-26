@@ -1,20 +1,32 @@
 import Dropdown from '@/app/components/Layout/Dropdown';
+import { getMessagesForChat } from '@/lib/features/chat/chatActions';
 import Image from 'next/image';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 interface ChatBoxProps {
     setIsShowChatMenu: (value: boolean) => void;
-    selectedUser: any;
+    selectedChat: any;
     isShowChatMenu: boolean;
     scrollToBottom: () => void;
     setFilteredItems: (value: any) => void;
     chatRooms: any
 }
 
-const ChatBox = ({ setIsShowChatMenu, isShowChatMenu, selectedUser, scrollToBottom, setFilteredItems, chatRooms }: ChatBoxProps) => {
+const ChatBox = ({ setIsShowChatMenu, isShowChatMenu, selectedChat, scrollToBottom, setFilteredItems, chatRooms }: ChatBoxProps) => {
 
+
+    const fetchMessages = async () => {
+        const messages = await getMessagesForChat('1');
+        console.log(messages);
+    };
+
+    useEffect(() => {
+        if (selectedChat) {
+            fetchMessages();
+        }
+    }, [selectedChat]);
 
     const [textMessage, setTextMessage] = useState('');
 
@@ -22,9 +34,9 @@ const ChatBox = ({ setIsShowChatMenu, isShowChatMenu, selectedUser, scrollToBott
         console.log(textMessage);
         if (textMessage.trim()) {
             let list = chatRooms;
-            let user: any = list.find((d: any) => d.userId === selectedUser.userId);
+            let user: any = list.find((d: any) => d.userId === selectedChat.userId);
             user.messages.push({
-                fromUserId: selectedUser.userId,
+                fromUserId: selectedChat.userId,
                 toUserId: 0,
                 text: textMessage,
                 time: 'Just now',
@@ -53,14 +65,14 @@ const ChatBox = ({ setIsShowChatMenu, isShowChatMenu, selectedUser, scrollToBott
                         </svg>
                     </button>
                     <div className="relative flex-none">
-                        <img src={`/assets/images/${selectedUser.path}`} className="h-10 w-10 rounded-full object-cover sm:h-12 sm:w-12" alt="" />
+                        <img src={`/assets/images/${selectedChat.path}`} className="h-10 w-10 rounded-full object-cover sm:h-12 sm:w-12" alt="" />
                         <div className="absolute bottom-0 ltr:right-0 rtl:left-0">
                             <div className="h-4 w-4 rounded-full bg-success"></div>
                         </div>
                     </div>
                     <div className="mx-3">
-                        <p className="font-semibold">{selectedUser.name}</p>
-                        <p className="text-xs text-white-dark">{selectedUser.active ? 'Active now' : 'Last seen at ' + selectedUser.time}</p>
+                        <p className="font-semibold">{selectedChat.name}</p>
+                        <p className="text-xs text-white-dark">{selectedChat.active ? 'Active now' : 'Last seen at ' + selectedChat.time}</p>
                     </div>
                 </div>
                 <div className="flex gap-3 sm:gap-5">
@@ -213,24 +225,24 @@ const ChatBox = ({ setIsShowChatMenu, isShowChatMenu, selectedUser, scrollToBott
                 <div className="min-h-[400px] space-y-5 p-4 pb-[68px] sm:min-h-[300px] sm:pb-0">
                     <div className="m-6 mt-0 block">
                         <h4 className="relative border-b border-[#f4f4f4] text-center text-xs dark:border-gray-800">
-                            <span className="relative top-2 bg-white px-3 dark:bg-black">{'Today, ' + selectedUser.time}</span>
+                            <span className="relative top-2 bg-white px-3 dark:bg-black">{'Today, ' + selectedChat.time}</span>
                         </h4>
                     </div>
-                    {selectedUser.messages && selectedUser.messages.length ? (
+                    {selectedChat.messages && selectedChat.messages.length ? (
                         <>
-                            {selectedUser.messages.map((message: any, index: any) => {
+                            {selectedChat.messages.map((message: any, index: any) => {
                                 return (
                                     <div key={index}>
-                                        <div className={`flex items-start gap-3 ${selectedUser.userId === message.fromUserId ? 'justify-end' : ''}`}>
-                                            <div className={`flex-none ${selectedUser.userId === message.fromUserId ? 'order-2' : ''}`}>
-                                                {selectedUser.userId === message.fromUserId ? (
+                                        <div className={`flex items-start gap-3 ${selectedChat.userId === message.fromUserId ? 'justify-end' : ''}`}>
+                                            <div className={`flex-none ${selectedChat.userId === message.fromUserId ? 'order-2' : ''}`}>
+                                                {selectedChat.userId === message.fromUserId ? (
                                                     <Image height={40} width={40} src="/assets/images/onelife-logo.png" className="rounded-full object-cover" alt="" />
 
                                                 ) : (
                                                     ''
                                                 )}
-                                                {selectedUser.userId !== message.fromUserId ? (
-                                                    <img src={`/assets/images/${selectedUser.path}`} className="h-10 w-10 rounded-full object-cover" alt="" />
+                                                {selectedChat.userId !== message.fromUserId ? (
+                                                    <img src={`/assets/images/${selectedChat.path}`} className="h-10 w-10 rounded-full object-cover" alt="" />
                                                 ) : (
                                                     ''
                                                 )}
@@ -238,14 +250,14 @@ const ChatBox = ({ setIsShowChatMenu, isShowChatMenu, selectedUser, scrollToBott
                                             <div className="space-y-2">
                                                 <div className="flex items-center gap-3">
                                                     <div
-                                                        className={`rounded-md bg-black/10 p-4 py-2 dark:bg-gray-800 ${message.fromUserId === selectedUser.userId
+                                                        className={`rounded-md bg-black/10 p-4 py-2 dark:bg-gray-800 ${message.fromUserId === selectedChat.userId
                                                             ? '!bg-primary text-white ltr:rounded-br-none rtl:rounded-bl-none'
                                                             : 'ltr:rounded-bl-none rtl:rounded-br-none'
                                                             }`}
                                                     >
                                                         {message.text}
                                                     </div>
-                                                    <div className={`${selectedUser.userId === message.fromUserId ? 'hidden' : ''}`}>
+                                                    <div className={`${selectedChat.userId === message.fromUserId ? 'hidden' : ''}`}>
                                                         <svg
                                                             className="h-5 w-5 text-black/70 hover:!text-primary dark:text-white/70"
                                                             viewBox="0 0 24 24"
@@ -267,7 +279,7 @@ const ChatBox = ({ setIsShowChatMenu, isShowChatMenu, selectedUser, scrollToBott
                                                         </svg>
                                                     </div>
                                                 </div>
-                                                <div className={`text-xs text-white-dark ${selectedUser.userId === message.fromUserId ? 'ltr:text-right rtl:text-left' : ''}`}>
+                                                <div className={`text-xs text-white-dark ${selectedChat.userId === message.fromUserId ? 'ltr:text-right rtl:text-left' : ''}`}>
                                                     {message.time ? message.time : '5h ago'}
                                                 </div>
                                             </div>
