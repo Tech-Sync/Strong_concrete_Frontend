@@ -96,7 +96,7 @@ const ChatMain = ({ chatTitle, image, chats }: ChatMainProps) => {
     }
 
     return (
-        <div className={`mt-5 relative flex h-full gap-5 sm:h-[calc(100vh_-_150px)] sm:min-h-0 ${isShowChatMenu ? 'min-h-[999px]' : ''}`}>
+        <div className={`mt-5 relative flex h-full gap-5 sm:h-[calc(100vh_-_160px)] sm:min-h-0 ${isShowChatMenu ? 'min-h-[999px]' : ''}`}>
             <div className={`panel absolute z-10 hidden w-full max-w-xs flex-none space-y-4 overflow-hidden p-4 xl:relative xl:block xl:h-full ${isShowChatMenu ? '!block' : ''}`}>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center">
