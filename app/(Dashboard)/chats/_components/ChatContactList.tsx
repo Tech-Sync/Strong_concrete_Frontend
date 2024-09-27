@@ -9,7 +9,6 @@ import React, { useEffect, useState } from 'react'
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 interface ChatListProps {
-    filteredItems: any[];
     selectUser: (user: any) => void;
     selectedChat: any;
 }

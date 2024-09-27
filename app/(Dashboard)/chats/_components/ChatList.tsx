@@ -17,6 +17,23 @@ const ChatList = ({ filteredItems, selectUser, selectedChat }: ChatListProps) =>
 
     return (
         <PerfectScrollbar className="chat-users relative -mr-3.5 h-full min-h-[100px] space-y-0.5 pb-5 pr-3.5 sm:h-[calc(100vh_-_357px)]">
+            {
+                filteredItems.length === 0 ? (
+                    <div className="flex items-center justify-center h-full">
+                        <p className="text-gray-400 dark:text-gray-500">No Chat found</p>
+                    </div>
+                ) : (
+                    <div className="relative">
+                        <input type="text" className="peer form-input ltr:pr-9 rtl:pl-9" placeholder="Searching..." />
+                        <div className="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-2 rtl:left-2">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="11.5" cy="11.5" r="9.5" stroke="currentColor" strokeWidth="1.5" opacity="0.5"></circle>
+                                <path d="M18.5 18.5L22 22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
+                            </svg>
+                        </div>
+                    </div>
+                )
+            }
             {filteredItems.map((chat: Chat, i: number) => {
                 const member = chat.chatUsers.find((member: any) => member.id !== userInfo?.id);
                 return (

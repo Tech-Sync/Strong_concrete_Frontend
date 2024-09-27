@@ -34,7 +34,7 @@ const Tabs = [
 
 const ChatMain = ({ children }: { children: React.ReactNode; }) => {
     const dispatch = useAppDispatch()
-    
+
     const { userInfo } = useCurrentUser()
     const { status, error } = useAppSelector(selectChatStates)
     const chats = useAppSelector(selectChats)
@@ -177,7 +177,7 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
                         </Dropdown>
                     </div>
                 </div>
-                <div className="relative">
+                {/* <div className="relative">
                     <input type="text" className="peer form-input ltr:pr-9 rtl:pl-9" placeholder="Searching..." value={searchUser} onChange={(e) => setSearchUser(e.target.value)} />
                     <div className="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-2 rtl:left-2">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -185,7 +185,9 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
                             <path d="M18.5 18.5L22 22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
                         </svg>
                     </div>
-                </div>
+                </div> */}
+                <div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b]" />
+
                 <Tab.Group>
                     <Tab.List className="flex items-center justify-between text-xs">
                         {
@@ -201,7 +203,8 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
                             ))
                         }
                     </Tab.List>
-                    <div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b]"></div>
+                    {filteredItems.length === 0 && (<div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b]" />)}
+
                     <Tab.Panels>
                         <Tab.Panel>
                             <ChatList selectUser={selectUser} selectedChat={selectedChat} filteredItems={filteredItems} />
@@ -213,7 +216,7 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
                             <ChatList selectUser={selectUser} selectedChat={selectedChat} filteredItems={filteredItems} />
                         </Tab.Panel>
                         <Tab.Panel>
-                            <ChatContactList selectUser={selectUser} selectedChat={selectedChat} filteredItems={filteredItems} />
+                            <ChatContactList selectUser={selectUser} selectedChat={selectedChat} />
                         </Tab.Panel>
                     </Tab.Panels>
                 </Tab.Group>
