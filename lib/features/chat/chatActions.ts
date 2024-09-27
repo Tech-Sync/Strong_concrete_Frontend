@@ -35,7 +35,7 @@ export const getAllChats = async () => {
     }
 };
 
-export const getMessagesForChat = async (chatId: string) => {
+export const getMessagesForChat = async (chatId: number) => {
     const headers = await authConfig();
     try {
         const response = await fetch(`${BASE_URL}/chats/message/${chatId}`, {
@@ -46,6 +46,29 @@ export const getMessagesForChat = async (chatId: string) => {
 
         if (response.ok) {
             return data.messages;
+        } else {
+            throw new Error(data.message || "Something went wrong, Please try again!");
+        }
+
+    } catch (error: any) {
+        return { error: error.message };
+    }
+};
+
+export const postMessage = async (chatId: number, messageData: { receiverId: number, content: string }) => {
+    const headers = await authConfig();
+    try {
+        const response = await fetch(`${BASE_URL}/chats/message/${chatId}`, {
+            cache: "no-cache",
+            headers,
+            method: "POST",
+            body: JSON.stringify(messageData),
+
+        });
+        const data = await response.json();
+
+        if (response.ok) {
+            return data.message;
         } else {
             throw new Error(data.message || "Something went wrong, Please try again!");
         }

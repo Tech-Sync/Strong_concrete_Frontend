@@ -368,6 +368,7 @@ export interface Chat {
   id: number;
   latestMessageId: null | number;
   chatName: string | null;
+  chatPicture: string | null;
   isGroupChat: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -398,4 +399,15 @@ export interface LatestMessage {
   chatId: number;
   senderId: number;
 }
+
+export interface Message {
+  id: number;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: null | Date;
+  chatId: number;
+  senderId: number;
+}
+
 

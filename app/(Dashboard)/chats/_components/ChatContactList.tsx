@@ -12,7 +12,7 @@ interface ChatListProps {
     selectedChat: any;
 }
 
-const ChatList = ({ filteredItems, selectUser, selectedChat }: ChatListProps) => {
+const ChatContactList = ({ filteredItems, selectUser, selectedChat }: ChatListProps) => {
     const { userInfo } = useCurrentUser()
 
     return (
@@ -57,4 +57,4 @@ const ChatList = ({ filteredItems, selectUser, selectedChat }: ChatListProps) =>
     )
 }
 
-export default ChatList
+export default ChatContactList

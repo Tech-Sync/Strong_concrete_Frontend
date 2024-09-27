@@ -31,7 +31,5 @@ export default function Error({ error, reset, }: {
         </div>
     )
 }
-Error.getLayout = (page: any) => {
-    return <BlankLayout>{page}</BlankLayout>;
-};
+
 

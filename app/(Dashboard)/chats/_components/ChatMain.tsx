@@ -4,10 +4,10 @@ import Dropdown from '@/app/components/Layout/Dropdown';
 import Image from 'next/image';
 import { Tab } from '@headlessui/react';
 import { Fragment } from 'react';
-import WpChatList from './ChatList';
-import WpChatBox from './ChatBox';
+import ChatList from './ChatList';
+import ChatBox from './ChatBox';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
-import { CallsIcon, ChatsIcon, ContactIcon, NotiIcon, PhoneChatIcon, SettingIcon, SignOutIcon, StartChatIcon } from './ChatIcons';
+import { CallsIcon, ChatsIcon, ContactIcon, HelpIcon, NotiIcon, PhoneChatIcon, SettingIcon, SignOutIcon, StartChatIcon } from './ChatIcons';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { fetchAllChatsAsync, selectChats, selectChatStates, setChats } from '@/lib/features/chat/chatSlice';
 import { Chat } from '@/types/types';
@@ -15,6 +15,7 @@ import { coloredToast } from '@/utils/sweetAlerts';
 import { useCallback } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { selectIsDarkMode } from '@/lib/features/themeConfig/themeConfigSlice';
+import ChatContactList from './ChatContactList';
 
 
 type ChatMainProps = {
@@ -31,7 +32,7 @@ const ChatMain = ({ chatTitle, image, chats }: ChatMainProps) => {
     const [isShowChatMenu, setIsShowChatMenu] = useState(false);
     const [searchUser, setSearchUser] = useState('');
     const [isShowUserChat, setIsShowUserChat] = useState(false);
-    const [selectedChat, setSelectedChat] = useState<any>(null);
+    const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
     const [filteredItems, setFilteredItems] = useState<Chat[]>(chats);
     const isDark = useAppSelector(selectIsDarkMode)
 
@@ -84,7 +85,7 @@ const ChatMain = ({ chatTitle, image, chats }: ChatMainProps) => {
             });
         }
     };
-    const selectUser = (user: any) => {
+    const selectUser = (user: Chat) => {
         setSelectedChat(user);
         setIsShowUserChat(true);
         scrollToBottom();
@@ -101,7 +102,7 @@ const ChatMain = ({ chatTitle, image, chats }: ChatMainProps) => {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center">
                         <div className="flex-none">
-                            <img src="/assets/images/profile-34.jpeg" className="h-12 w-12 rounded-full object-cover" alt="" />
+                            <Image width={48} height={48} src="/assets/images/profile-1.jpeg" className="rounded-full object-cover" alt="" />
                         </div>
                         <div className="mx-3">
                             <p className="mb-1 font-semibold">{userInfo?.firstName} {userInfo?.lastName}</p>
@@ -130,16 +131,7 @@ const ChatMain = ({ chatTitle, image, chats }: ChatMainProps) => {
                                 </li>
                                 <li>
                                     <button type="button">
-                                        <svg className="ltr:mr-1 rtl:ml-1" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
-                                            <path
-                                                d="M10.125 8.875C10.125 7.83947 10.9645 7 12 7C13.0355 7 13.875 7.83947 13.875 8.875C13.875 9.56245 13.505 10.1635 12.9534 10.4899C12.478 10.7711 12 11.1977 12 11.75V13"
-                                                stroke="currentColor"
-                                                strokeWidth="1.5"
-                                                strokeLinecap="round"
-                                            />
-                                            <circle cx="12" cy="16" r="1" fill="currentColor" />
-                                        </svg>
+                                        <HelpIcon />
                                         Help & feedback
                                     </button>
                                 </li>
@@ -196,18 +188,17 @@ const ChatMain = ({ chatTitle, image, chats }: ChatMainProps) => {
                                 </button>
                             )}
                         </Tab>
-                        {/* <Tab className="pointer-events-none -mb-[1px] block p-3.5 py-2 text-white-light outline-none dark:text-dark">Disabled</Tab> */}
                     </Tab.List>
                     <div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b]"></div>
                     <Tab.Panels>
                         <Tab.Panel>
-                            <WpChatList selectUser={selectUser} selectedChat={selectedChat} filteredItems={filteredItems} />
+                            <ChatList selectUser={selectUser} selectedChat={selectedChat} filteredItems={filteredItems} />
                         </Tab.Panel>
                         <Tab.Panel>
                             <div>1</div>
                         </Tab.Panel>
                         <Tab.Panel>
-                            <div>2</div>
+                            <ChatContactList selectUser={selectUser} selectedChat={selectedChat} filteredItems={filteredItems} />
                         </Tab.Panel>
                     </Tab.Panels>
                 </Tab.Group>
@@ -236,19 +227,19 @@ const ChatMain = ({ chatTitle, image, chats }: ChatMainProps) => {
                     </div>
                 )}
                 {isShowUserChat && selectedChat ? (
-                    <WpChatBox
+                    <ChatBox
                         setIsShowChatMenu={setIsShowChatMenu}
                         isShowChatMenu={isShowChatMenu}
                         selectedChat={selectedChat}
                         scrollToBottom={scrollToBottom}
                         setFilteredItems={setFilteredItems}
-                        chatRooms={chats} />
+                        chats={chats} />
                 ) : (
                     ''
                 )}
             </div>
         </div>
-    
+
     );
 };
 
