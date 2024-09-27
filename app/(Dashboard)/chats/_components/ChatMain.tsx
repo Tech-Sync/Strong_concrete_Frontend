@@ -9,7 +9,7 @@ import ChatBox from './ChatBox';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { CallsIcon, ChatsIcon, ContactIcon, HelpIcon, NotiIcon, PhoneChatIcon, SettingIcon, SignOutIcon, StartChatIcon } from './ChatIcons';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { fetchAllChatsAsync, selectChats, selectChatStates, setChats } from '@/lib/features/chat/chatSlice';
+import { fetchAllChatsAsync, selectChats, selectChatStates, setChats, setIsShowChatMenu,  } from '@/lib/features/chat/chatSlice';
 import { Chat } from '@/types/types';
 import { coloredToast } from '@/utils/sweetAlerts';
 import { useCallback } from 'react';
@@ -25,6 +25,8 @@ type ChatMainProps = {
     chats: Chat[];
 };
 
+const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
+
 const Tabs = [
     { name: 'All', icon: <ChatsIcon /> },
     { name: 'Chats', icon: <CallsIcon /> },
@@ -36,10 +38,9 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
     const dispatch = useAppDispatch()
 
     const { userInfo } = useCurrentUser()
-    const { status, error } = useAppSelector(selectChatStates)
     const chats = useAppSelector(selectChats)
+    const { status, error, isShowChatMenu } = useAppSelector(selectChatStates)
 
-    const [isShowChatMenu, setIsShowChatMenu] = useState(false);
     const [searchUser, setSearchUser] = useState('');
     const [isShowUserChat, setIsShowUserChat] = useState(false);
     const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
@@ -111,7 +112,8 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
         setSelectedChat(chat);
         setIsShowUserChat(true);
         scrollToBottom();
-        setIsShowChatMenu(false);
+        dispatch(setIsShowChatMenu(false))
+
     };
 
     const handleTab = (type: string) => {
@@ -136,7 +138,9 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center">
                         <div className="flex-none">
-                            <Image width={48} height={48} src="/assets/images/profile-1.jpeg" className="rounded-full object-cover" alt="" />
+                            <Image width={48} height={48}
+                                src={`${BASE_URL}/image/${userInfo?.profilePic || '/assets/images/profile.png'}`}
+                                className="rounded-full object-cover" alt="" />
                         </div>
                         <div className="mx-3">
                             <p className="mb-1 font-semibold">{userInfo?.firstName} {userInfo?.lastName}</p>
@@ -179,15 +183,7 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
                         </Dropdown>
                     </div>
                 </div>
-                {/* <div className="relative">
-                    <input type="text" className="peer form-input ltr:pr-9 rtl:pl-9" placeholder="Searching..." value={searchUser} onChange={(e) => setSearchUser(e.target.value)} />
-                    <div className="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-2 rtl:left-2">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="11.5" cy="11.5" r="9.5" stroke="currentColor" strokeWidth="1.5" opacity="0.5"></circle>
-                            <path d="M18.5 18.5L22 22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
-                        </svg>
-                    </div>
-                </div> */}
+
                 <div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b]" />
 
                 <Tab.Group>
@@ -209,13 +205,13 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
 
                     <Tab.Panels>
                         <Tab.Panel>
-                            <ChatList selectUser={selectUser} selectedChat={selectedChat} filteredItems={filteredItems} />
+                            <ChatList selectUser={selectUser} filteredItems={filteredItems} />
                         </Tab.Panel>
                         <Tab.Panel>
-                            <ChatList selectUser={selectUser} selectedChat={selectedChat} filteredItems={filteredItems} />
+                            <ChatList selectUser={selectUser} filteredItems={filteredItems} />
                         </Tab.Panel>
                         <Tab.Panel>
-                            <ChatList selectUser={selectUser} selectedChat={selectedChat} filteredItems={filteredItems} />
+                            <ChatList selectUser={selectUser} filteredItems={filteredItems} />
                         </Tab.Panel>
                         <Tab.Panel>
                             <ChatContactList selectUser={selectUser} selectedChat={selectedChat} />
@@ -224,7 +220,7 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
                 </Tab.Group>
 
             </div>
-            <div className={`absolute z-[5] hidden h-full w-full rounded-md bg-black/10 ${isShowChatMenu ? '!block xl:!hidden' : ''}`} onClick={() => setIsShowChatMenu(!isShowChatMenu)}></div>
+            <div className={`absolute z-[5] hidden h-full w-full rounded-md bg-black/10 ${isShowChatMenu ? '!block xl:!hidden' : ''}`} onClick={() => dispatch(setIsShowChatMenu(!isShowChatMenu))}></div>
 
             {/* <div className="panel flex-1 p-0">
                 {!isShowUserChat && (

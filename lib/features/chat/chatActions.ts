@@ -35,6 +35,26 @@ export const getAllChats = async () => {
     }
 };
 
+export const getChat = async (chatId: string) => {
+    const headers = await authConfig();
+    try {
+        const response = await fetch(`${BASE_URL}/chats/${chatId}`, {
+            cache: "no-cache",
+            headers,
+        });
+        const data = await response.json();
+
+        if (response.ok) {
+            return data;
+        } else {
+            throw new Error(data.message || "Something went wrong, Please try again!");
+        }
+
+    } catch (error: any) {
+        return { error: error.message };
+    }
+};
+
 export const getMessagesForChat = async (chatId: number) => {
     const headers = await authConfig();
     try {
@@ -99,28 +119,7 @@ export const deleteChat = async (id: any) => {
     }
 };
 
-// export const deleteMultiTicket = async (ids: any) => {
-//     const headers = await authConfig();
 
-//     try {
-//         const response = await fetch(`${BASE_URL}/sales/multiple-delete`, {
-//             method: "POST",
-//             headers,
-//             body: JSON.stringify({ ids }),
-//         });
-
-//         const data = await response.json();
-
-//         if (!data.error && response.status === 202) {
-//             return { message: data.message, remainingData: data.data };
-//         } else {
-//             throw new Error(data.message ?? "Something went wrong, Please try again!");
-//         }
-
-//     } catch (error: any) {
-//         return { error: error.message };
-//     }
-// };
 
 export const readChat = async (id: string) => {
     const headers = await authConfig();

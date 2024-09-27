@@ -3,17 +3,22 @@ import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { Chat } from '@/types/types';
 import { formatDate } from '@/utils/helperFunctions';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import React from 'react'
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import { useParams } from 'next/navigation';
 
 interface ChatListProps {
     filteredItems: Chat[];
     selectUser: (chat: any) => void;
-    selectedChat: Chat | null;
 }
 
-const ChatList = ({ filteredItems, selectUser, selectedChat }: ChatListProps) => {
+const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
+
+const ChatList = ({ filteredItems, selectUser }: ChatListProps) => {
     const { userInfo } = useCurrentUser()
+    const navigate = useRouter()
+    const params = useParams();
 
     return (
         <PerfectScrollbar className="chat-users relative -mr-3.5 h-full min-h-[100px] space-y-0.5 pb-5 pr-3.5 sm:h-[calc(100vh_-_357px)]">
@@ -38,15 +43,17 @@ const ChatList = ({ filteredItems, selectUser, selectedChat }: ChatListProps) =>
                 const member = chat.chatUsers.find((member: any) => member.id !== userInfo?.id);
                 return (
                     <button
-                        className={`flex w-full items-center justify-between rounded-md p-2 hover:bg-gray-100 hover:text-primary dark:hover:bg-[#050b14] dark:hover:text-primary ${selectedChat && selectedChat.id === chat.id ? 'bg-gray-100 text-primary dark:bg-[#050b14] dark:text-primary' : ''}`}
+                        className={`flex w-full items-center justify-between rounded-md p-2 hover:bg-gray-100 hover:text-primary dark:hover:bg-[#050b14] dark:hover:text-primary ${params?.chatId && Number(params?.chatId) === chat.id ? 'bg-gray-100 text-primary dark:bg-[#050b14] dark:text-primary' : ''}`}
                         key={chat.id}
                         type="button"
-                        onClick={() => { selectUser(chat) }}
+                        onClick={() => { selectUser(chat); navigate.push(`/chats/${chat.id}`) }}
                     >
                         <div className="flex-1">
                             <div className="flex items-center">
                                 <div className="relative flex-shrink-0">
-                                    <Image className="rounded-full object-cover" width={48} height={48} src={`${chat.isGroupChat ? `/assets/images/${chat.chatPicture}` : `/assets/images/${member?.profilePic}`}`} alt="" />
+                                    <Image className="rounded-full object-cover" width={48} height={48}
+                                        
+                                        src={`${chat.isGroupChat ? `/assets/images/${chat.chatPicture}` : `${BASE_URL}/image/${member?.profilePic || '/assets/images/profile.png'}`}`} alt="" />
                                     <div>
                                         <div className="absolute bottom-0 ltr:right-0 rtl:left-0">
                                             <div className="h-4 w-4 rounded-full bg-success"></div>

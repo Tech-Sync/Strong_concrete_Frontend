@@ -8,13 +8,15 @@ export interface ChatSliceState {
     status: "idle" | "loading" | "failed";
     error: string | null
     chat: null | Chat;
+    isShowChatMenu: boolean;
 }
 
 const initialState: ChatSliceState = {
     chats: [],
     status: "idle",
     error: null,
-    chat: null
+    chat: null,
+    isShowChatMenu: false
 }
 
 
@@ -30,6 +32,10 @@ export const chatSlice = createAppSlice({
             state.status = 'idle';
             state.chats = action.payload;
         }),
+        setIsShowChatMenu: reducer((state, action: PayloadAction<boolean>) => {
+            state.isShowChatMenu = action.payload;
+        }),
+
         fetchAllChatsAsync: asyncThunk(
             async () => {
                 try {
@@ -59,5 +65,5 @@ export const chatSlice = createAppSlice({
     }
 })
 
-export const { setChat, setChats, fetchAllChatsAsync } = chatSlice.actions;
+export const { setChat, setChats, fetchAllChatsAsync, setIsShowChatMenu } = chatSlice.actions;
 export const { selectChats, selectChat, selectChatStatus, selectChatStates } = chatSlice.selectors

@@ -1,19 +1,43 @@
 import React from 'react'
 import { ChatBoxCallIcons, ChatBoxSmileIcon, ChatBoxVideoCallIcons } from '../_components/ChatIcons';
 import ChatBoxBody from '../_components/ChatBoxBody';
+import { getChat } from '@/lib/features/chat/chatActions';
+import Image from 'next/image';
+import ChatBurgerBtn from '../_components/ChatBurgerBtn';
+import { auth } from '@/auth';
 
+const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
-export default async function ChatBoxPage() {
+export default async function ChatBoxPage({ params }: { params: { chatId: string } }) {
+
+    const chatboxData = await getChat(params?.chatId)
+    const session = await auth()
+
+    const userInfo = session?.user
+    const receiver = chatboxData?.selectedChat?.chatUsers?.find((member: any) => member.id !== userInfo?.id)
+
+    
+    console.log(BASE_URL);
 
     return (
         <div className="relative h-full">
             <div className="flex items-center justify-between p-4">
                 <div className="flex items-center space-x-2 rtl:space-x-reverse">
-
-
-
-
-
+                    <ChatBurgerBtn />
+                    <div className="relative flex-none">
+                        <Image
+                            width={40}
+                            height={40}
+                            src={`${BASE_URL}/image/${receiver?.profilePic || '/assets/images/profile.png'}`}
+                            className="rounded-full object-cover sm:h-12 sm:w-12" alt="" />
+                        <div className="absolute bottom-0 ltr:right-0 rtl:left-0">
+                            <div className="h-4 w-4 rounded-full bg-success"></div>
+                        </div>
+                    </div>
+                    <div className="mx-3">
+                        <p className="font-semibold">{receiver?.firstName} {receiver?.lastName}</p>
+                        <p className="text-xs text-white-dark">{true ? 'Active now' : 'Last seen at ' + 10}</p>
+                    </div>
                 </div>
                 <div className="flex gap-3 sm:gap-5">
                     <button type="button">
@@ -69,7 +93,7 @@ export default async function ChatBoxPage() {
                 </div>
             </div>
             <div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b]"></div>
-            <ChatBoxBody />
+            <ChatBoxBody chatboxData={chatboxData} />
             <div className="absolute bottom-0 left-0 w-full p-4">
                 <div className="w-full items-center space-x-3 sm:flex">
                     <div className="relative flex-1">

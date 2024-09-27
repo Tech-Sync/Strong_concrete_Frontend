@@ -6,62 +6,64 @@ import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { ChatBoxSmileIcon } from './ChatIcons';
 
 
-const selectedChat = {
-    "id": 2,
-    "latestMessageId": 1,
-    "chatName": null,
-    "chatPicture": null,
-    "isGroupChat": false,
-    "createdAt": "2024-09-27T16:02:08.591Z",
-    "updatedAt": "2024-09-27T16:02:08.599Z",
-    "deletedAt": null,
-    "groupAdminId": null,
-    "chatUsers": [
-        {
-            "id": 1,
-            "firstName": "Admin",
-            "lastName": "Admin",
-            "email": "admin@gmail.com",
-            "profilePic": "profile-1.jpeg",
-            "phoneNo": "0971234567",
-            "role": 5
-        },
-        {
-            "id": 2,
-            "firstName": "Kabwe",
-            "lastName": "Mumba",
-            "email": "kabwe.mumba1@gmail.com",
-            "profilePic": "profile-2.jpeg",
-            "phoneNo": "0971234562",
-            "role": 1
-        }
-    ],
-    "latestMessage": {
-        "id": 1,
-        "content": "hi",
-        "createdAt": "2024-09-27T16:02:08.596Z",
-        "updatedAt": "2024-09-27T16:02:08.596Z",
-        "deletedAt": null,
-        "chatId": 2,
-        "senderId": 1
-    },
-    "groupAdmin": null
-}
+// const selectedChat = {
+//     "id": 2,
+//     "latestMessageId": 1,
+//     "chatName": null,
+//     "chatPicture": null,
+//     "isGroupChat": false,
+//     "createdAt": "2024-09-27T16:02:08.591Z",
+//     "updatedAt": "2024-09-27T16:02:08.599Z",
+//     "deletedAt": null,
+//     "groupAdminId": null,
+//     "chatUsers": [
+//         {
+//             "id": 1,
+//             "firstName": "Admin",
+//             "lastName": "Admin",
+//             "email": "admin@gmail.com",
+//             "profilePic": "profile-1.jpeg",
+//             "phoneNo": "0971234567",
+//             "role": 5
+//         },
+//         {
+//             "id": 2,
+//             "firstName": "Kabwe",
+//             "lastName": "Mumba",
+//             "email": "kabwe.mumba1@gmail.com",
+//             "profilePic": "profile-2.jpeg",
+//             "phoneNo": "0971234562",
+//             "role": 1
+//         }
+//     ],
+//     "latestMessage": {
+//         "id": 1,
+//         "content": "hi",
+//         "createdAt": "2024-09-27T16:02:08.596Z",
+//         "updatedAt": "2024-09-27T16:02:08.596Z",
+//         "deletedAt": null,
+//         "chatId": 2,
+//         "senderId": 1
+//     },
+//     "groupAdmin": null
+// }
 
-const messages = [
-    {
-        "id": 1,
-        "content": "hi",
-        "createdAt": "2024-09-27T16:02:08.596Z",
-        "updatedAt": "2024-09-27T16:02:08.596Z",
-        "deletedAt": null,
-        "chatId": 2,
-        "senderId": 1
-    }
-]
+// const messages = [
+//     {
+//         "id": 1,
+//         "content": "hi",
+//         "createdAt": "2024-09-27T16:02:08.596Z",
+//         "updatedAt": "2024-09-27T16:02:08.596Z",
+//         "deletedAt": null,
+//         "chatId": 2,
+//         "senderId": 1
+//     }
+// ]
 
-export default function ChatBoxBody() {
+export default function ChatBoxBody({ chatboxData }: { chatboxData: any }) {
     const { userInfo } = useCurrentUser()
+    const { messages, selectedChat } = chatboxData
+
     return (
         <PerfectScrollbar className="chat-conversation-box relative h-full sm:h-[calc(100vh_-_300px)]">
             <div className="min-h-[400px] space-y-5 p-4 pb-[68px] sm:min-h-[300px] sm:pb-0">
@@ -72,7 +74,7 @@ export default function ChatBoxBody() {
                 </div>
                 {messages && messages.length ? (
                     <>
-                        {messages.map((message) => {
+                        {messages.map((message: any) => {
                             return (
                                 <div key={message.id}>
                                     <div className={`flex items-start gap-3 ${userInfo?.id === message.senderId ? 'justify-end' : ''}`}>
