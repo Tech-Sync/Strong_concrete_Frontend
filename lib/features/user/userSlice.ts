@@ -24,6 +24,7 @@ const initialState: UserSliceState = {
         nrcNo: " ",
         phoneNo: " ",
         address: " ",
+        profilePic: " ",
         role: 0,
         email: " ",
         password: " ",

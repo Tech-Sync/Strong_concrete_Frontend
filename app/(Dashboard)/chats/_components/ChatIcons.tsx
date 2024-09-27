@@ -1,3 +1,5 @@
+import { selectIsDarkMode } from "@/lib/features/themeConfig/themeConfigSlice"
+import { useAppSelector } from "@/lib/hooks"
 
 export const ChatsIcon = () => {
     return (
@@ -189,7 +191,10 @@ export const HelpIcon = () => {
         </svg>
     )
 }
-export const PhoneChatIcon = ({ isDark }: { isDark: boolean }) => {
+export const PhoneChatIcon = () => {
+    // const isDark = useAppSelector(selectIsDarkMode)
+    const isDark = false
+
     return (
         <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" className="h-full w-full" viewBox="0 0 891.29496 745.19434" xmlns-xlink="http://www.w3.org/1999/xlink">
             <ellipse cx="418.64354" cy="727.19434" rx="352" ry="18" fill={isDark ? '#888ea8' : '#e6e6e6'} />

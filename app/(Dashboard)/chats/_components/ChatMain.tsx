@@ -16,6 +16,7 @@ import { useCallback } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { selectIsDarkMode } from '@/lib/features/themeConfig/themeConfigSlice';
 import ChatContactList from './ChatContactList';
+import { getAllUserAsync, selectUsers } from '@/lib/features/user/userSlice';
 
 
 type ChatMainProps = {
@@ -24,21 +25,29 @@ type ChatMainProps = {
     chats: Chat[];
 };
 
-const ChatMain = ({ chatTitle, image, chats }: ChatMainProps) => {
-    const { userInfo } = useCurrentUser()
+const Tabs = [
+    { name: 'All', icon: <ChatsIcon /> },
+    { name: 'Chats', icon: <CallsIcon /> },
+    { name: 'Groups', icon: <NotiIcon /> },
+    { name: 'Contacts', icon: <ContactIcon /> },
+]
+
+const ChatMain = ({ children }: { children: React.ReactNode; }) => {
     const dispatch = useAppDispatch()
+    
+    const { userInfo } = useCurrentUser()
     const { status, error } = useAppSelector(selectChatStates)
+    const chats = useAppSelector(selectChats)
 
     const [isShowChatMenu, setIsShowChatMenu] = useState(false);
     const [searchUser, setSearchUser] = useState('');
     const [isShowUserChat, setIsShowUserChat] = useState(false);
     const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
-    const [filteredItems, setFilteredItems] = useState<Chat[]>(chats);
-    const isDark = useAppSelector(selectIsDarkMode)
+    const [filteredItems, setFilteredItems] = useState<Chat[] | any>([]);
 
     useEffect(() => {
-        dispatch(setChats(chats))
-    }, [])
+        dispatch(fetchAllChatsAsync({}))
+    }, [dispatch])
 
     useEffect(() => {
         if (error) {
@@ -53,14 +62,21 @@ const ChatMain = ({ chatTitle, image, chats }: ChatMainProps) => {
 
 
     useEffect(() => {
+
         setFilteredItems(() => {
             return chats.filter((chat: any) => {
 
                 const searchTerm = searchUser.toLowerCase();
 
+
+                // if (chat.role) {
+                //     const isUserMatch = chat.firstName.toLowerCase().includes(searchTerm) || chat.lastName.toLowerCase().includes(searchTerm);
+                //     console.log(isUserMatch);
+                //     return isUserMatch;
+                // }
+
                 let isChatNameMatch;
                 if (chat.chatName) {
-                    // Check if chatName matches the search term
                     isChatNameMatch = chat.chatName ? chat.chatName.toLowerCase().includes(searchTerm) : false;
                 }
 
@@ -72,8 +88,11 @@ const ChatMain = ({ chatTitle, image, chats }: ChatMainProps) => {
                 });
 
                 return isChatNameMatch || isMemberMatch;
+
+
             });
         });
+
     }, [searchUser, chats]);
 
     const scrollToBottom = () => {
@@ -85,16 +104,29 @@ const ChatMain = ({ chatTitle, image, chats }: ChatMainProps) => {
             });
         }
     };
-    const selectUser = (user: Chat) => {
-        setSelectedChat(user);
+
+    const selectUser = (chat: Chat) => {
+        setSelectedChat(chat);
         setIsShowUserChat(true);
         scrollToBottom();
         setIsShowChatMenu(false);
     };
 
-    if (status === 'loading') {
-        return <div>Loading...</div>;
-    }
+    const handleTab = (type: string) => {
+        switch (type) {
+            case 'All':
+                setFilteredItems(chats);
+                break;
+            case 'Chats':
+                setFilteredItems(chats.filter((chat) => chat.isGroupChat === false));
+                break;
+            case 'Groups':
+                setFilteredItems(chats.filter((chat) => chat.isGroupChat === true));
+                break;
+            default:
+                break;
+        }
+    };
 
     return (
         <div className={`mt-5 relative flex h-full gap-5 sm:h-[calc(100vh_-_160px)] sm:min-h-0 ${isShowChatMenu ? 'min-h-[999px]' : ''}`}>
@@ -156,38 +188,18 @@ const ChatMain = ({ chatTitle, image, chats }: ChatMainProps) => {
                 </div>
                 <Tab.Group>
                     <Tab.List className="flex items-center justify-between text-xs">
-                        <Tab as={Fragment}>
-                            {({ selected }) => (
-                                <button type="button" className={`${selected ? 'text-primary' : 'hover:text-primary'}`}>
-                                    <ChatsIcon />
-                                    Chats
-                                </button>
-                            )}
-                        </Tab>
-                        <Tab as={Fragment}>
-                            {({ selected }) => (
-                                <button type="button" className={`${selected ? 'text-primary' : 'hover:text-primary'}`}>
-                                    <CallsIcon />
-                                    Calls
-                                </button>
-                            )}
-                        </Tab>
-                        <Tab as={Fragment}>
-                            {({ selected }) => (
-                                <button type="button" className={`${selected ? 'text-primary' : 'hover:text-primary'}`}>
-                                    <ContactIcon />
-                                    Contacts
-                                </button>
-                            )}
-                        </Tab>
-                        <Tab as={Fragment}>
-                            {({ selected }) => (
-                                <button type="button" className={`${selected ? 'text-primary' : 'hover:text-primary'}`}>
-                                    <NotiIcon />
-                                    Notification
-                                </button>
-                            )}
-                        </Tab>
+                        {
+                            Tabs.map((tab, i) => (
+                                <Tab as={Fragment} key={i}>
+                                    {({ selected }) => (
+                                        <button onClick={() => handleTab(tab.name)} type="button" className={`${selected ? 'text-primary' : 'hover:text-primary'}`}>
+                                            {tab.icon}
+                                            {tab.name}
+                                        </button>
+                                    )}
+                                </Tab>
+                            ))
+                        }
                     </Tab.List>
                     <div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b]"></div>
                     <Tab.Panels>
@@ -195,7 +207,10 @@ const ChatMain = ({ chatTitle, image, chats }: ChatMainProps) => {
                             <ChatList selectUser={selectUser} selectedChat={selectedChat} filteredItems={filteredItems} />
                         </Tab.Panel>
                         <Tab.Panel>
-                            <div>1</div>
+                            <ChatList selectUser={selectUser} selectedChat={selectedChat} filteredItems={filteredItems} />
+                        </Tab.Panel>
+                        <Tab.Panel>
+                            <ChatList selectUser={selectUser} selectedChat={selectedChat} filteredItems={filteredItems} />
                         </Tab.Panel>
                         <Tab.Panel>
                             <ChatContactList selectUser={selectUser} selectedChat={selectedChat} filteredItems={filteredItems} />
@@ -205,7 +220,8 @@ const ChatMain = ({ chatTitle, image, chats }: ChatMainProps) => {
 
             </div>
             <div className={`absolute z-[5] hidden h-full w-full rounded-md bg-black/10 ${isShowChatMenu ? '!block xl:!hidden' : ''}`} onClick={() => setIsShowChatMenu(!isShowChatMenu)}></div>
-            <div className="panel flex-1 p-0">
+
+            {/* <div className="panel flex-1 p-0">
                 {!isShowUserChat && (
                     <div className="relative flex h-full items-center justify-center p-4">
                         <button type="button" onClick={() => setIsShowChatMenu(!isShowChatMenu)} className="absolute top-4 hover:text-primary ltr:left-4 rtl:right-4 xl:hidden">
@@ -237,6 +253,10 @@ const ChatMain = ({ chatTitle, image, chats }: ChatMainProps) => {
                 ) : (
                     ''
                 )}
+            </div> */}
+
+            <div className="panel flex-1 p-0">
+                {children}
             </div>
         </div>
 

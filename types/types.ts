@@ -109,6 +109,7 @@ export interface User {
   address: string;
   role: number;
   email: string;
+  profilePic: string | null;
   password: string;
   emailToken: string;
   isActive: boolean;

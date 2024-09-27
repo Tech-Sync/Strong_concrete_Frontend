@@ -3,6 +3,7 @@ import ActionBtnGroup from '@/app/(Dashboard)/purchases/_components/ActionBtnGro
 import { saleStatuses } from '@/app/constraints/roles&status';
 import { readSale } from '@/lib/features/sale/saleActions';
 import { formatDate } from '@/utils/helperFunctions';
+import Image from 'next/image';
 import React from 'react'
 
 
@@ -84,7 +85,9 @@ const SalePage = async ({ params }: { params: { saleId: string } }) => {
                 <div className="flex flex-wrap justify-between gap-4 px-4">
                     <div className="text-2xl font-semibold uppercase">Sale</div>
                     <div className="shrink-0">
-                        <img
+                        <Image
+                            width={56}
+                            height={56}
                             src="/assets/images/logo.png"
                             alt="img"
                             className="w-14 ltr:ml-auto rtl:mr-auto"
