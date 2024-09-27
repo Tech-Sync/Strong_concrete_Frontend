@@ -42,7 +42,7 @@ const ChatBox = ({ setIsShowChatMenu, isShowChatMenu, selectedChat, scrollToBott
 
     const sendMessage = async () => {
         if (textMessage.trim()) {
-            
+
             if (receiver?.id) {
                 const res = await postMessage(selectedChat.id, { receiverId: receiver?.id, content: textMessage });
                 setMessages([...messages, res]);

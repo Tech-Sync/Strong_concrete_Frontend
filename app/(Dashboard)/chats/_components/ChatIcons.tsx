@@ -193,7 +193,7 @@ export const HelpIcon = () => {
 }
 export const PhoneChatIcon = () => {
     // const isDark = useAppSelector(selectIsDarkMode)
-    const isDark = false
+    const isDark = true
 
     return (
         <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" className="h-full w-full" viewBox="0 0 891.29496 745.19434" xmlns-xlink="http://www.w3.org/1999/xlink">

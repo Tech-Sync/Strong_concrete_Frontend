@@ -9,7 +9,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 interface ChatListProps {
     filteredItems: Chat[];
     selectUser: (chat: any) => void;
-    selectedChat: any;
+    selectedChat: Chat | null;
 }
 
 const ChatList = ({ filteredItems, selectUser, selectedChat }: ChatListProps) => {

@@ -45,6 +45,8 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
     const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
     const [filteredItems, setFilteredItems] = useState<Chat[] | any>([]);
 
+    // console.log(selectedChat);
+
     useEffect(() => {
         dispatch(fetchAllChatsAsync({}))
     }, [dispatch])
