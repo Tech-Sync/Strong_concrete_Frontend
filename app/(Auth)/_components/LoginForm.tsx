@@ -1,5 +1,5 @@
 "use client";
-import { login } from "@/actions/authActions";
+import { login } from "@/lib/features/auth/authActions";
 import {
   coloredToast,
   forgetPasswordToast,

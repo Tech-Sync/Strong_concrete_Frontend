@@ -1,22 +1,17 @@
 'use client'
-import { useState, useEffect, Children } from 'react';
+import { useState, useEffect } from 'react';
 import Dropdown from '@/app/components/Layout/Dropdown';
 import Image from 'next/image';
 import { Tab } from '@headlessui/react';
 import { Fragment } from 'react';
 import ChatList from './ChatList';
-import ChatBox from './ChatBox';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
-import { CallsIcon, ChatsIcon, ContactIcon, HelpIcon, NotiIcon, PhoneChatIcon, SettingIcon, SignOutIcon, StartChatIcon } from './ChatIcons';
+import { AllChatsIcon, ContactIcon, GroupChatIcon, HelpIcon, SettingIcon, SignOutIcon, SingleChatIcon } from './ChatIcons';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { fetchAllChatsAsync, selectChats, selectChatStates, setChats, setIsShowChatMenu,  } from '@/lib/features/chat/chatSlice';
+import { fetchAllChatsAsync, selectChats, selectChatStates, setIsShowChatMenu, } from '@/lib/features/chat/chatSlice';
 import { Chat } from '@/types/types';
 import { coloredToast } from '@/utils/sweetAlerts';
-import { useCallback } from 'react';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import { selectIsDarkMode } from '@/lib/features/themeConfig/themeConfigSlice';
 import ChatContactList from './ChatContactList';
-import { getAllUserAsync, selectUsers } from '@/lib/features/user/userSlice';
 
 
 type ChatMainProps = {
@@ -28,9 +23,9 @@ type ChatMainProps = {
 const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
 const Tabs = [
-    { name: 'All', icon: <ChatsIcon /> },
-    { name: 'Chats', icon: <CallsIcon /> },
-    { name: 'Groups', icon: <NotiIcon /> },
+    { name: 'All', icon: <AllChatsIcon /> },
+    { name: 'Chats', icon: <SingleChatIcon /> },
+    { name: 'Groups', icon: <GroupChatIcon /> },
     { name: 'Contacts', icon: <ContactIcon /> },
 ]
 
@@ -113,7 +108,6 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
         setIsShowUserChat(true);
         scrollToBottom();
         dispatch(setIsShowChatMenu(false))
-
     };
 
     const handleTab = (type: string) => {

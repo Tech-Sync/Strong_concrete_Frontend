@@ -1,5 +1,4 @@
-import { forgetPassword } from "@/actions/authActions";
-import { Firm } from "@/types/types";
+import { forgetPassword } from "@/lib/features/auth/authActions";
 import Swal, { SweetAlertPosition } from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 

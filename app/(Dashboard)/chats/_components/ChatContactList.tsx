@@ -22,14 +22,9 @@ const ChatContactList = ({ selectUser, selectedChat }: ChatListProps) => {
 
     useEffect(() => {
         dispatch(getAllUserAsync({}))
-    }, [dispatch])
-
-
+    }, [])
 
     const [filteredItems, setfilteredItems] = useState(users)
-
-
-
 
     return (
         <>
@@ -43,7 +38,7 @@ const ChatContactList = ({ selectUser, selectedChat }: ChatListProps) => {
             {
                 filteredItems[0]?.role ? (
                     <PerfectScrollbar className="user-users relative -mr-3.5 h-full min-h-[100px] space-y-0.5 pb-5 pr-3.5 sm:h-[calc(100vh_-_357px)]">
-                        {/* <div className="relative">
+                        <div className="relative">
                             <input type="text" className="peer form-input ltr:pr-9 rtl:pl-9" placeholder="Searching..." />
                             <div className="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-2 rtl:left-2">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -51,7 +46,7 @@ const ChatContactList = ({ selectUser, selectedChat }: ChatListProps) => {
                                     <path d="M18.5 18.5L22 22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
                                 </svg>
                             </div>
-                        </div> */}
+                        </div>
                         {filteredItems.map((user: User, i: number) => {
                             return (
                                 <button

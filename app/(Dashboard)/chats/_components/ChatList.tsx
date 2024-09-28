@@ -28,7 +28,7 @@ const ChatList = ({ filteredItems, selectUser }: ChatListProps) => {
                         <p className="text-gray-400 dark:text-gray-500">No Chat found</p>
                     </div>
                 ) : (
-                    <div className="relative">
+                    <div className="relative mb-3">
                         <input type="text" className="peer form-input ltr:pr-9 rtl:pl-9" placeholder="Searching..." />
                         <div className="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-2 rtl:left-2">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -43,16 +43,16 @@ const ChatList = ({ filteredItems, selectUser }: ChatListProps) => {
                 const member = chat.chatUsers.find((member: any) => member.id !== userInfo?.id);
                 return (
                     <button
+                        onClick={() => { selectUser(chat); navigate.push(`/chats/${chat.id}`) }}
                         className={`flex w-full items-center justify-between rounded-md p-2 hover:bg-gray-100 hover:text-primary dark:hover:bg-[#050b14] dark:hover:text-primary ${params?.chatId && Number(params?.chatId) === chat.id ? 'bg-gray-100 text-primary dark:bg-[#050b14] dark:text-primary' : ''}`}
                         key={chat.id}
                         type="button"
-                        onClick={() => { selectUser(chat); navigate.push(`/chats/${chat.id}`) }}
                     >
                         <div className="flex-1">
                             <div className="flex items-center">
                                 <div className="relative flex-shrink-0">
                                     <Image className="rounded-full object-cover" width={48} height={48}
-                                        
+
                                         src={`${chat.isGroupChat ? `/assets/images/${chat.chatPicture}` : `${BASE_URL}/image/${member?.profilePic || '/assets/images/profile.png'}`}`} alt="" />
                                     <div>
                                         <div className="absolute bottom-0 ltr:right-0 rtl:left-0">
