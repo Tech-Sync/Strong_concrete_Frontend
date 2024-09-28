@@ -45,8 +45,12 @@ const ChatBox = ({ setIsShowChatMenu, isShowChatMenu, selectedChat, scrollToBott
 
             if (receiver?.id) {
                 const res = await postMessage(selectedChat.id, { receiverId: receiver?.id, content: textMessage });
+                if (!res.isError) {
+                    setMessages([...messages, res.message]);
+                } else {
+                    coloredToast('danger', res.message);
+                }
 
-                setMessages([...messages, res]);
             } else {
                 coloredToast('danger', 'Receiver not found');
             }

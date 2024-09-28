@@ -75,7 +75,7 @@ export const getMessagesForChat = async (chatId: number) => {
     }
 };
 
-export const postMessage = async (chatId: number, messageData: { receiverId: number, content: string }) => {
+export const postMessage = async (chatId: number | null, messageData: { receiverId: number, content?: string }) => {
     const headers = await authConfig();
     try {
         const response = await fetch(`${BASE_URL}/chats/message/${chatId}`, {
@@ -88,7 +88,7 @@ export const postMessage = async (chatId: number, messageData: { receiverId: num
         const data = await response.json();
 
         if (response.ok) {
-            return data.message;
+            return data;
         } else {
             throw new Error(data.message || "Something went wrong, Please try again!");
         }

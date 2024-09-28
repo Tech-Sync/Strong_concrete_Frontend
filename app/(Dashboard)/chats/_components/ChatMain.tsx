@@ -41,7 +41,6 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
     const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
     const [filteredItems, setFilteredItems] = useState<Chat[] | any>([]);
 
-    // console.log(selectedChat);
 
     useEffect(() => {
         dispatch(fetchAllChatsAsync({}))
@@ -60,18 +59,10 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
 
 
     useEffect(() => {
-
         setFilteredItems(() => {
             return chats.filter((chat: any) => {
 
                 const searchTerm = searchUser.toLowerCase();
-
-
-                // if (chat.role) {
-                //     const isUserMatch = chat.firstName.toLowerCase().includes(searchTerm) || chat.lastName.toLowerCase().includes(searchTerm);
-                //     console.log(isUserMatch);
-                //     return isUserMatch;
-                // }
 
                 let isChatNameMatch;
                 if (chat.chatName) {
@@ -86,8 +77,6 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
                 });
 
                 return isChatNameMatch || isMemberMatch;
-
-
             });
         });
 
@@ -146,14 +135,11 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
                             offset={[0, 5]}
                             placement={'bottom-end'}
                             btnClassName="bg-[#f4f4f4] dark:bg-[#1b2e4b] hover:bg-primary-light w-8 h-8 rounded-full !flex justify-center items-center hover:text-primary"
-                            button={
-                                <svg className="opacity-70" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="5" cy="12" r="2" stroke="currentColor" strokeWidth="1.5" />
-                                    <circle opacity="0.5" cx="12" cy="12" r="2" stroke="currentColor" strokeWidth="1.5" />
-                                    <circle cx="19" cy="12" r="2" stroke="currentColor" strokeWidth="1.5" />
-                                </svg>
-                            }
-                        >
+                            button={<svg className="opacity-70" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="5" cy="12" r="2" stroke="currentColor" strokeWidth="1.5" />
+                                <circle opacity="0.5" cx="12" cy="12" r="2" stroke="currentColor" strokeWidth="1.5" />
+                                <circle cx="19" cy="12" r="2" stroke="currentColor" strokeWidth="1.5" />
+                            </svg>}>
                             <ul className="whitespace-nowrap">
                                 <li>
                                     <button type="button">
@@ -177,26 +163,21 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
                         </Dropdown>
                     </div>
                 </div>
-
                 <div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b]" />
-
                 <Tab.Group>
                     <Tab.List className="flex items-center justify-between text-xs">
-                        {
-                            Tabs.map((tab, i) => (
-                                <Tab as={Fragment} key={i}>
-                                    {({ selected }) => (
-                                        <button onClick={() => handleTab(tab.name)} type="button" className={`${selected ? 'text-primary' : 'hover:text-primary'}`}>
-                                            {tab.icon}
-                                            {tab.name}
-                                        </button>
-                                    )}
-                                </Tab>
-                            ))
-                        }
+                        {Tabs.map((tab, i) => (
+                            <Tab as={Fragment} key={i}>
+                                {({ selected }) => (
+                                    <button onClick={() => handleTab(tab.name)} type="button" className={`${selected ? 'text-primary' : 'hover:text-primary'}`}>
+                                        {tab.icon}
+                                        {tab.name}
+                                    </button>
+                                )}
+                            </Tab>
+                        ))}
                     </Tab.List>
                     {filteredItems.length === 0 && (<div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b]" />)}
-
                     <Tab.Panels>
                         <Tab.Panel>
                             <ChatList selectUser={selectUser} filteredItems={filteredItems} />
@@ -208,47 +189,13 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
                             <ChatList selectUser={selectUser} filteredItems={filteredItems} />
                         </Tab.Panel>
                         <Tab.Panel>
-                            <ChatContactList selectUser={selectUser} selectedChat={selectedChat} />
+                            <ChatContactList selectUser={selectUser} />
                         </Tab.Panel>
                     </Tab.Panels>
                 </Tab.Group>
 
             </div>
             <div className={`absolute z-[5] hidden h-full w-full rounded-md bg-black/10 ${isShowChatMenu ? '!block xl:!hidden' : ''}`} onClick={() => dispatch(setIsShowChatMenu(!isShowChatMenu))}></div>
-
-            {/* <div className="panel flex-1 p-0">
-                {!isShowUserChat && (
-                    <div className="relative flex h-full items-center justify-center p-4">
-                        <button type="button" onClick={() => setIsShowChatMenu(!isShowChatMenu)} className="absolute top-4 hover:text-primary ltr:left-4 rtl:right-4 xl:hidden">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M20 7L4 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                                <path opacity="0.5" d="M20 12L4 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                                <path d="M20 17L4 17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                            </svg>
-                        </button>
-                        <div className="flex flex-col items-center justify-center py-8">
-                            <div className="mb-8 h-[calc(100vh_-_320px)] min-h-[120px] w-[280px] text-white dark:text-black md:w-[430px]">
-                                <PhoneChatIcon isDark={isDark} />
-                            </div>
-                            <p className="mx-auto flex max-w-[190px] justify-center rounded-md bg-white-dark/20 p-2 font-semibold">
-                                <StartChatIcon />
-                                Click User To Chat
-                            </p>
-                        </div>
-                    </div>
-                )}
-                {isShowUserChat && selectedChat ? (
-                    <ChatBox
-                        setIsShowChatMenu={setIsShowChatMenu}
-                        isShowChatMenu={isShowChatMenu}
-                        selectedChat={selectedChat}
-                        scrollToBottom={scrollToBottom}
-                        setFilteredItems={setFilteredItems}
-                        chats={chats} />
-                ) : (
-                    ''
-                )}
-            </div> */}
 
             <div className="panel flex-1 p-0">
                 {children}

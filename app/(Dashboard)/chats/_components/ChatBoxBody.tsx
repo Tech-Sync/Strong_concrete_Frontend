@@ -18,10 +18,10 @@ export default function ChatBoxBody({ chatboxData, receiver }: { chatboxData: an
             <div className="min-h-[400px] space-y-5 p-4 pb-[68px] sm:min-h-[300px] sm:pb-0">
                 <div className="m-6 mt-0 block">
                     <h4 className="relative border-b border-[#f4f4f4] text-center text-xs dark:border-gray-800">
-                        <span className="relative top-2 bg-white px-3 dark:bg-black">{'Today, ' + selectedChat.updatedAt}</span>
+                        <span className="relative top-2 bg-white px-3 dark:bg-black">{'Today, ' + selectedChat?.updatedAt}</span>
                     </h4>
                 </div>
-                {messages && messages.length ? (
+                {messages && messages.length > 0 ? (
                     <>
                         {messages.map((message: any) => {
                             return (

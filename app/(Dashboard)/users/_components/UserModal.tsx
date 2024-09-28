@@ -32,7 +32,6 @@ const UserModal = ({ userModal, setUserModal, params, changeValue }: UserModalPr
     const handleDivClick = () => {
         fileInputRef.current?.click();
     };
-    console.log(preview);
 
     const saveUser = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();

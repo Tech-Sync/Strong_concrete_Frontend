@@ -4,9 +4,10 @@ import { Chat } from '@/types/types';
 import { formatDate } from '@/utils/helperFunctions';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useParams } from 'next/navigation';
+import GroupModal from './GroupModal/GroupModal';
 
 interface ChatListProps {
     filteredItems: Chat[];
@@ -16,9 +17,15 @@ interface ChatListProps {
 const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
 const ChatList = ({ filteredItems, selectUser }: ChatListProps) => {
+
+    const [searchQuery, setSearchQuery] = useState('')
+
     const { userInfo } = useCurrentUser()
     const navigate = useRouter()
     const params = useParams();
+
+    const [groupModal, setGroupModal] = useState(false);
+
 
     return (
         <PerfectScrollbar className="chat-users relative -mr-3.5 h-full min-h-[100px] space-y-0.5 pb-5 pr-3.5 sm:h-[calc(100vh_-_357px)]">
@@ -28,15 +35,19 @@ const ChatList = ({ filteredItems, selectUser }: ChatListProps) => {
                         <p className="text-gray-400 dark:text-gray-500">No Chat found</p>
                     </div>
                 ) : (
-                    <div className="relative mb-3">
-                        <input type="text" className="peer form-input ltr:pr-9 rtl:pl-9" placeholder="Searching..." />
-                        <div className="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-2 rtl:left-2">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="11.5" cy="11.5" r="9.5" stroke="currentColor" strokeWidth="1.5" opacity="0.5"></circle>
-                                <path d="M18.5 18.5L22 22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
-                            </svg>
+                    <div className='flex gap-x-2 mb-3'>
+                        <div className="relative flex-1">
+                            <input type="text" className="peer form-input ltr:pr-9 rtl:pl-9" placeholder="Searching..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                            <div className="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-2 rtl:left-2">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="11.5" cy="11.5" r="9.5" stroke="currentColor" strokeWidth="1.5" opacity="0.5"></circle>
+                                    <path d="M18.5 18.5L22 22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
+                                </svg>
+                            </div>
                         </div>
+                        {!filteredItems[0].isGroupChat && (<button className='btn btn-primary btn-sm text-base' onClick={() => setGroupModal(!groupModal)}>+</button>)}
                     </div>
+
                 )
             }
             {filteredItems.map((chat: Chat, i: number) => {
@@ -77,6 +88,7 @@ const ChatList = ({ filteredItems, selectUser }: ChatListProps) => {
                     </button>
                 );
             })}
+            <GroupModal isOpen={groupModal} onClose={() => setGroupModal(false)} />
         </PerfectScrollbar >
     )
 }

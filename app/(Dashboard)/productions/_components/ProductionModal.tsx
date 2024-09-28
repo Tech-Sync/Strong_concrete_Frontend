@@ -13,8 +13,6 @@ const firmSchema = object({
   VehicleIds: array().required("This field is required."),
 });
 
-
-
 export default function ProductionModal() {
 
 
@@ -53,7 +51,7 @@ export default function ProductionModal() {
             <div className="flex items-start justify-center min-h-screen px-4">
               <Dialog.Panel className="panel border-0 p-0 rounded-lg  w-full max-w-lg my-8 text-black dark:text-white-dark animate__animated animate__slideInDown">
                 <div className="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
-                  <h5 className="font-bold text-lg">Modal Title</h5>
+                  <h5 className="font-bold text-lg"></h5>
                   <button onClick={() => dispatch(setProductionModal(false))} type="button" className="text-white-dark hover:text-dark">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

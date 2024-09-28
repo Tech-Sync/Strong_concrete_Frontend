@@ -14,12 +14,11 @@ export default async function ChatBoxPage({ params }: { params: { chatId: string
 
     const chatboxData = await getChat(params?.chatId)
     const session = await auth()
-
+    console.log('chatboxData--->', chatboxData);
     const userInfo = session?.user
     const receiver = chatboxData?.selectedChat?.chatUsers?.find((member: any) => member.id !== userInfo?.id)
 
 
-    console.log(BASE_URL);
 
     return (
         <div className="relative h-full">
