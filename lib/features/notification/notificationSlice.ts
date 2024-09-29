@@ -22,7 +22,6 @@ export const notificationSlice = createAppSlice({
             state.messages.push(action.payload);
         }),
         removeFromMessageState: reducer((state, action: PayloadAction<number>) => {
-            console.log('removeFromMessageState reducer called');
             state.messages = state.messages.filter(message => message.id !== action.payload);
         })
     }),
