@@ -24,7 +24,7 @@ export const coloredToast = (
   position: SweetAlertPosition = "top-end"
 ) => {
   let openEmail = false;
-  if (msg.startsWith("Please verify")) {
+  if (msg?.startsWith("Please verify")) {
     openEmail = true;
   }
 

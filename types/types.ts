@@ -412,3 +412,27 @@ export interface Message {
 }
 
 
+export interface MessageNotification {
+  id: number;
+  content: string;
+  senderId: number;
+  chatId: number;
+  updatedAt: Date;
+  createdAt: Date;
+  deletedAt: null;
+  isGroupChat: boolean;
+  chatPicture: null | string;
+  chatName: null | string;
+  sender: MsgSender;
+}
+
+export interface MsgSender {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  profilePic: string;
+  phoneNo: string;
+  role: number;
+}
+
