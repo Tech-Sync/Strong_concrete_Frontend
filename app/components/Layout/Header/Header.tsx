@@ -10,12 +10,60 @@ import NavbarThemeToggle from './NavbarThemeToggle';
 import NavbarMessagesDrop from './NavbarMessagesDrop';
 import NavbarNotificationDrop from './NavbarNotificationDrop';
 import NavbarProfileDrop from './NavbarProfileDrop';
-import { useAppSelector } from '@/lib/hooks';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { selectThemeConfig } from '@/lib/features/themeConfig/themeConfigSlice';
+import useSocket from '@/hooks/useSocket';
+import { setMessagesState } from '@/lib/features/notification/notificationSlice';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { setActiveUsersState } from '@/lib/features/user/userSlice';
 
 
 const Header = () => {
 	const pathname = usePathname()
+	const dispatch = useAppDispatch()
+	const { userInfo } = useCurrentUser()
+
+	const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
+	const socket = useSocket(BASE_URL)
+
+	// socket connection
+	useEffect(() => {
+		if (socket) {
+			socket.on('connect', () => {
+				console.log('Connected to server');
+				if (userInfo?.id) socket.emit('userConnected', userInfo?.id)
+			});
+
+			socket.on('disconnect', () => {
+				console.log('Disconnected from server');
+			});
+
+			socket.on('activeUsers', (users) => {
+				dispatch(setActiveUsersState(users))
+			})
+
+			return () => {
+				socket.off('connect');
+				socket.off('disconnect');
+				socket.off('activeUsers');
+			};
+		}
+	}, [socket, userInfo, dispatch]);
+
+	useEffect(() => {
+
+		socket?.on('receiveNotification', (notification) => {
+			console.log('Notification received:', notification);
+			dispatch(setMessagesState(notification))
+		})
+		return () => {
+			if (socket) {
+				socket.off('receiveNotification')
+			}
+		}
+
+	}, [socket, dispatch])
+
 
 	useEffect(() => {
 		const selector = document.querySelector('ul.horizontal-menu a[href="' + window.location.pathname + '"]');

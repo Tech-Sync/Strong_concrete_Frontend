@@ -7,11 +7,11 @@ import ContextProvider from "./ContextProvider";
 export default async function ChatLayout({ children, }: { children: React.ReactNode; }) {
 
     return (
-        <ContextProvider>
+        <>
             <BreadCrumb />
             <ChatMain>
                 {children}
             </ChatMain>
-        </ContextProvider>
+        </>
     );
 }

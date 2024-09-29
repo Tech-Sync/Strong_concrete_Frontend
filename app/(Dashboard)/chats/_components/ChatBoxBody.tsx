@@ -6,16 +6,24 @@ import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { ChatBoxSmileIcon } from './ChatIcons';
 import ChatBoxBottom from './ChatBoxBottom';
 import { Message } from '@/types/types';
-import { useSocket } from '@/lib/contexts/SocketContext';
-import { useAppSelector } from '@/lib/hooks';
+// import { useSocket } from '@/lib/contexts/SocketContext';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { selectActiveUsers } from '@/lib/features/user/userSlice';
-import { coloredToast } from '@/utils/sweetAlerts';
+import useSocket from '@/hooks/useSocket';
 
 const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
 export default function ChatBoxBody({ chatboxData, receiver }: { chatboxData: any, receiver: any }) {
 
-    const socket = useSocket();
+    // const dispatch = useAppDispatch()
+
+    //? CONTEXT API
+    // const socket = useSocket();
+
+    //? CUSTOM HOOK
+    const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
+    const socket = useSocket(BASE_URL)
+
     const { userInfo } = useCurrentUser()
     const activeUsers = useAppSelector(selectActiveUsers)
 
@@ -33,11 +41,6 @@ export default function ChatBoxBody({ chatboxData, receiver }: { chatboxData: an
             setChatMessages((prevMessages) => [...prevMessages, message]);
         })
 
-        socket?.on('receiveNotification', (notification) => {
-            console.log('Notification received:', notification);
-            coloredToast('warning', notification)
-        })
-
         socket?.on('typing', () => {
             setIsTyping(true);
         });
@@ -52,7 +55,6 @@ export default function ChatBoxBody({ chatboxData, receiver }: { chatboxData: an
                 socket.off('receiveMessage');
                 socket.off('typing');
                 socket.off('stopTyping');
-                socket.off('receiveNotification')
             }
         }
 

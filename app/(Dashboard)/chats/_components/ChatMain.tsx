@@ -13,10 +13,8 @@ import { Chat } from '@/types/types';
 import { coloredToast } from '@/utils/sweetAlerts';
 import ChatContactList from './ChatContactList';
 import { getAllUserAsync, setActiveUsersState } from '@/lib/features/user/userSlice';
-import { useSocket } from '@/lib/contexts/SocketContext';
-
-
-const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
+import useSocket from '@/hooks/useSocket';
+// import { useSocket } from '@/lib/contexts/SocketContext';
 
 const Tabs = [
     { name: 'All', icon: <AllChatsIcon /> },
@@ -32,35 +30,16 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
     const chats = useAppSelector(selectChats)
     const { status, error, isShowChatMenu } = useAppSelector(selectChatStates)
 
+
     const [searchUser, setSearchUser] = useState('');
     const [filteredItems, setFilteredItems] = useState<Chat[] | any>([]);
-    const socket = useSocket();
 
-    useEffect(() => {
-        if (socket) {
-            socket.on('connect', () => {
-                console.log('Connected to server');
-                if (userInfo?.id) socket.emit('userConnected', userInfo?.id)
-            });
+    //? CONTEXT API
+    // const socket = useSocket();
 
-            socket.on('disconnect', () => {
-                console.log('Disconnected from server');
-            });
+    //? CUSTOM HOOK
+    const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
-            socket.on('activeUsers', (users) => {
-                dispatch(setActiveUsersState(users))
-            })
-
-            
-
-
-            return () => {
-                socket.off('connect');
-                socket.off('disconnect');
-                socket.off('activeUsers');
-            };
-        }
-    }, [socket, userInfo, dispatch]);
 
     useEffect(() => {
         dispatch(fetchAllChatsAsync({}))
