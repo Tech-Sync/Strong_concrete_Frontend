@@ -25,9 +25,7 @@ const ChatContactList = ({ selectUser }: ChatListProps) => {
     const status = useAppSelector(selectUserStatus)
     const { userInfo } = useCurrentUser()
 
-    useEffect(() => {
-        dispatch(getAllUserAsync({}))
-    }, [dispatch])
+
 
     useEffect(() => {
         setfilteredItems(users)

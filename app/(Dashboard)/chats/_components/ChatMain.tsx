@@ -12,6 +12,7 @@ import { fetchAllChatsAsync, selectChats, selectChatStates, setIsShowChatMenu, }
 import { Chat } from '@/types/types';
 import { coloredToast } from '@/utils/sweetAlerts';
 import ChatContactList from './ChatContactList';
+import { getAllUserAsync } from '@/lib/features/user/userSlice';
 
 
 type ChatMainProps = {
@@ -38,12 +39,14 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
 
     const [searchUser, setSearchUser] = useState('');
     const [isShowUserChat, setIsShowUserChat] = useState(false);
-    const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
+    // const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
     const [filteredItems, setFilteredItems] = useState<Chat[] | any>([]);
 
 
     useEffect(() => {
         dispatch(fetchAllChatsAsync({}))
+        dispatch(getAllUserAsync({}))
+
     }, [dispatch])
 
     useEffect(() => {
@@ -93,9 +96,9 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
     };
 
     const selectUser = (chat: Chat) => {
-        setSelectedChat(chat);
-        setIsShowUserChat(true);
-        scrollToBottom();
+        // setSelectedChat(chat);
+        // setIsShowUserChat(true);
+        // scrollToBottom();
         dispatch(setIsShowChatMenu(false))
     };
 

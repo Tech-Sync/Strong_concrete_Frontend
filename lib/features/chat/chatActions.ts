@@ -14,6 +14,15 @@ const authConfig = async () => {
     };
 };
 
+const authConfigFormData = async () => {
+    const session = await auth();
+    const accessToken = session?.accessToken;
+  
+    return {
+      Authorization: `Bearer ${accessToken}`,
+      // "Content-Type": "multipart/form-data",
+    };
+  }
 
 export const getAllChats = async () => {
     const headers = await authConfig();
@@ -97,6 +106,32 @@ export const postMessage = async (chatId: number | null, messageData: { receiver
         return { error: error.message };
     }
 };
+
+export const postGroup = async (groupData: any) => {
+    const headers = await authConfigFormData();
+    try {
+        const response = await fetch(`${BASE_URL}/chats/group`, {
+            headers,
+            method: "POST",
+            body: groupData,
+
+        });
+        const data = await response.json();
+
+        if (response.ok) {
+            return data;
+        } else {
+            throw new Error(data.message || "Something went wrong, Please try again!");
+        }
+
+    } catch (error: any) {
+        return { error: error.message };
+    }
+};
+
+
+
+/* ----------------------------------------------------- */
 
 export const deleteChat = async (id: any) => {
     const headers = await authConfig();

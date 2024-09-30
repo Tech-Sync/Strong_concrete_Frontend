@@ -1,25 +1,14 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { ChatBoxSendIcon, ChatBoxSmileIcon } from './ChatIcons'
-import { Message } from '@/types/types';
+import { Chat, Message } from '@/types/types';
 import { getMessagesForChat, postMessage } from '@/lib/features/chat/chatActions';
 import { coloredToast } from '@/utils/sweetAlerts';
 
-export default function ChatBoxBottom({ receiver, selectedChat }: { receiver: any, selectedChat: any }) {
+export default function ChatBoxBottom({ receiver, selectedChat, setChatMessages }: { receiver: any, selectedChat: Chat, setChatMessages: (value: Message) => void }) {
 
-    const [messages, setMessages] = useState<Message[]>([]);
     const [textMessage, setTextMessage] = useState<string>('');
 
-    useEffect(() => {
-        const fetchMessages = async () => {
-            const messages = await getMessagesForChat(selectedChat.id);
-            setMessages(messages);
-        };
-
-        if (selectedChat) {
-            fetchMessages();
-        }
-    }, [selectedChat]);
 
     const scrollToBottom = () => {
         // if (isShowUserChat) {
@@ -33,12 +22,11 @@ export default function ChatBoxBottom({ receiver, selectedChat }: { receiver: an
 
     const sendMessage = async () => {
         if (textMessage.trim()) {
-            console.log('msg', textMessage);
 
             if (receiver?.id) {
                 const res = await postMessage(selectedChat.id, { receiverId: receiver?.id, content: textMessage });
                 if (!res.isError) {
-                    setMessages([...messages, res.message]);
+                    setChatMessages(res.message)
                 } else {
                     coloredToast('danger', res.message);
                 }

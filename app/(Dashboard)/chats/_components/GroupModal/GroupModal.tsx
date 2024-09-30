@@ -8,8 +8,12 @@ import makeAnimated from 'react-select/animated';
 
 import { useState, Fragment, useRef } from 'react';
 import { selectUsers } from '@/lib/features/user/userSlice';
-import { useAppSelector } from '@/lib/hooks';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { postGroup } from '@/lib/features/chat/chatActions';
+import { coloredToast } from '@/utils/sweetAlerts';
+import { setChats } from '@/lib/features/chat/chatSlice';
+import { useRouter } from 'next/navigation';
 
 
 interface GroupModalProps {
@@ -20,19 +24,21 @@ interface GroupModalProps {
 interface GroupData {
     chatName: string;
     userIds: string[];
-    chatPicture: string;
     id?: string;
 }
+
+const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
 export default function GroupModal({ onClose, isOpen }: GroupModalProps) {
 
     const animatedComponents = makeAnimated();
+    const dispatch = useAppDispatch()
+    const navigate = useRouter()
 
 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [preview, setPreview] = useState<string | null>(null);
-    const [profilePic, setProfilePic] = useState<any | null>(null);
-    const [selectedUsers, setSelectedUsers] = useState<any>([])
+    const [chatPicture, setChatPicture] = useState<any | null>(null);
     const { userInfo } = useCurrentUser();
 
     const users = useAppSelector(selectUsers);
@@ -42,20 +48,20 @@ export default function GroupModal({ onClose, isOpen }: GroupModalProps) {
         .map(user => ({
             label: user.firstName + " " + user.lastName,
             value: user.id,
+            picture: user?.profilePic
         }));
 
-    console.log(userOp);
 
     const [groupData, setGroupData] = useState<GroupData>({
-        chatName: "",
-        userIds: [],
-        chatPicture: ""
+        "chatName": "",
+        "userIds": [],
     })
 
     const handleUpload = () => {
         const fileInput = document.querySelector('.custom-file-container__custom-file__custom-file-input') as HTMLInputElement;
         const file = fileInput.files![0];
-        setProfilePic(file);
+        setChatPicture(file);
+        // to review
         setPreview(URL.createObjectURL(file));
     }
 
@@ -68,7 +74,34 @@ export default function GroupModal({ onClose, isOpen }: GroupModalProps) {
         setGroupData({ ...groupData, [id]: value });
     };
 
-    async function handleCreateGroup() {
+    async function handleCreateGroup(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        const formData = new FormData();
+
+        // @ts-ignore
+        Object.keys(groupData).forEach((key) => {
+            if (key === 'userIds' && Array.isArray(groupData[key])) {
+                formData.append(key, JSON.stringify(groupData[key]));
+            } else {
+                formData.append(key, groupData[key]);
+            }
+        });
+
+        if (chatPicture) formData.append('chatPicture', chatPicture);
+
+        for (let [key, value] of formData.entries()) {
+            console.log(`${key}: ${value}`);
+        }
+
+        const res = await postGroup(formData);
+        if (!res.error) {
+            coloredToast("success", 'succesfully created');
+            dispatch(setChats(res.userChats))
+            navigate.push(`/chats/${res.group.id}`)
+            // dispatch(getAllUserAsync({}));
+        } else {
+            coloredToast("danger", res.error);
+        }
 
     }
 
@@ -100,9 +133,9 @@ export default function GroupModal({ onClose, isOpen }: GroupModalProps) {
                             <div className="p-5">
                                 <form onSubmit={handleCreateGroup}>
                                     {/* picture upload */}
-                                    <div>
+                                    <div >
                                         <input
-                                            id='profilePic'
+                                            id='chatPicture'
                                             type="file"
                                             className="custom-file-container__custom-file__custom-file-input h-0 w-full"
                                             accept="image/*"
@@ -112,17 +145,14 @@ export default function GroupModal({ onClose, isOpen }: GroupModalProps) {
                                         />
                                         <input type="hidden" name="MAX_FILE_SIZE" value="10485760" />
                                         <div className="upload__image-wrapper">
-                                            {!profilePic && (
-                                                <div
-                                                    className="custom-file-container__custom-file__custom-file-control cursor-pointer static mb-5 h-9"
-                                                    onClick={handleDivClick}
-                                                >
+                                            {!chatPicture && (
+                                                <div className="custom-file-container__custom-file__custom-file-control cursor-pointer static mb-5 h-9" onClick={handleDivClick}>
                                                     Choose Profile Pic...
                                                 </div>
                                             )}
                                             {preview && (
                                                 <div className="custom-file-container__image-preview relative mb-5 ">
-                                                    <div className='absolute left-0 text-2xl cursor-pointer' onClick={() => { setProfilePic(null); setPreview(null) }}>x </div>
+                                                    <div className='absolute left-0 text-2xl cursor-pointer' onClick={() => { setChatPicture(null); setPreview(null) }}>x</div>
                                                     <Image
                                                         width={45}
                                                         height={45}
@@ -137,38 +167,36 @@ export default function GroupModal({ onClose, isOpen }: GroupModalProps) {
                                     </div>
 
                                     <div className="mb-5">
-                                        <label htmlFor="chatName">Group Name</label>
-                                        <input id="chatName" type="text" placeholder="Enter First Name" className="form-input" value={groupData.chatName} onChange={(e) => changeValue(e)} />
+                                        <label htmlFor="chatName" className="form-label">Group Name</label>
+                                        <input id="chatName" type="text" placeholder="Enter Group Name" className="form-input flex-1" value={groupData.chatName} onChange={(e) => changeValue(e)} />
                                     </div>
+                                    <Select
+                                        placeholder="Select Group Members"
+                                        options={userOp}
+                                        className=''
+                                        isMulti
+                                        components={animatedComponents}
+                                        formatOptionLabel={(user: any) => (
+                                            <div className="flex items-center">
+                                                <Image
+                                                    src={`${BASE_URL}/image/${user.picture}`}
+                                                    alt={user.label}
+                                                    width={30}
+                                                    height={30}
+                                                    className="rounded-full mr-2"
+                                                />
+                                                <span>{user.label}</span>
+                                            </div>
+                                        )}
+                                        onChange={(selectedOptions) => {
+                                            const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
+                                            setGroupData(() => ({ ...groupData, userIds: selectedValues }))
+                                            // setSelectedUsers(users.filter(user => selectedValues.includes(user.id)));
+                                        }}
+                                    />
 
-                                    <div className="relative mb-6">
-                                        <StatusIcon />
-                                        <div  >
-                                            <Select placeholder="Select Group Members" options={userOp} isMulti components={animatedComponents}
 
-                                            // onChange={(selectedOptions) => {
-                                            //     const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
-                                            //     setSelectedUsers(users.filter(user => selectedValues.includes(user.id)))
 
-                                            // }}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {
-                                        selectedUsers?.map((user: any, i: number) => {
-                                            return (
-                                                <div key={user.id} className="flex gap-2 my-4">
-                                                    <div className="panel grid place-content-center  py-1 px-2">{i + 1}</div>
-                                                    <div className="flex gap-2">
-                                                        <img src="" alt="" />
-                                                        <p>adi</p>
-                                                    </div>
-
-                                                </div>
-                                            )
-                                        })
-                                    }
                                     <div className="h-px border-b border-white-light dark:border-[#1b2e4b]"></div>
 
                                     <div className="mt-8 flex items-center justify-end">

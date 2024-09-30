@@ -31,8 +31,9 @@ const ChatList = ({ filteredItems, selectUser }: ChatListProps) => {
         <PerfectScrollbar className="chat-users relative -mr-3.5 h-full min-h-[100px] space-y-0.5 pb-5 pr-3.5 sm:h-[calc(100vh_-_357px)]">
             {
                 filteredItems.length === 0 ? (
-                    <div className="flex items-center justify-center h-full">
+                    <div className=" relative flex items-center justify-center h-full">
                         <p className="text-gray-400 dark:text-gray-500">No Chat found</p>
+                        <button className='btn btn-primary btn-sm text-base absolute bottom-0 right-0' onClick={() => setGroupModal(!groupModal)}>+</button>
                     </div>
                 ) : (
                     <div className='flex gap-x-2 mb-3'>
@@ -45,7 +46,7 @@ const ChatList = ({ filteredItems, selectUser }: ChatListProps) => {
                                 </svg>
                             </div>
                         </div>
-                        {!filteredItems[0].isGroupChat && (<button className='btn btn-primary btn-sm text-base' onClick={() => setGroupModal(!groupModal)}>+</button>)}
+                        {filteredItems[0].isGroupChat && (<button className='btn btn-primary btn-sm text-base' onClick={() => setGroupModal(!groupModal)}>+</button>)}
                     </div>
 
                 )
@@ -63,8 +64,7 @@ const ChatList = ({ filteredItems, selectUser }: ChatListProps) => {
                             <div className="flex items-center">
                                 <div className="relative flex-shrink-0">
                                     <Image className="rounded-full object-cover" width={48} height={48}
-
-                                        src={`${chat.isGroupChat ? `/assets/images/${chat.chatPicture}` : `${BASE_URL}/image/${member?.profilePic || '/assets/images/profile.png'}`}`} alt="" />
+                                        src={`${chat.isGroupChat ? `${BASE_URL}/image/${chat.chatPicture}` : `${BASE_URL}/image/${member?.profilePic || '/assets/images/profile.png'}`}`} alt="" />
                                     <div>
                                         <div className="absolute bottom-0 ltr:right-0 rtl:left-0">
                                             <div className="h-4 w-4 rounded-full bg-success"></div>
