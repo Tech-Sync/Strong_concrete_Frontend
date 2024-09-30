@@ -6,7 +6,6 @@ import Image from 'next/image';
 import ChatBurgerBtn from '../_components/ChatBurgerBtn';
 import { auth } from '@/auth';
 import Dropdown from '@/app/components/Layout/Dropdown';
-import ChatBoxBottom from '../_components/ChatBoxBottom';
 
 const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
@@ -18,12 +17,10 @@ export default async function ChatBoxPage({ params }: { params: { chatId: string
     const userInfo = session?.user
     const receiver = selectedChat?.chatUsers?.find((member: any) => member.id !== userInfo?.id)
 
-
-
     return (
         <div className="relative h-full">
             <div className="flex items-center justify-between p-4">
-                <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                <div className="flex items-center space-x-2 rtl:space-x-reverse cursor-pointer">
                     <ChatBurgerBtn />
                     <div className="relative flex-none">
                         <Image

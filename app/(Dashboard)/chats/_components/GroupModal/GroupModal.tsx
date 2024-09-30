@@ -22,9 +22,10 @@ interface GroupModalProps {
 }
 
 interface GroupData {
+    [key: string]: string | string[];
     chatName: string;
     userIds: string[];
-    id?: string;
+    // id?: string;
 }
 
 const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
@@ -69,7 +70,7 @@ export default function GroupModal({ onClose, isOpen }: GroupModalProps) {
         fileInputRef.current?.click();
     };
 
-    const changeValue = (e: any) => {
+    const changeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value, id } = e.target;
         setGroupData({ ...groupData, [id]: value });
     };
@@ -83,22 +84,18 @@ export default function GroupModal({ onClose, isOpen }: GroupModalProps) {
             if (key === 'userIds' && Array.isArray(groupData[key])) {
                 formData.append(key, JSON.stringify(groupData[key]));
             } else {
-                formData.append(key, groupData[key]);
+                formData.append(key, groupData[key] as string);
             }
         });
 
         if (chatPicture) formData.append('chatPicture', chatPicture);
-
-        for (let [key, value] of formData.entries()) {
-            console.log(`${key}: ${value}`);
-        }
 
         const res = await postGroup(formData);
         if (!res.error) {
             coloredToast("success", 'succesfully created');
             dispatch(setChats(res.userChats))
             navigate.push(`/chats/${res.group.id}`)
-            // dispatch(getAllUserAsync({}));
+            onClose()
         } else {
             coloredToast("danger", res.error);
         }
