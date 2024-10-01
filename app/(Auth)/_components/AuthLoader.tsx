@@ -1,6 +1,6 @@
 "use client";
 
-import { verifyEmail } from "@/actions/authActions";
+import { verifyEmail } from "@/lib/features/auth/authActions";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -20,7 +20,6 @@ const AuthLoader = () => {
             await verifyEmail(emailToken);
             setIsLoading(false);
           } catch (error: any) {
-            console.error("Verification failed:", error);
             setIsLoading(false);
             alert(error.message);
           }

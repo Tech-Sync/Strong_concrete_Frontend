@@ -190,7 +190,6 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
                       validationSchema={ProductSchema}
                       onSubmit={async (values, { setSubmitting, resetForm }) => {
                         if ("id" in values) {
-                          console.log('update');
                           const res = await updateProduct(values);
                           if (res.message) {
                             coloredToast("success", res.message, "bottom-start");

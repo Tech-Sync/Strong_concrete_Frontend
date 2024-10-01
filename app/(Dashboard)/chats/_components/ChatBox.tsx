@@ -45,7 +45,6 @@ const ChatBox = ({ setIsShowChatMenu, isShowChatMenu, selectedChat, scrollToBott
 
             if (receiver?.id) {
                 const res = await postMessage(selectedChat.id, { receiverId: receiver?.id, content: textMessage });
-                console.log('res-->', res);
                 if (!res.isError) {
                     setMessages([...messages, res.message]);
                 } else {

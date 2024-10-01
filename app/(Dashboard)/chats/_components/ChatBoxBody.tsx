@@ -13,6 +13,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 export default function ChatBoxBody({ chatboxData, receiver }: { chatboxData: any, receiver: any }) {
 
     const { messages, selectedChat } = chatboxData
+    const [isTyping, setIsTyping] = useState<boolean>(false);
     const [chatMessages, setChatMessages] = useState<Message[]>(messages)
     const { userInfo } = useCurrentUser()
     const socket = useSocket();
@@ -32,25 +33,42 @@ export default function ChatBoxBody({ chatboxData, receiver }: { chatboxData: an
     useEffect(() => {
         if (socket && selectedChat) {
             socket.emit('joinRoom', selectedChat.id);
-            console.log(`Joining room with chat Id : ${selectedChat.id}`);
         }
 
         socket?.on('receiveMessage', (message: Message) => {
-            console.log(`Message received: ${message.content}`);
             setChatMessages((prevMessages) => [...prevMessages, message]);
         })
+
+        socket?.on('typing', () => {
+            setIsTyping(true);
+        });
+
+        socket?.on('stopTyping', () => {
+            setIsTyping(false);
+        });
 
         return () => {
             if (socket && selectedChat) {
                 socket.emit('leaveRoom', selectedChat.id);
-                console.log(`Leaving room with chat Id : ${selectedChat.id}`);
                 socket.off('receiveMessage');
+                socket.off('typing');
+                socket.off('stopTyping');
             }
         }
 
     }, [selectedChat, socket]);
 
+    useEffect(() => {
+        scrollToBottom();
+    }, [chatMessages, isTyping]);
 
+    const scrollToBottom = () => {
+        setTimeout(() => {
+            const element: any = document.querySelector('.chat-conversation-box');
+            element.behavior = 'smooth';
+            element.scrollTop = element.scrollHeight;
+        });
+    };
 
     const showProfilePic = (currentMessage: Message, nextMessage: Message | undefined) => {
         return !nextMessage || currentMessage.senderId !== nextMessage.senderId;
@@ -77,7 +95,7 @@ export default function ChatBoxBody({ chatboxData, receiver }: { chatboxData: an
 
     return (
         <>
-            <PerfectScrollbar className="chat-conversation-box relative h-full sm:h-[calc(100vh_-_300px)]">
+            <PerfectScrollbar className="chat-conversation-box relative h-full sm:h-[calc(100vh_-_310px)]">
                 <div className="min-h-[400px] space-y-3 p-4 pb-[68px] sm:min-h-[300px] sm:pb-0">
 
                     {chatMessages && chatMessages?.length > 0 ? (
@@ -86,6 +104,12 @@ export default function ChatBoxBody({ chatboxData, receiver }: { chatboxData: an
                                 const nextMessage = chatMessages[i + 1];
                                 const previousMessage = chatMessages[i - 1];
                                 const showDateHeader = isNewDay(message, previousMessage);
+                                let senderPic;
+
+                                if (selectedChat.isGroupChat) {
+                                    senderPic = selectedChat.chatUsers.find((user: any) => user.id === message.senderId).profilePic;
+                                }
+
 
                                 return (
                                     <div key={message.id}>
@@ -99,11 +123,25 @@ export default function ChatBoxBody({ chatboxData, receiver }: { chatboxData: an
 
                                         <div className={`flex items-start gap-3 ${userInfo?.id === message.senderId ? 'justify-end' : ''}`}>
                                             <div className={`flex-none ${userInfo?.id === message.senderId ? 'order-2' : ''}`}>
-                                                {showProfilePic(message, nextMessage) && userInfo?.id !== message.senderId ? (
+                                                {/* {showProfilePic(message, nextMessage) && userInfo?.id !== message.senderId ? (
                                                     <Image width={40} height={40} src={`${BASE_URL}/image/${receiver?.profilePic}`} className="rounded-full object-cover" alt="" />
-                                                ) : ('')}
-                                                {/* {userInfo?.id === message.senderId ? (<Image height={40} width={40} src={`${BASE_URL}/image/${userInfo?.profilePic}`} className="rounded-full object-cover" alt="" />) : ('')} */}
-                                                {/* {userInfo?.id !== message.senderId ? (<Image width={40} height={40} src={`${BASE_URL}/image/${receiver?.profilePic}`} className="rounded-full object-cover" alt="" />) : ('')} */}
+                                                ) : ('')} */}
+
+                                                {
+                                                    selectedChat.isGroupChat ? (
+                                                        <Image height={40} width={40} src={`${BASE_URL}/image/${senderPic}`} className="rounded-full object-cover" alt="" />
+                                                    ) : (
+                                                        userInfo?.id === message.senderId ? (
+                                                            <Image height={40} width={40} src={`${BASE_URL}/image/${userInfo?.profilePic}`} className="rounded-full object-cover" alt="" />
+                                                        ) : (
+                                                            <Image width={40} height={40} src={`${BASE_URL}/image/${receiver?.profilePic}`} className="rounded-full object-cover" alt="" />
+                                                        )
+                                                    )
+                                                }
+
+
+
+
                                             </div>
                                             <div className="flex items-center gap-3">
                                                 <div className={` relative rounded-md bg-black/10 p-2 py-3 pr-11 dark:bg-gray-800 ${message.senderId === userInfo?.id ? '!bg-primary text-white rounded-br-none' : 'rounded-bl-none '}`}>
@@ -112,7 +150,6 @@ export default function ChatBoxBody({ chatboxData, receiver }: { chatboxData: an
                                                         {formatTime(message.createdAt.toString())}
                                                     </div>
                                                 </div>
-
                                                 <div className={`${userInfo?.id === message.senderId ? 'hidden' : ''}`}>
                                                     <ChatBoxSmileIcon />
                                                 </div>
@@ -123,10 +160,20 @@ export default function ChatBoxBody({ chatboxData, receiver }: { chatboxData: an
                             })}
                         </>
                     ) : null}
+
+                    {
+                        isTyping && (
+                            <div className={`rounded-full w-fit bg-black/10 p-3 dark:bg-gray-800 flex gap-2`}>
+                                <div className='w-2 h-2 bg-slate-500 rounded-xl animate-typing delay-0'></div>
+                                <div className='w-2 h-2 bg-slate-500 rounded-xl animate-typing delay-200'></div>
+                                <div className='w-2 h-2 bg-slate-500 rounded-xl animate-typing delay-400'></div>
+                            </div>
+                        )
+                    }
                 </div>
             </PerfectScrollbar>
-            <div className="absolute bottom-0 left-0 w-full p-4">
-                <ChatBoxBottom receiver={receiver} selectedChat={selectedChat} pushMessage={(msg: Message) => setChatMessages((prevMessages) => [...prevMessages, msg])} />
+            <div className="absolute bottom-0 left-0 w-full p-4 ">
+                <ChatBoxBottom receiver={receiver} selectedChat={selectedChat} pushMessage={(msg: Message) => setChatMessages((prevMessages) => [...prevMessages, msg])} scrollToBottom={scrollToBottom} />
             </div>
         </>
 

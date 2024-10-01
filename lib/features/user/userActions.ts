@@ -125,7 +125,6 @@ export const updateUser = async (userId: string, userData: any) => {
     });
 
     const data = await response.json();
-    console.log(data);
 
     if (response.ok) {
       return { message: "Successfully Updated!" };

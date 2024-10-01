@@ -155,7 +155,6 @@ const SaleAdd = () => {
                         }, 500);
                     } else {
                         const { id, ...valuesToSend } = values
-                        console.log('values---', valuesToSend);
                         const res = await addSale(valuesToSend);
                         setTimeout(() => {
                             setSubmitting(false);

@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { ChatBoxSendIcon, ChatBoxSmileIcon } from './ChatIcons'
 import { Chat, Message } from '@/types/types';
 import { getMessagesForChat, postMessage } from '@/lib/features/chat/chatActions';
@@ -8,21 +8,14 @@ import { useSocket } from '@/lib/contexts/SocketContext';
 
 
 
-export default function ChatBoxBottom({ receiver, selectedChat, pushMessage }: { receiver: any, selectedChat: Chat, pushMessage: (value: Message) => void }) {
+export default function ChatBoxBottom({ receiver, selectedChat, pushMessage, scrollToBottom }: { receiver: any, selectedChat: Chat, pushMessage: (value: Message) => void, scrollToBottom: () => void }) {
 
     const [textMessage, setTextMessage] = useState<string>('');
+    const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const socket = useSocket();
 
-    const scrollToBottom = () => {
-        // if (isShowUserChat) {
-        setTimeout(() => {
-            const element: any = document.querySelector('.chat-conversation-box');
-            element.behavior = 'smooth';
-            element.scrollTop = element.scrollHeight;
-        });
-        // }
-    };
+
 
     const sendMessage = async () => {
         if (textMessage.trim()) {
@@ -52,6 +45,22 @@ export default function ChatBoxBottom({ receiver, selectedChat, pushMessage }: {
         }
     };
 
+    const handleOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+        setTextMessage(e.target.value)
+
+        if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current);
+        } else {
+            socket?.emit('typing', { chatId: selectedChat.id });
+        }
+
+        typingTimeoutRef.current = setTimeout(() => {
+            socket?.emit('stopTyping', { chatId: selectedChat.id });
+            typingTimeoutRef.current = null;
+        },3000);
+    }
+
     return (
         <div className="w-full items-center space-x-3 sm:flex">
             <div className="relative flex-1">
@@ -59,7 +68,7 @@ export default function ChatBoxBottom({ receiver, selectedChat, pushMessage }: {
                     className="form-input rounded-full border-0 bg-[#f4f4f4] px-12 py-2 focus:outline-none"
                     placeholder="Type a message"
                     value={textMessage}
-                    onChange={(e: any) => setTextMessage(e.target.value)}
+                    onChange={handleOnchange}
                     onKeyUp={sendMessageHandle}
                 />
                 <button type="button" className="absolute top-1/2 -translate-y-1/2 hover:text-primary ltr:left-4 rtl:right-4">

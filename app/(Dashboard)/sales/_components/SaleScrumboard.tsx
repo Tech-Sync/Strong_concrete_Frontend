@@ -140,8 +140,6 @@ const SaleScrumboard = () => {
                                                 const newProject = projectList.find(project => project.id.toString() === newProjectId);
                                                 if (newProject) {
                                                     const newOrderDate = newProject.date;
-                                                    // console.log(evt.item);
-                                                    // console.log(`Dragged Item ID: ${draggedSaleId}, New Order Number: ${newOrderNumber}, New Project Date: ${newOrderDate}`);
                                                     const updateOrderData = { newOrderNumber, newOrderDate };
 
                                                     if (draggedSaleId) {
