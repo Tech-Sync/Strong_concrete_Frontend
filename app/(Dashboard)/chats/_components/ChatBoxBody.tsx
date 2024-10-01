@@ -1,21 +1,56 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { ChatBoxSmileIcon } from './ChatIcons';
 import ChatBoxBottom from './ChatBoxBottom';
 import { Message } from '@/types/types';
-
+import { useSocket } from '@/lib/contexts/SocketContext';
 
 const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
-
 
 export default function ChatBoxBody({ chatboxData, receiver }: { chatboxData: any, receiver: any }) {
 
     const { messages, selectedChat } = chatboxData
     const [chatMessages, setChatMessages] = useState<Message[]>(messages)
     const { userInfo } = useCurrentUser()
+    const socket = useSocket();
+
+    useEffect(() => {
+        if (socket) {
+            socket.on('connect', () => {
+                console.log('Connected to server');
+            });
+
+            socket.on('disconnect', () => {
+                console.log('Disconnected from server');
+            });
+        }
+    }, [socket]);
+
+    useEffect(() => {
+        if (socket && selectedChat) {
+            socket.emit('joinRoom', selectedChat.id);
+            console.log(`Joining room with chat Id : ${selectedChat.id}`);
+        }
+
+        socket?.on('receiveMessage', (message: Message) => {
+            console.log(`Message received: ${message.content}`);
+            setChatMessages((prevMessages) => [...prevMessages, message]);
+        })
+
+        return () => {
+            if (socket && selectedChat) {
+                socket.emit('leaveRoom', selectedChat.id);
+                console.log(`Leaving room with chat Id : ${selectedChat.id}`);
+                socket.off('receiveMessage');
+            }
+        }
+
+    }, [selectedChat, socket]);
+
+
 
     const showProfilePic = (currentMessage: Message, nextMessage: Message | undefined) => {
         return !nextMessage || currentMessage.senderId !== nextMessage.senderId;
@@ -91,7 +126,7 @@ export default function ChatBoxBody({ chatboxData, receiver }: { chatboxData: an
                 </div>
             </PerfectScrollbar>
             <div className="absolute bottom-0 left-0 w-full p-4">
-                <ChatBoxBottom receiver={receiver} selectedChat={selectedChat} setChatMessages={(msg: Message) => setChatMessages([...chatMessages, msg])} />
+                <ChatBoxBottom receiver={receiver} selectedChat={selectedChat} pushMessage={(msg: Message) => setChatMessages((prevMessages) => [...prevMessages, msg])} />
             </div>
         </>
 

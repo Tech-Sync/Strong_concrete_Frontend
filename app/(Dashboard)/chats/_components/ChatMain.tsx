@@ -98,7 +98,7 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
     const selectUser = (chat: Chat) => {
         // setSelectedChat(chat);
         // setIsShowUserChat(true);
-        // scrollToBottom();
+        scrollToBottom();
         dispatch(setIsShowChatMenu(false))
     };
 

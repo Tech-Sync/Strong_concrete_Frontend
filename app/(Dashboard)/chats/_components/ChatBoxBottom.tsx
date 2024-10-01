@@ -4,11 +4,15 @@ import { ChatBoxSendIcon, ChatBoxSmileIcon } from './ChatIcons'
 import { Chat, Message } from '@/types/types';
 import { getMessagesForChat, postMessage } from '@/lib/features/chat/chatActions';
 import { coloredToast } from '@/utils/sweetAlerts';
+import { useSocket } from '@/lib/contexts/SocketContext';
 
-export default function ChatBoxBottom({ receiver, selectedChat, setChatMessages }: { receiver: any, selectedChat: Chat, setChatMessages: (value: Message) => void }) {
+
+
+export default function ChatBoxBottom({ receiver, selectedChat, pushMessage }: { receiver: any, selectedChat: Chat, pushMessage: (value: Message) => void }) {
 
     const [textMessage, setTextMessage] = useState<string>('');
 
+    const socket = useSocket();
 
     const scrollToBottom = () => {
         // if (isShowUserChat) {
@@ -26,7 +30,10 @@ export default function ChatBoxBottom({ receiver, selectedChat, setChatMessages 
             if (receiver?.id) {
                 const res = await postMessage(selectedChat.id, { receiverId: receiver?.id, content: textMessage });
                 if (!res.isError) {
-                    setChatMessages(res.message)
+
+                    socket?.emit('sendMessage', res.message);
+
+                    pushMessage(res.message)
                 } else {
                     coloredToast('danger', res.message);
                 }
