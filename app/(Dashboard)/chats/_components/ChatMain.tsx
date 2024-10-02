@@ -12,14 +12,9 @@ import { fetchAllChatsAsync, selectChats, selectChatStates, setIsShowChatMenu, }
 import { Chat } from '@/types/types';
 import { coloredToast } from '@/utils/sweetAlerts';
 import ChatContactList from './ChatContactList';
-import { getAllUserAsync } from '@/lib/features/user/userSlice';
+import { getAllUserAsync, setActiveUsersState } from '@/lib/features/user/userSlice';
+import { useSocket } from '@/lib/contexts/SocketContext';
 
-
-type ChatMainProps = {
-    chatTitle: string;
-    image: string;
-    chats: Chat[];
-};
 
 const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
@@ -38,10 +33,34 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
     const { status, error, isShowChatMenu } = useAppSelector(selectChatStates)
 
     const [searchUser, setSearchUser] = useState('');
-    const [isShowUserChat, setIsShowUserChat] = useState(false);
-    // const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
     const [filteredItems, setFilteredItems] = useState<Chat[] | any>([]);
+    const socket = useSocket();
 
+    useEffect(() => {
+        if (socket) {
+            socket.on('connect', () => {
+                console.log('Connected to server');
+                if (userInfo?.id) socket.emit('userConnected', userInfo?.id)
+            });
+
+            socket.on('disconnect', () => {
+                console.log('Disconnected from server');
+            });
+
+            socket.on('activeUsers', (users) => {
+                dispatch(setActiveUsersState(users))
+            })
+
+            
+
+
+            return () => {
+                socket.off('connect');
+                socket.off('disconnect');
+                socket.off('activeUsers');
+            };
+        }
+    }, [socket, userInfo, dispatch]);
 
     useEffect(() => {
         dispatch(fetchAllChatsAsync({}))
@@ -85,20 +104,11 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
 
     }, [searchUser, chats]);
 
-    const scrollToBottom = () => {
-        if (isShowUserChat) {
-            setTimeout(() => {
-                const element: any = document.querySelector('.chat-conversation-box');
-                element.behavior = 'smooth';
-                element.scrollTop = element.scrollHeight;
-            });
-        }
-    };
+
 
     const selectUser = (chat: Chat) => {
         // setSelectedChat(chat);
         // setIsShowUserChat(true);
-        scrollToBottom();
         dispatch(setIsShowChatMenu(false))
     };
 

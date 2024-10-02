@@ -10,11 +10,12 @@ export interface UserSliceState {
     error: string | null;
     status: "idle" | "loading" | "failed" | "succeeded";
     user: User
-
+    activeUsers: any[]
 }
 
 const initialState: UserSliceState = {
     users: [],
+    activeUsers: [],
     loading: false,
     error: null,
     status: "idle",
@@ -56,6 +57,10 @@ export const userSlice = createAppSlice({
             state.users = action.payload;
         }),
 
+        setActiveUsersState: reducer((state, action: PayloadAction<any[]>) => {
+            state.activeUsers = action.payload
+        }),
+
         getAllUserAsync: asyncThunk(
             async () => {
                 try {
@@ -78,8 +83,9 @@ export const userSlice = createAppSlice({
     selectors: {
         selectUsers: (user) => user.users,
         selectUserStatus: (user) => user.status,
+        selectActiveUsers: (user) => user.activeUsers
     }
 })
 
-export const { fetchStartUser, fetchFailUser, updateUsers, getAllUserAsync } = userSlice.actions
-export const { selectUsers, selectUserStatus } = userSlice.selectors
+export const { fetchStartUser, fetchFailUser, updateUsers, getAllUserAsync, setActiveUsersState } = userSlice.actions
+export const { selectUsers, selectUserStatus, selectActiveUsers } = userSlice.selectors

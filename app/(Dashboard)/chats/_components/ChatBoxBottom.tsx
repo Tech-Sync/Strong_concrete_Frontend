@@ -24,7 +24,7 @@ export default function ChatBoxBottom({ receiver, selectedChat, pushMessage, scr
                 const res = await postMessage(selectedChat.id, { receiverId: receiver?.id, content: textMessage });
                 if (!res.isError) {
 
-                    socket?.emit('sendMessage', res.message);
+                    socket?.emit('sendMessage', res.message, receiver.id);
 
                     pushMessage(res.message)
                 } else {

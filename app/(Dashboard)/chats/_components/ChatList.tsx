@@ -7,23 +7,26 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useParams } from 'next/navigation';
-import GroupModal from './GroupModal/GroupModal';
+import GroupModal from './GroupModal';
+import { useAppSelector } from '@/lib/hooks';
+import { selectActiveUsers } from '@/lib/features/user/userSlice';
 
 interface ChatListProps {
     filteredItems: Chat[];
     selectUser: (chat: any) => void;
+    // activeUsers: any[]
 }
 
 const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
 const ChatList = ({ filteredItems, selectUser }: ChatListProps) => {
 
-    const [searchQuery, setSearchQuery] = useState('')
-
     const { userInfo } = useCurrentUser()
     const navigate = useRouter()
     const params = useParams();
-
+    
+    const activeUsers = useAppSelector(selectActiveUsers)
+    const [searchQuery, setSearchQuery] = useState('')
     const [groupModal, setGroupModal] = useState(false);
 
 
@@ -65,11 +68,14 @@ const ChatList = ({ filteredItems, selectUser }: ChatListProps) => {
                                 <div className="relative flex-shrink-0">
                                     <Image className="rounded-full object-cover" width={48} height={48}
                                         src={`${chat.isGroupChat ? `${BASE_URL}/image/${chat.chatPicture}` : `${BASE_URL}/image/${member?.profilePic || '/assets/images/profile.png'}`}`} alt="" />
-                                    <div>
-                                        <div className="absolute bottom-0 ltr:right-0 rtl:left-0">
-                                            <div className="h-4 w-4 rounded-full bg-success"></div>
-                                        </div>
-                                    </div>
+                                    {
+                                        !chat.isGroupChat && activeUsers.some(user => user.userId === member?.id) && (
+                                            <div className="absolute bottom-0 ltr:right-0 rtl:left-0">
+                                                <div className="size-3 rounded-full bg-success"></div>
+                                            </div>
+                                        )
+                                    }
+
                                 </div>
                                 <div className="mx-3 ltr:text-left rtl:text-right">
                                     {

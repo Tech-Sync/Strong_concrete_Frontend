@@ -7,28 +7,22 @@ import { ChatBoxSmileIcon } from './ChatIcons';
 import ChatBoxBottom from './ChatBoxBottom';
 import { Message } from '@/types/types';
 import { useSocket } from '@/lib/contexts/SocketContext';
+import { useAppSelector } from '@/lib/hooks';
+import { selectActiveUsers } from '@/lib/features/user/userSlice';
+import { coloredToast } from '@/utils/sweetAlerts';
 
 const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
 export default function ChatBoxBody({ chatboxData, receiver }: { chatboxData: any, receiver: any }) {
 
+    const socket = useSocket();
+    const { userInfo } = useCurrentUser()
+    const activeUsers = useAppSelector(selectActiveUsers)
+
     const { messages, selectedChat } = chatboxData
     const [isTyping, setIsTyping] = useState<boolean>(false);
     const [chatMessages, setChatMessages] = useState<Message[]>(messages)
-    const { userInfo } = useCurrentUser()
-    const socket = useSocket();
 
-    useEffect(() => {
-        if (socket) {
-            socket.on('connect', () => {
-                console.log('Connected to server');
-            });
-
-            socket.on('disconnect', () => {
-                console.log('Disconnected from server');
-            });
-        }
-    }, [socket]);
 
     useEffect(() => {
         if (socket && selectedChat) {
@@ -37,6 +31,11 @@ export default function ChatBoxBody({ chatboxData, receiver }: { chatboxData: an
 
         socket?.on('receiveMessage', (message: Message) => {
             setChatMessages((prevMessages) => [...prevMessages, message]);
+        })
+
+        socket?.on('receiveNotification', (notification) => {
+            console.log('Notification received:', notification);
+            coloredToast('warning', notification)
         })
 
         socket?.on('typing', () => {
@@ -53,6 +52,7 @@ export default function ChatBoxBody({ chatboxData, receiver }: { chatboxData: an
                 socket.off('receiveMessage');
                 socket.off('typing');
                 socket.off('stopTyping');
+                socket.off('receiveNotification')
             }
         }
 
