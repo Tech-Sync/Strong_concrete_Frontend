@@ -6,12 +6,13 @@ import Image from 'next/image';
 import ChatBurgerBtn from '../_components/ChatBurgerBtn';
 import { auth } from '@/auth';
 import Dropdown from '@/app/components/Layout/Dropdown';
+import ChatBoxUserDetail from '../_components/ChatBoxUserDetail';
 
-const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
 export default async function ChatBoxPage({ params }: { params: { chatId: string } }) {
 
     const chatboxData = await getChat(params?.chatId)
+
     const { selectedChat } = chatboxData
     const session = await auth()
     const userInfo = session?.user
@@ -20,23 +21,7 @@ export default async function ChatBoxPage({ params }: { params: { chatId: string
     return (
         <div className="relative h-full">
             <div className="flex items-center justify-between p-4">
-                <div className="flex items-center space-x-2 rtl:space-x-reverse cursor-pointer">
-                    <ChatBurgerBtn />
-                    <div className="relative flex-none">
-                        <Image
-                            width={40}
-                            height={40}
-                            src={`${selectedChat?.isGroupChat ? `${BASE_URL}/image/${selectedChat?.chatPicture || '/assets/images/profile.png'}` : `${BASE_URL}/image/${receiver?.profilePic || '/assets/images/profile.png'}`}`}
-                            className="rounded-full object-cover sm:h-12 sm:w-12" alt="" />
-                        <div className="absolute bottom-0 ltr:right-0 rtl:left-0">
-                            <div className="h-4 w-4 rounded-full bg-success"></div>
-                        </div>
-                    </div>
-                    <div className="mx-3">
-                        <p className="font-semibold">{selectedChat.isGroupChat ? `${selectedChat?.chatName}` : `${receiver?.firstName} ${receiver?.lastName}`}</p>
-                        <p className="text-xs text-white-dark">{true ? 'Active now' : 'Last seen at ' + 10}</p>
-                    </div>
-                </div>
+                <ChatBoxUserDetail selectedChat={selectedChat} receiver={receiver} />
                 <div className="flex gap-3 sm:gap-5">
                     <button type="button">
                         <ChatBoxCallIcons />
