@@ -25,7 +25,29 @@ const Header = () => {
 
 	const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 	const socket = useSocket(BASE_URL)
+	// socket connection
+	useEffect(() => {
+		if (socket) {
+			socket.on('connect', () => {
+				console.log('Connected to server');
+				if (userInfo?.id) socket.emit('userConnected', userInfo?.id)
+			});
 
+			socket.on('disconnect', () => {
+				console.log('Disconnected from server');
+			});
+
+			socket.on('activeUsers', (users) => {
+				dispatch(setActiveUsersState(users))
+			})
+
+			return () => {
+				socket.off('connect');
+				socket.off('disconnect');
+				socket.off('activeUsers');
+			};
+		}
+	}, [socket, userInfo, dispatch]);
 
 
 	useEffect(() => {

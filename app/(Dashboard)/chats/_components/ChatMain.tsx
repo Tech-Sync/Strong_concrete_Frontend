@@ -12,9 +12,7 @@ import { fetchAllChatsAsync, selectChats, selectChatStates, setIsShowChatMenu, }
 import { Chat } from '@/types/types';
 import { coloredToast } from '@/utils/sweetAlerts';
 import ChatContactList from './ChatContactList';
-import { getAllUserAsync, setActiveUsersState } from '@/lib/features/user/userSlice';
-import useSocket from '@/hooks/useSocket';
-// import { useSocket } from '@/lib/contexts/SocketContext';
+import { getAllUserAsync } from '@/lib/features/user/userSlice';
 
 const Tabs = [
     { name: 'All', icon: <AllChatsIcon /> },
@@ -24,8 +22,8 @@ const Tabs = [
 ]
 
 const ChatMain = ({ children }: { children: React.ReactNode; }) => {
+    
     const dispatch = useAppDispatch()
-
     const { userInfo } = useCurrentUser()
     const chats = useAppSelector(selectChats)
     const { status, error, isShowChatMenu } = useAppSelector(selectChatStates)
@@ -34,9 +32,6 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
     const [searchUser, setSearchUser] = useState('');
     const [filteredItems, setFilteredItems] = useState<Chat[] | any>([]);
 
-    //? CONTEXT API
-    // const socket = useSocket();
-
     //? CUSTOM HOOK
     const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
@@ -44,7 +39,6 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
     useEffect(() => {
         dispatch(fetchAllChatsAsync({}))
         dispatch(getAllUserAsync({}))
-
     }, [dispatch])
 
     useEffect(() => {
@@ -145,12 +139,12 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
                                         Help & feedback
                                     </button>
                                 </li>
-                                <li>
+                                {/* <li>
                                     <button type="button">
                                         <SignOutIcon />
                                         Sign Out
                                     </button>
-                                </li>
+                                </li> */}
                             </ul>
                         </Dropdown>
                     </div>

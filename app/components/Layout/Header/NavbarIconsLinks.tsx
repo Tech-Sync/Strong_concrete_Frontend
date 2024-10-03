@@ -17,7 +17,7 @@ const NavbarIconsLinks = () => {
           </Link>
         </li>
         <li>
-          <Link href="#" className="block rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60">
+          <Link href="/chats" className="block rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60">
             <ChatIcon />
           </Link>
         </li>

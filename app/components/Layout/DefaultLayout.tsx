@@ -25,7 +25,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
 
 
 
-    const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
+/*     const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
     const socket = useSocket(BASE_URL)
     const { userInfo } = useCurrentUser()
     // socket connection
@@ -50,7 +50,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                 socket.off('activeUsers');
             };
         }
-    }, [socket, userInfo, dispatch]);
+    }, [socket, userInfo, dispatch]); */
 
     const goToTop = () => {
         document.body.scrollTop = 0;
