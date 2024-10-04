@@ -10,7 +10,6 @@ import { usePathname } from 'next/navigation'
 import AppContainer from '@/container/AppContainer';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { selectThemeConfig, toggleSidebar } from '@/lib/features/themeConfig/themeConfigSlice';
-import useSocket from '@/hooks/useSocket';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { setActiveUsersState } from '@/lib/features/user/userSlice';
 
@@ -22,35 +21,6 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
     const [animation, setAnimation] = useState(themeConfig.animation);
     const dispatch = useAppDispatch();
 
-
-
-
-/*     const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
-    const socket = useSocket(BASE_URL)
-    const { userInfo } = useCurrentUser()
-    // socket connection
-    useEffect(() => {
-        if (socket) {
-            socket.on('connect', () => {
-                console.log('Connected to server');
-                if (userInfo?.id) socket.emit('userConnected', userInfo?.id)
-            });
-
-            socket.on('disconnect', () => {
-                console.log('Disconnected from server');
-            });
-
-            socket.on('activeUsers', (users) => {
-                dispatch(setActiveUsersState(users))
-            })
-
-            return () => {
-                socket.off('connect');
-                socket.off('disconnect');
-                socket.off('activeUsers');
-            };
-        }
-    }, [socket, userInfo, dispatch]); */
 
     const goToTop = () => {
         document.body.scrollTop = 0;

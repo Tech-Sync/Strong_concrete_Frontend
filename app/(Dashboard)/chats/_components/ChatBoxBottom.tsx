@@ -4,8 +4,7 @@ import { ChatBoxSendIcon, ChatBoxSmileIcon } from './ChatIcons'
 import { Chat, Message } from '@/types/types';
 import { getMessagesForChat, postMessage } from '@/lib/features/chat/chatActions';
 import { coloredToast } from '@/utils/sweetAlerts';
-import useSocket from '@/hooks/useSocket';
-// import { useSocket } from '@/lib/contexts/SocketContext';
+import { useSocket } from '@/lib/contexts/SocketContext';
 
 
 
@@ -14,12 +13,10 @@ export default function ChatBoxBottom({ receiver, selectedChat, pushMessage, scr
     const [textMessage, setTextMessage] = useState<string>('');
     const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-    //? CONTEXT API
-    // const socket = useSocket();
 
     //? CUSTOM HOOK
     const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
-    const socket = useSocket(BASE_URL)
+    const socket = useSocket()
 
 
 
