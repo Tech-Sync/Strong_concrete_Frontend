@@ -13,46 +13,19 @@ import NavbarProfileDrop from './NavbarProfileDrop';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { selectThemeConfig } from '@/lib/features/themeConfig/themeConfigSlice';
 import { setMessagesState } from '@/lib/features/notification/notificationSlice';
-import { useCurrentUser } from '@/hooks/useCurrentUser';
-import { setActiveUsersState } from '@/lib/features/user/userSlice';
 import { useSocket } from '@/lib/contexts/SocketContext';
 
 
 const Header = () => {
 	const pathname = usePathname()
 	const dispatch = useAppDispatch()
-	const { userInfo } = useCurrentUser()
+    const socket = useSocket()
 
-	const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
-	const socket = useSocket()
-	// socket connection
-	useEffect(() => {
-		if (socket) {
-			socket.on('connect', () => {
-				console.log('Connected to server');
-				if (userInfo?.id) socket.emit('userConnected', userInfo?.id)
-			});
-
-			socket.on('disconnect', () => {
-				console.log('Disconnected from server');
-			});
-
-			socket.on('activeUsers', (users) => {
-				dispatch(setActiveUsersState(users))
-			})
-
-			return () => {
-				socket.off('connect');
-				socket.off('disconnect');
-				socket.off('activeUsers');
-			};
-		}
-	}, [socket, userInfo, dispatch]);
 
 
 	useEffect(() => {
 
-		socket?.on('receiveNotification', (notification) => {
+		socket?.on('receiveNotification', (notification: any) => {
 			console.log('Notification received:', notification);
 			dispatch(setMessagesState(notification))
 		})

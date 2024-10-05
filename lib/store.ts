@@ -13,9 +13,10 @@ import { vehicleSlice } from "./features/vehicle/vehicleSlice";
 import { emailSlice } from "./features/email/emailSlice";
 import { chatSlice } from "./features/chat/chatSlice";
 import { notificationSlice } from "./features/notification/notificationSlice";
+import { socketSlice } from "./features/socket/socketSlice";
 
 
-const rootReducer = combineSlices(themeConfigSlice, deliverySlice, firmSlice, materialSlice, productSlice, productionSlice, purchaseSlice, saleSlice, userSlice, vehicleSlice, emailSlice, chatSlice, notificationSlice);
+const rootReducer = combineSlices(themeConfigSlice, deliverySlice, firmSlice, materialSlice, productSlice, productionSlice, purchaseSlice, saleSlice, userSlice, vehicleSlice, emailSlice, chatSlice, notificationSlice, socketSlice);
 
 export type RootState = ReturnType<typeof rootReducer>;
 

@@ -7,7 +7,6 @@ import React, { useEffect, useState } from 'react'
 
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { ChatBoxCallIcons, ChatBoxDeletecons, ChatBoxSendIcon, ChatBoxShareIcons, ChatBoxSmileIcon, ChatBoxVideoCallIcons, SettingIcon } from './ChatIcons';
-import { set } from 'lodash';
 import { coloredToast } from '@/utils/sweetAlerts';
 
 interface ChatBoxProps {

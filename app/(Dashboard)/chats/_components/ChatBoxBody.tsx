@@ -8,6 +8,7 @@ import ChatBoxBottom from './ChatBoxBottom';
 import { Message } from '@/types/types';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { selectActiveUsers } from '@/lib/features/user/userSlice';
+import { selectSocket } from '@/lib/features/socket/socketSlice';
 import { useSocket } from '@/lib/contexts/SocketContext';
 
 const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
@@ -20,6 +21,7 @@ export default function ChatBoxBody({ chatboxData, receiver }: { chatboxData: an
     //? CUSTOM HOOK
     const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
     const socket = useSocket()
+
 
     const { userInfo } = useCurrentUser()
     const activeUsers = useAppSelector(selectActiveUsers)
