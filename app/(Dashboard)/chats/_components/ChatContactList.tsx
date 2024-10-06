@@ -55,12 +55,8 @@ const ChatContactList = ({ selectUser }: ChatListProps) => {
 
 
     return (
-        <>
-            {
-                !filteredItems.length && (<div className="flex items-center justify-center h-full">
-                    <p className="text-gray-400 dark:text-gray-500">No user found</p>
-                </div>)
-            }
+        <div className='relative'>
+
             {
                 status === 'loading' ? (<div className="flex items-center justify-center h-full">
                     <p className="text-gray-400 dark:text-gray-500">Loading...</p>
@@ -103,7 +99,13 @@ const ChatContactList = ({ selectUser }: ChatListProps) => {
                     </PerfectScrollbar >
                 )
             }
-        </>
+            {
+                !filteredItems.length && (
+
+                    <p className="absolute top-1/2 left-24 text-gray-400 dark:text-gray-500">No user found</p>
+                )
+            }
+        </div>
 
     )
 }

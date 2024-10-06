@@ -22,20 +22,18 @@ const Tabs = [
     { name: 'Contacts', icon: <ContactIcon /> },
 ]
 
+const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
+
+
 const ChatMain = ({ children }: { children: React.ReactNode; }) => {
 
     const dispatch = useAppDispatch()
     const { userInfo } = useCurrentUser()
     const chats = useAppSelector(selectChats)
     const { status, error, isShowChatMenu } = useAppSelector(selectChatStates)
-
-
-    const [searchUser, setSearchUser] = useState('');
     const [filteredItems, setFilteredItems] = useState<Chat[] | any>([]);
-
-    //? CUSTOM HOOK
-    const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
-
+    const [searchQuery, setSearchQuery] = useState('')
+    const [selectedTab, setSelectedTab] = useState('All')
 
     useEffect(() => {
         dispatch(fetchAllChatsAsync({}))
@@ -43,22 +41,14 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
     }, [dispatch])
 
     useEffect(() => {
-        if (error) {
-            coloredToast('danger', error);
-        }
-    }, [error]);
-
-
-    useEffect(() => {
         setFilteredItems(chats);
     }, [chats]);
 
-
     useEffect(() => {
         setFilteredItems(() => {
-            return chats.filter((chat: any) => {
+            return chats?.filter((chat: any) => {
 
-                const searchTerm = searchUser.toLowerCase();
+                const searchTerm = searchQuery.toLowerCase();
 
                 let isChatNameMatch;
                 if (chat.chatName) {
@@ -72,12 +62,31 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
                     return fullName.includes(searchTerm) || email.includes(searchTerm);
                 });
 
-                return isChatNameMatch || isMemberMatch;
+                const matchesSearch = isChatNameMatch || isMemberMatch;
+
+                switch (selectedTab) {
+                    case 'All':
+                        return matchesSearch;
+                    case 'Chats':
+                        return matchesSearch && chat.isGroupChat === false;
+                    case 'Groups':
+                        return matchesSearch && chat.isGroupChat === true;
+                    default:
+                        return false;
+                }
             });
         });
 
-    }, [searchUser, chats]);
+    }, [searchQuery, chats, selectedTab]);
 
+
+
+
+    useEffect(() => {
+        if (error) {
+            coloredToast('danger', error);
+        }
+    }, [error]);
 
 
     const selectUser = (chat: Chat) => {
@@ -86,21 +95,6 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
         dispatch(setIsShowChatMenu(false))
     };
 
-    const handleTab = (type: string) => {
-        switch (type) {
-            case 'All':
-                setFilteredItems(chats);
-                break;
-            case 'Chats':
-                setFilteredItems(chats.filter((chat) => chat.isGroupChat === false));
-                break;
-            case 'Groups':
-                setFilteredItems(chats.filter((chat) => chat.isGroupChat === true));
-                break;
-            default:
-                break;
-        }
-    };
 
     return (
         <div className={`mt-5 relative flex h-full gap-5 sm:h-[calc(100vh_-_160px)] sm:min-h-0 ${isShowChatMenu ? 'min-h-[999px]' : ''}`}>
@@ -150,13 +144,32 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
                         </Dropdown>
                     </div>
                 </div>
+                {
+                    selectedTab !== 'Contacts' && (<div className='flex gap-x-2 mb-3'>
+                        <div className="relative flex-1">
+                            <input
+                                type="text"
+                                className="peer form-input ltr:pr-9 rtl:pl-9"
+                                placeholder="Searching..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                            <div className="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-2 rtl:left-2">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="11.5" cy="11.5" r="9.5" stroke="currentColor" strokeWidth="1.5" opacity="0.5"></circle>
+                                    <path d="M18.5 18.5L22 22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>)
+                }
                 <div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b]" />
                 <Tab.Group>
                     <Tab.List className="flex items-center justify-between text-xs">
                         {Tabs.map((tab, i) => (
                             <Tab as={Fragment} key={i}>
                                 {({ selected }) => (
-                                    <button onClick={() => handleTab(tab.name)} type="button" className={`${selected ? 'text-primary' : 'hover:text-primary'}`}>
+                                    <button onClick={() => { setSelectedTab(tab.name) }} type="button" className={`${selected ? 'text-primary' : 'hover:text-primary'}`}>
                                         {tab.icon}
                                         {tab.name}
                                     </button>
@@ -164,7 +177,7 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
                             </Tab>
                         ))}
                     </Tab.List>
-                    {filteredItems.length === 0 && (<div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b]" />)}
+                    {chats.length === 0 && (<div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b]" />)}
                     <Tab.Panels>
                         <Tab.Panel>
                             {
@@ -172,13 +185,13 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
                                     ? (<ChatListSkeleton />)
                                     : (<ChatList selectUser={selectUser} filteredItems={filteredItems} />)
                             }
-                            <ChatList selectUser={selectUser} filteredItems={filteredItems} />
                         </Tab.Panel>
                         <Tab.Panel>
                             <ChatList selectUser={selectUser} filteredItems={filteredItems} />
                         </Tab.Panel>
                         <Tab.Panel>
                             <ChatList selectUser={selectUser} filteredItems={filteredItems} />
+
                         </Tab.Panel>
                         <Tab.Panel>
                             <ChatContactList selectUser={selectUser} />

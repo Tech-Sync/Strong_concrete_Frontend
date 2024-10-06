@@ -19,6 +19,7 @@ export default async function ChatBoxPage({ params }: { params: { chatId: string
     const receiver = selectedChat?.chatUsers?.find((member: any) => member.id !== userInfo?.id)
 
     return (
+
         <div className="relative h-full">
             <div className="flex items-center justify-between p-4">
                 <ChatBoxUserDetail selectedChat={selectedChat} receiver={receiver} />
@@ -80,7 +81,8 @@ export default async function ChatBoxPage({ params }: { params: { chatId: string
 
             <ChatBoxBody chatboxData={chatboxData} receiver={receiver} />
 
-
         </div>
+
+
     )
 }
