@@ -13,6 +13,7 @@ import { Chat } from '@/types/types';
 import { coloredToast } from '@/utils/sweetAlerts';
 import ChatContactList from './ChatContactList';
 import { getAllUserAsync } from '@/lib/features/user/userSlice';
+import { ChatListSkeleton } from './ChatSkeletons';
 
 const Tabs = [
     { name: 'All', icon: <AllChatsIcon /> },
@@ -22,7 +23,7 @@ const Tabs = [
 ]
 
 const ChatMain = ({ children }: { children: React.ReactNode; }) => {
-    
+
     const dispatch = useAppDispatch()
     const { userInfo } = useCurrentUser()
     const chats = useAppSelector(selectChats)
@@ -166,6 +167,11 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
                     {filteredItems.length === 0 && (<div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b]" />)}
                     <Tab.Panels>
                         <Tab.Panel>
+                            {
+                                status === 'loading'
+                                    ? (<ChatListSkeleton />)
+                                    : (<ChatList selectUser={selectUser} filteredItems={filteredItems} />)
+                            }
                             <ChatList selectUser={selectUser} filteredItems={filteredItems} />
                         </Tab.Panel>
                         <Tab.Panel>

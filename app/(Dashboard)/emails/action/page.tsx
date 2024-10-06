@@ -1,12 +1,13 @@
-'use client'
+'use client';
 
 import { fetchAllEmailsAsync, selectDefaultParams, selectFolderId, selectIsShowMailMenu, setIsEdit, setIsShowMailMenu, setSelectedTab, updateEmailState } from "@/lib/features/email/emailSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { useState } from "react";
-import ReactQuill from 'react-quill';
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { coloredToast } from "@/utils/sweetAlerts";
 import { forwardMessage, replyMessage, sendMessage } from "@/lib/features/email/emailActions";
+import dynamic from "next/dynamic";
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 export default function MailActionPage() {
     const isShowMailMenu = useAppSelector(selectIsShowMailMenu);
@@ -38,40 +39,6 @@ export default function MailActionPage() {
             coloredToast('warning', 'To email address is required.');
             return false;
         }
-
-        let maxId = 0;
-        //@ts-ignore
-        // if (!params.id) { maxId = mailList.length ? mailList.reduce((max, character) => (character.id > max ? character.id : max), mailList[0].id) : 0; }
-
-        /* let obj: any = {
-            id: maxId + 1,
-            path: '',
-            firstName: '',
-            lastName: '',
-            email: params.to,
-            date: cDt.getMonth() + 1 + '/' + cDt.getDate() + '/' + cDt.getFullYear(),
-            time: cDt.toLocaleTimeString(),
-            title: params.title,
-            displayDescription: params.displayDescription,
-            type: 'Drafts',
-            isImportant: false,
-            group: '',
-            comment: params.comment,
-            isRead: false,
-            description: params.description,
-            attachments: null,
-        };
-        if (params.file && params.file.length) {
-            obj.attachments = [];
-            for (let file of params.file) {
-                let flObj = {
-                    name: file.name,
-                    size: getFileSize(file.size),
-                    type: getFileType(file.type),
-                };
-                obj.attachments.push(flObj);
-            }
-        } */
 
         if (type === 'save' || type === 'save_reply' || type === 'save_forward') {
             //saved to Drafts
@@ -244,19 +211,18 @@ export default function MailActionPage() {
                     <input id="title" type="text" className="form-input" placeholder="Enter Subject" defaultValue={params.title} onChange={(e) => changeValue(e)} />
                 </div>
 
-                <div className="">
-                    <ReactQuill
-                        theme="snow"
-                        value={params.comment}
-                        // defaultValue={params.comment || '' }
-                        onChange={(content, delta, source, editor) => {
-                            const updatedComment = editor.getHTML();
-                            setParams({ ...params, comment: updatedComment });
-                        }}
 
-                        style={{ minHeight: '200px' }}
-                    />
-                </div>
+                <ReactQuill
+                    theme="snow"
+                    value={params.comment}
+                    // defaultValue={params.comment || '' }
+                    onChange={(content, delta, source, editor) => {
+                        const updatedComment = editor.getHTML();
+                        setParams({ ...params, comment: updatedComment });
+                    }}
+
+                    style={{ minHeight: '200px' }}
+                />
 
                 <div>
                     <input

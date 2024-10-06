@@ -16,7 +16,7 @@ import { notificationSlice } from "./features/notification/notificationSlice";
 import { socketSlice } from "./features/socket/socketSlice";
 
 
-const rootReducer = combineSlices(themeConfigSlice, deliverySlice, firmSlice, materialSlice, productSlice, productionSlice, purchaseSlice, saleSlice, userSlice, vehicleSlice, emailSlice, chatSlice, notificationSlice, socketSlice);
+const rootReducer = combineSlices(themeConfigSlice, deliverySlice, firmSlice, materialSlice, productSlice, productionSlice, purchaseSlice, saleSlice, userSlice, vehicleSlice, emailSlice, chatSlice, notificationSlice);
 
 export type RootState = ReturnType<typeof rootReducer>;
 

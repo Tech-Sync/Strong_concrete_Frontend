@@ -4,8 +4,7 @@ import 'tippy.js/dist/tippy.css';
 import 'react-quill/dist/quill.snow.css';
 import { Email } from '@/types/types';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { fetchAllEmailsAsync, fetchAllEmailsFolderAsync, selectDefaultParams, selectEmailStatus, selectEmails, selectFolderId, selectFolders, selectIsShowMailMenu, selectMail, selectSelectedTab, setFolderId, setIds, setIsEdit, setIsShowMailMenu, setPagedMails, setSelectedTab, updateEmailState } from '@/lib/features/email/emailSlice';
-// import { fetchAllKycAsync } from '@/lib/features/kyc/kycSlice';
+import { selectEmails, selectFolderId, selectFolders, selectIsShowMailMenu, selectSelectedTab, setIds, setIsShowMailMenu, setPagedMails } from '@/lib/features/email/emailSlice';
 import MailSubMenu from './MailSubMenu';
 import MailRightBox from './MailRightBox';
 
