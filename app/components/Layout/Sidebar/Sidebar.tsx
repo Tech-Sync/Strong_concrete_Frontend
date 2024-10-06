@@ -77,7 +77,7 @@ const Sidebar = () => {
             icon: <SiderbarSaleIcon />,
             subMenu: [
                 { name: 'Sale List', path: '/sales' },
-                { name: 'Sale Accounts', path: '/sale-accounts' },
+                { name: 'Sale Accounts', path: '/sales/accounts' },
             ]
         },
         {
@@ -99,7 +99,7 @@ const Sidebar = () => {
             icon: <SiderbarPurchaseIcon />,
             subMenu: [
                 { name: 'Purchase List', path: '/purchases' },
-                { name: 'Purchase Accounts', path: '/purchase-accounts' },
+                { name: 'Purchase Accounts', path: '/purchases/accounts' },
             ]
         },
         {
@@ -145,8 +145,8 @@ const Sidebar = () => {
             subMenu: [
                 { name: 'Emails', path: '/emails' },
                 { name: 'Chats', path: '/chats' },
-                { name: 'Facebook', path: '/fb' },
-                { name: 'Instagram', path: '/itr' },
+                { name: 'Facebook', path: '/facebook' },
+                { name: 'Instagram', path: '/instagram' },
 
             ]
         },
