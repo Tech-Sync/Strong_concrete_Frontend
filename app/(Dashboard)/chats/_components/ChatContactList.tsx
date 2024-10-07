@@ -1,10 +1,10 @@
 'use client'
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { postMessage } from '@/lib/features/chat/chatActions';
-import { getAllUserAsync, selectUsers, selectUserStatus } from '@/lib/features/user/userSlice';
+import { fetchAllChatsAsync, updateChatsState } from '@/lib/features/chat/chatSlice';
+import { selectUsers, selectUserStatus } from '@/lib/features/user/userSlice';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { Chat, User } from '@/types/types';
-import { formatDate } from '@/utils/helperFunctions';
+import { User } from '@/types/types';
 import { coloredToast } from '@/utils/sweetAlerts';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -13,12 +13,14 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 
 interface ChatListProps {
     selectUser: (user: any) => void;
+    setSelectedTab: (user: any) => void;
+
 }
 
 const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
 
-const ChatContactList = ({ selectUser }: ChatListProps) => {
+const ChatContactList = ({ selectUser,setSelectedTab }: ChatListProps) => {
     const dispatch = useAppDispatch()
     const navigate = useRouter()
     const users = useAppSelector(selectUsers)
@@ -48,7 +50,12 @@ const ChatContactList = ({ selectUser }: ChatListProps) => {
     async function handleSelectUser(user: User) {
         if (user.id) {
             const res = await postMessage(null, { receiverId: user?.id })
-            if (!res.isError) navigate.push(`/chats/${res.chat.id}`)
+            if (!res.isError) {
+                navigate.push(`/chats/${res.chat.id}`)
+                dispatch(updateChatsState(res.chat))
+                setSelectedTab('Chats')
+
+            }
             else coloredToast('danger', res.message)
         }
     }

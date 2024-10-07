@@ -12,7 +12,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { postGroup } from '@/lib/features/chat/chatActions';
 import { coloredToast } from '@/utils/sweetAlerts';
-import { setChats } from '@/lib/features/chat/chatSlice';
+import { setChats, updateChatsState } from '@/lib/features/chat/chatSlice';
 import { useRouter } from 'next/navigation';
 
 
@@ -92,10 +92,10 @@ export default function GroupModal({ onClose, isOpen }: GroupModalProps) {
 
         const res = await postGroup(formData);
         if (!res.error) {
+            dispatch(updateChatsState(res.group))
             coloredToast("success", 'succesfully created');
-            dispatch(setChats(res.userChats))
-            navigate.push(`/chats/${res.group.id}`)
             onClose()
+            navigate.push(`/chats/${res.group.id}`)
         } else {
             coloredToast("danger", res.error);
         }

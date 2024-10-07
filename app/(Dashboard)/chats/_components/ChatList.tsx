@@ -14,13 +14,14 @@ import { selectActiveUsers } from '@/lib/features/user/userSlice';
 interface ChatListProps {
     filteredItems: Chat[];
     selectUser: (chat: any) => void;
+    selectedTab?: string
     // activeUsers: any[]
     // chats?: Chat[]
 }
 
 const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
-const ChatList = ({ selectUser, filteredItems }: ChatListProps) => {
+const ChatList = ({ selectUser, filteredItems, selectedTab }: ChatListProps) => {
 
     const { userInfo } = useCurrentUser()
     const navigate = useRouter()
@@ -36,7 +37,6 @@ const ChatList = ({ selectUser, filteredItems }: ChatListProps) => {
                 filteredItems?.length === 0 ? (
                     <div className=" relative flex items-center justify-center h-full">
                         <p className="text-gray-400 dark:text-gray-500">No Chat found</p>
-                        <button className='btn btn-primary btn-sm text-base absolute bottom-0 right-0' onClick={() => setGroupModal(!groupModal)}>+</button>
                     </div>
                 ) : (
                     <>
@@ -88,8 +88,8 @@ const ChatList = ({ selectUser, filteredItems }: ChatListProps) => {
 
                 )
             }
-            {filteredItems[0]?.isGroupChat && (<button className='btn btn-primary absolute right-5 bottom-10 btn-md z-50  text-lg' onClick={() => setGroupModal(!groupModal)}>+</button>)}
-
+            {/* {filteredItems[0]?.isGroupChat && (<button className='btn btn-primary absolute right-5 bottom-10 btn-md z-50  text-lg' onClick={() => setGroupModal(!groupModal)}>+</button>)} */}
+            {selectedTab === 'Groups' && <button className='btn btn-primary btn-md absolute bottom-10 right-5' onClick={() => setGroupModal(!groupModal)}>+</button>}
             <GroupModal isOpen={groupModal} onClose={() => setGroupModal(false)} />
         </PerfectScrollbar >
     )

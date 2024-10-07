@@ -190,11 +190,11 @@ const ChatMain = ({ children }: { children: React.ReactNode; }) => {
                             <ChatList selectUser={selectUser} filteredItems={filteredItems} />
                         </Tab.Panel>
                         <Tab.Panel>
-                            <ChatList selectUser={selectUser} filteredItems={filteredItems} />
+                            <ChatList selectUser={selectUser} filteredItems={filteredItems} selectedTab={selectedTab} />
 
                         </Tab.Panel>
                         <Tab.Panel>
-                            <ChatContactList selectUser={selectUser} />
+                            <ChatContactList setSelectedTab={setSelectedTab} selectUser={selectUser} />
                         </Tab.Panel>
                     </Tab.Panels>
                 </Tab.Group>

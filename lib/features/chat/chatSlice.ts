@@ -32,6 +32,10 @@ export const chatSlice = createAppSlice({
             state.status = 'idle';
             state.chats = action.payload;
         }),
+        updateChatsState: reducer((state, action: PayloadAction<Chat>) => {
+            state.status = 'idle';
+            state.chats.push(action.payload)
+        }),
         setIsShowChatMenu: reducer((state, action: PayloadAction<boolean>) => {
             state.isShowChatMenu = action.payload;
         }),
@@ -65,5 +69,5 @@ export const chatSlice = createAppSlice({
     }
 })
 
-export const { setChat, setChats, fetchAllChatsAsync, setIsShowChatMenu } = chatSlice.actions;
+export const { setChat, setChats, fetchAllChatsAsync, setIsShowChatMenu, updateChatsState } = chatSlice.actions;
 export const { selectChats, selectChat, selectChatStatus, selectChatStates } = chatSlice.selectors
