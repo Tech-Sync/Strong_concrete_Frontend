@@ -363,8 +363,6 @@ export interface Folder {
 /* EMAIL ENDS */
 
 /* CHAT START */
-
-
 export interface Chat {
   id: number;
   latestMessageId: null | number;

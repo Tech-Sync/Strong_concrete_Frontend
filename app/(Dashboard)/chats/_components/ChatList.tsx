@@ -88,7 +88,6 @@ const ChatList = ({ selectUser, filteredItems, selectedTab }: ChatListProps) => 
 
                 )
             }
-            {/* {filteredItems[0]?.isGroupChat && (<button className='btn btn-primary absolute right-5 bottom-10 btn-md z-50  text-lg' onClick={() => setGroupModal(!groupModal)}>+</button>)} */}
             {selectedTab === 'Groups' && <button className='btn btn-primary btn-md absolute bottom-10 right-5' onClick={() => setGroupModal(!groupModal)}>+</button>}
             <GroupModal isOpen={groupModal} onClose={() => setGroupModal(false)} />
         </PerfectScrollbar >
