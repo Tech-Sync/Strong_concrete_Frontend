@@ -54,7 +54,6 @@ const ChatContactList = ({ selectUser,setSelectedTab }: ChatListProps) => {
                 navigate.push(`/chats/${res.chat.id}`)
                 dispatch(updateChatsState(res.chat))
                 setSelectedTab('Chats')
-
             }
             else coloredToast('danger', res.message)
         }
