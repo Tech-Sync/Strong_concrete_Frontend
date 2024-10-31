@@ -1,10 +1,24 @@
-import Image from 'next/image'
 import React from 'react'
+import PurchaseAccHeaderBtns from './_components/PurchaseAccHeaderBtns'
+import PurchaseAccCard from './_components/PurchaseAccCard'
+import BreadCrumb from '@/app/components/common/BreadCrumb'
 
 export default function PurchaseAccountPage() {
+
     return (
-        <div className='w-full h-[calc(100vh-110px)]'>
-            <Image src="/assets/images/undercons.jpg" alt="working on it" className="object-cover h-full w-full" width={500} height={500} />
-        </div>
+        <>
+            <BreadCrumb />
+            <PurchaseAccHeaderBtns />
+            <div className="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+
+                {
+                    Array.from({ length: 6 }).map((_, i) => (
+                        <PurchaseAccCard key={i} />
+                    ))
+                }
+                <PurchaseAccCard />
+            </div>
+        </>
+
     )
 }

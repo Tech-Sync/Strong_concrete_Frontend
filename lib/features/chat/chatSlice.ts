@@ -34,7 +34,7 @@ export const chatSlice = createAppSlice({
         }),
         updateChatsState: reducer((state, action: PayloadAction<Chat>) => {
             state.status = 'idle';
-            if (state.chats.some(chat => chat.id === action.payload.id)) {
+            if (state.chats.some(chat => chat.id !== action.payload.id)) {
                 state.chats.push(action.payload)
             }
         }),
