@@ -286,7 +286,7 @@ const Sidebar = () => {
                                     {appRoutes.map((route, i) => {
                                         return (
                                             route?.subMenu ?
-                                                (<li className="menu nav-item">
+                                                (<li className="menu nav-item" key={i}>
                                                     <button type="button" className={`${currentMenu === route.name ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu(route.name)}>
                                                         <div className="flex items-center">
                                                             {route.icon}
