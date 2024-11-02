@@ -26,12 +26,48 @@ export const getAllPurchaseAccAccs = async () => {
     if (response.ok) {
       return data;
     } else {
-      throw new Error( data.message || "Something went wrong, Please try again!");
+      throw new Error(data.message || "Something went wrong, Please try again!");
     }
   } catch (error: any) {
     return { error: error.message };
   }
 };
+
+interface updateData {
+  id: number;
+  credit: string;
+}
+
+export const updatePurchaseAcc = async (purchaseAccData: updateData) => {
+  const headers = await authConfig();
+  try {
+    const response = await fetch(`${BASE_URL}/purchase_accounts/${purchaseAccData.id}`, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify(purchaseAccData),
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.isUpdated) {
+      return { message: "Successfully Updated!" };
+    } else {
+      throw new Error(data.message || "Something went wrong, Please try again!");
+    }
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};
+
+
+
+
+
+
+
+
+
+/* ----------------------------------------------- */
 
 export const deletePurchaseAcc = async (id: any) => {
   const headers = await authConfig();
@@ -46,7 +82,7 @@ export const deletePurchaseAcc = async (id: any) => {
     if (!data.error && response.status === 202) {
       return { message: data.message, remainingData: data.data };
     } else {
-      throw new Error( data.message ?? "Something went wrong, Please try again!");
+      throw new Error(data.message ?? "Something went wrong, Please try again!");
     }
 
   } catch (error: any) {
@@ -54,14 +90,14 @@ export const deletePurchaseAcc = async (id: any) => {
   }
 };
 
-export const deleteMultiPurchaseAcc = async (ids:any) => {
+export const deleteMultiPurchaseAcc = async (ids: any) => {
   const headers = await authConfig();
 
   try {
     const response = await fetch(`${BASE_URL}/purchase_accounts/multiple-delete`, {
       method: "POST",
       headers,
-      body: JSON.stringify({ids}),
+      body: JSON.stringify({ ids }),
     });
 
     const data = await response.json();
@@ -69,7 +105,7 @@ export const deleteMultiPurchaseAcc = async (ids:any) => {
     if (!data.error && response.status === 202) {
       return { message: data.message, remainingData: data.data };
     } else {
-      throw new Error( data.message ?? "Something went wrong, Please try again!");
+      throw new Error(data.message ?? "Something went wrong, Please try again!");
     }
 
   } catch (error: any) {
@@ -77,9 +113,9 @@ export const deleteMultiPurchaseAcc = async (ids:any) => {
   }
 };
 
-export const readPurchaseAcc = async (id:string) => {
+export const readPurchaseAcc = async (id: string) => {
   const headers = await authConfig();
-  
+
   try {
     const response = await fetch(`${BASE_URL}/purchase_accounts/${id}`, {
       headers,
@@ -90,10 +126,10 @@ export const readPurchaseAcc = async (id:string) => {
     if (response.ok) {
       return data;
     } else {
-      throw new Error( data.message || "Something went wrong, Please try again!");
+      throw new Error(data.message || "Something went wrong, Please try again!");
     }
 
-  } catch (error:any) {
+  } catch (error: any) {
     return { error: error.message };
   }
 
@@ -122,31 +158,5 @@ export const addPurchaseAcc = async (purchaseData: Object) => {
   }
 };
 
-interface updateData{
-  id: string | number,
-  MaterialId: string | number,
-  FirmId: string | number,
-  quantity: string | number,
-  unitPrice: string | number,
-}
 
-export const updatePurchaseAcc = async (purchaseData: updateData) => {
-  const headers = await authConfig();
-  try {
-    const response = await fetch(`${BASE_URL}/purchase_accounts/${purchaseData.id}`, {
-      method: "PUT",
-      headers,
-      body: JSON.stringify(purchaseData),
-    });
 
-    const data = await response.json();
-
-    if (response.ok && data.isUpdated) {
-      return { message: "Successfully Updated!" };
-    } else {
-      throw new Error( data.message || "Something went wrong, Please try again!" );
-    }
-  } catch (error: any) {
-    return { error: error.message };
-  }
-};

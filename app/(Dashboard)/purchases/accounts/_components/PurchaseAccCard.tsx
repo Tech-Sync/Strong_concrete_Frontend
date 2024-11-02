@@ -31,7 +31,7 @@ export default function PurchaseAccCard({ firmInfo }: { firmInfo: PurchaseAccoun
                 <div className="flex items-center justify-between text-white">
                     <p className="text-xl">Purchase Balance</p>
                     <h5 className="text-2xl ltr:ml-auto rtl:mr-auto">
-                        <span className="text-white-light">$</span>{firmInfo.totalDebit - firmInfo.totalCredit}
+                        <span className="text-white-light">K</span>{firmInfo.totalDebit - firmInfo.totalCredit}
                     </h5>
                 </div>
             </div>
@@ -43,7 +43,7 @@ export default function PurchaseAccCard({ firmInfo }: { firmInfo: PurchaseAccoun
                             <path d="M19 15L12 9L5 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                     </span>
-                    <div className="btn w-full  border-0 bg-[#ebedf2] py-1 text-base text-[#515365] shadow-none dark:bg-black dark:text-[#bfc9d4]">${firmInfo.totalDebit}</div>
+                    <div className="btn w-full  border-0 bg-[#ebedf2] py-1 text-base text-[#515365] shadow-none dark:bg-black dark:text-[#bfc9d4]">K{firmInfo.totalDebit}</div>
                 </div>
                 <div className="rounded-md bg-white px-4 py-2.5 shadow dark:bg-[#060818]">
                     <span className="mb-4 flex items-center justify-between dark:text-white">
@@ -52,7 +52,7 @@ export default function PurchaseAccCard({ firmInfo }: { firmInfo: PurchaseAccoun
                             <path d="M19 9L12 15L5 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                     </span>
-                    <div className="btn w-full  border-0 bg-[#ebedf2] py-1 text-base text-[#515365] shadow-none dark:bg-black dark:text-[#bfc9d4]">${firmInfo.totalCredit}</div>
+                    <div className="btn w-full  border-0 bg-[#ebedf2] py-1 text-base text-[#515365] shadow-none dark:bg-black dark:text-[#bfc9d4]">K{firmInfo.totalCredit}</div>
                 </div>
             </div>
             <div className="p-5">
@@ -67,31 +67,39 @@ export default function PurchaseAccCard({ firmInfo }: { firmInfo: PurchaseAccoun
                         {
                             firmInfo.transactions.map(transaction => (
                                 <div className="group relative flex items-center py-1.5" key={transaction.id}>
-                                    <div className="h-1.5 w-1.5 rounded-full bg-primary ltr:mr-1 rtl:ml-1.5"></div>
+                                    <div className={`h-1.5 w-1.5 rounded-full ${transaction.balance > 0 ? 'bg-warning' : 'bg-success'} ltr:mr-1 `}></div>
                                     <div className="flex-1">{transaction.Purchase.Material.name}</div>
-                                    <div className="text-xs text-white-dark ltr:ml-auto rtl:mr-auto dark:text-gray-500">{formatDate(transaction.createdAt)}</div>
+                                    <div className="text-xs text-white-dark ltr:ml-auto  dark:text-gray-500">{formatDate(transaction.createdAt)}</div>
 
-                                    <span className="badge badge-outline-primary absolute bg-primary-light text-xs opacity-0 group-hover:opacity-100 ltr:right-0 dark:bg-black px-5">
-                                        Pending
+                                    <span className={`badge ${transaction.balance > 0 ? 'badge-outline-warning bg-warning-light' : 'badge-outline-success bg-success-light'} absolute text-xs opacity-0 group-hover:opacity-100 ltr:right-0 dark:bg-black px-5`}>
+                                        Balance : K{transaction.balance}
                                     </span>
+
+                                    {
+                                        transaction.balance > 0 && (
+                                            <PurchaseAccPayModal purchaseAccInfo={transaction} />
+                                        )
+                                    }
+                                   
+
                                 </div>
                             ))
                         }
 
 
                         {/* <div className="group relative flex items-center py-1.5">
-                            <div className="h-1.5 w-1.5 rounded-full bg-success ltr:mr-1 rtl:ml-1.5"></div>
+                            <div className="h-1.5 w-1.5 rounded-full bg-primary ltr:mr-1 "></div>
                             <div className="flex-1">Send Mail to HR and Admin</div>
-                            <div className="text-xs text-white-dark ltr:ml-auto rtl:mr-auto dark:text-gray-500">2 min ago</div>
+                            <div className="text-xs text-white-dark ltr:ml-auto  dark:text-gray-500">2 min ago</div>
 
                             <span className="badge badge-outline-success absolute bg-success-light text-xs opacity-0 group-hover:opacity-100 ltr:right-0 rtl:left-0 dark:bg-black">
                                 Completed
                             </span>
                         </div>
                         <div className="group relative flex items-center py-1.5">
-                            <div className="h-1.5 w-1.5 rounded-full bg-warning ltr:mr-1 rtl:ml-1.5"></div>
+                            <div className="h-1.5 w-1.5 rounded-full bg-warning ltr:mr-1 "></div>
                             <div className="flex-1">Conference call with Marketing Manager.</div>
-                            <div className="text-xs text-white-dark ltr:ml-auto rtl:mr-auto dark:text-gray-500">17:00</div>
+                            <div className="text-xs text-white-dark ltr:ml-auto  dark:text-gray-500">17:00</div>
 
                             <span className="badge badge-outline-warning absolute bg-warning-light text-xs opacity-0 group-hover:opacity-100 ltr:right-0 rtl:left-0 dark:bg-black">
                                 In progress
@@ -104,7 +112,7 @@ export default function PurchaseAccCard({ firmInfo }: { firmInfo: PurchaseAccoun
                     <Link href={'/purchases/accounts/1'} type="button" className="btn btn-secondary ltr:mr-2 rtl:ml-2">
                         View Details
                     </Link>
-                    <PurchaseAccPayModal saleInfo={firmInfo.transactions[0]} />
+                    {/* <PurchaseAccPayModal purchaseAccInfo={firmInfo.transactions[0]} /> */}
                 </div>
             </div>
         </div>
