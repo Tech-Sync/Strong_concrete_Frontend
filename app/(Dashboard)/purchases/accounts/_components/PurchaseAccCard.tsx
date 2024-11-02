@@ -5,6 +5,7 @@ import React from 'react'
 import Link from 'next/link';
 import { PurchaseAccountList } from '@/types/types';
 import { formatDate } from '@/utils/helperFunctions';
+import PurchaseAccPayModal from './PurchaseAccPayModal';
 
 export default function PurchaseAccCard({ firmInfo }: { firmInfo: PurchaseAccountList }) {
     return (
@@ -103,9 +104,7 @@ export default function PurchaseAccCard({ firmInfo }: { firmInfo: PurchaseAccoun
                     <Link href={'/purchases/accounts/1'} type="button" className="btn btn-secondary ltr:mr-2 rtl:ml-2">
                         View Details
                     </Link>
-                    <button type="button" className="btn btn-success">
-                        Pay Now
-                    </button>
+                    <PurchaseAccPayModal saleInfo={firmInfo.transactions[0]} />
                 </div>
             </div>
         </div>

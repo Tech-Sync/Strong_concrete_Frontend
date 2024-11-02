@@ -26,7 +26,7 @@ export default function PurchaseTable() {
   useEffect(() => {
     dispatch(getAllPurchaseAsync({}));
     dispatch(updatePurchaseState(null))
-  }, []);
+  }, [dispatch]);
 
 
   const [page, setPage] = useState(1);
