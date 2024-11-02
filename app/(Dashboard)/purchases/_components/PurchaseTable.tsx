@@ -149,9 +149,9 @@ export default function PurchaseTable() {
                 accessor: "Firm",
                 sortable: true,
                 render: ({ Firm, id }) => (
-                  <div className="flex items-center font-semibold">
+                  <Link href={`/purchases/accounts?${new URLSearchParams({firmName: Firm.name?.toLocaleLowerCase() ?? ''})}`}  className="flex items-center font-semibold">
                     <div className={Firm.name ? "" : "text-red-800"}>{Firm.name ?? 'Data Deleted'}</div>
-                  </div>
+                  </Link>
                 ),
               },
               {

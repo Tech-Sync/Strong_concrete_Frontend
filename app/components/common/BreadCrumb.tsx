@@ -32,7 +32,9 @@ const BreadCrumb = () => {
             {
                 minititle &&
                 <li className="before:content-['/'] before:px-1.5 before:inline-block before:relative ">
-                    <button className="text-primary  truncate ">{minititle.slice(0, 90)}</button>
+                    <button className="text-primary  truncate ">
+                        {minititle.charAt(0).toUpperCase() + minititle.slice(1, 90)}
+                    </button>
                 </li>
             }
 

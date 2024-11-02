@@ -4,20 +4,23 @@ import PurchaseAccCard from './_components/PurchaseAccCard'
 import BreadCrumb from '@/app/components/common/BreadCrumb'
 import { getAllPurchaseAccAccs } from '@/lib/features/purchaseAccount/purchaseAccActions'
 import { PurchaseAccountList } from '@/types/types'
+import PurchaseAccCards from './_components/PurchaseAccCards'
 
-export default async function PurchaseAccountPage() {
+type SearchParams = { [key: string]: string | string[] | undefined }
+
+export default async function PurchaseAccountPage({ searchParams }: { searchParams: SearchParams }) {
+
     const purchaseAccInfo: PurchaseAccountList[] = await getAllPurchaseAccAccs()
+
+    // const firmName = (searchParams.firmName) as string || ''
+    // console.log(firmName);
+
+
     return (
         <>
             <BreadCrumb />
             <PurchaseAccHeaderBtns />
-            <div className="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-                {
-                    purchaseAccInfo.map((firmInfo, i) => (
-                        <PurchaseAccCard firmInfo={firmInfo} key={i} />
-                    ))
-                }
-            </div>
+            <PurchaseAccCards purchaseAccInfo={purchaseAccInfo} />
         </>
 
     )
