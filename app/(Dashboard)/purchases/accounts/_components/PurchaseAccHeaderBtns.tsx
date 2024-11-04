@@ -19,10 +19,10 @@ export default function PurchaseAccHeaderBtns() {
             <div className="ltr:ml-auto rtl:mr-auto">
                 <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => {
                     const params = new URLSearchParams(searchParams.toString());
-                    params.set('firmName', e.target.value);
+                    params.set('firmName', e.target.value.toLocaleLowerCase());
                     window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
                 }} />
             </div>
         </div>
     )
-}
+}   

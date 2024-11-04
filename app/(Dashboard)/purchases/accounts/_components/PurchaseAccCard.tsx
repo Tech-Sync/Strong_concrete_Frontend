@@ -56,11 +56,11 @@ export default function PurchaseAccCard({ firmInfo }: { firmInfo: PurchaseAccoun
                 </div>
             </div>
             <div className="p-5">
-                <div className="mb-5">
+                {/* <div className="mb-5">
                     <span className="rounded-full bg-[#1b2e4b] px-4 py-1.5 text-xs text-white before:inline-block before:h-1.5 before:w-1.5 before:rounded-full before:bg-white ltr:before:mr-2 rtl:before:ml-2">
                         Pending
                     </span>
-                </div>
+                </div> */}
                 <PerfectScrollbar className="relative -mr-3 mb-4 h-[100px] pr-3">
                     <div className="cursor-pointer text-sm">
 
@@ -109,7 +109,7 @@ export default function PurchaseAccCard({ firmInfo }: { firmInfo: PurchaseAccoun
                     </div>
                 </PerfectScrollbar>
                 <div className=" border-t border-white-light dark:border-white/10 flex justify-around px-2 pt-4 text-center">
-                    <Link href={'/purchases/accounts/1'} type="button" className="btn btn-secondary ltr:mr-2 rtl:ml-2">
+                    <Link href={`/purchases/accounts/${firmInfo.transactions[0].FirmId}`} type="button" className="btn btn-secondary ltr:mr-2 rtl:ml-2">
                         View Details
                     </Link>
                     {/* <PurchaseAccPayModal purchaseAccInfo={firmInfo.transactions[0]} /> */}

@@ -13,10 +13,16 @@ const authConfig = async () => {
   };
 };
 
-export const getAllPurchases = async () => {
+export const getAllPurchases = async (firmId: { firmId?: string }) => {
   const headers = await authConfig();
+
+
+  let url = `${BASE_URL}/purchases`
+
+  if (firmId) url = `${BASE_URL}/purchases/?search[FirmId]=${firmId}`
+
   try {
-    const response = await fetch(`${BASE_URL}/purchases`, {
+    const response = await fetch(url, {
       cache: "no-cache",
       headers,
     });
@@ -26,7 +32,7 @@ export const getAllPurchases = async () => {
     if (response.ok) {
       return data;
     } else {
-      throw new Error( data.message || "Something went wrong, Please try again!");
+      throw new Error(data.message || "Something went wrong, Please try again!");
     }
   } catch (error: any) {
     return { error: error.message };
@@ -46,7 +52,7 @@ export const deletePurchase = async (id: any) => {
     if (!data.error && response.status === 202) {
       return { message: data.message, remainingData: data.data };
     } else {
-      throw new Error( data.message ?? "Something went wrong, Please try again!");
+      throw new Error(data.message ?? "Something went wrong, Please try again!");
     }
 
   } catch (error: any) {
@@ -54,14 +60,14 @@ export const deletePurchase = async (id: any) => {
   }
 };
 
-export const deleteMultiPurchase = async (ids:any) => {
+export const deleteMultiPurchase = async (ids: any) => {
   const headers = await authConfig();
 
   try {
     const response = await fetch(`${BASE_URL}/purchases/multiple-delete`, {
       method: "POST",
       headers,
-      body: JSON.stringify({ids}),
+      body: JSON.stringify({ ids }),
     });
 
     const data = await response.json();
@@ -69,7 +75,7 @@ export const deleteMultiPurchase = async (ids:any) => {
     if (!data.error && response.status === 202) {
       return { message: data.message, remainingData: data.data };
     } else {
-      throw new Error( data.message ?? "Something went wrong, Please try again!");
+      throw new Error(data.message ?? "Something went wrong, Please try again!");
     }
 
   } catch (error: any) {
@@ -77,9 +83,9 @@ export const deleteMultiPurchase = async (ids:any) => {
   }
 };
 
-export const readPurchase = async (id:string) => {
+export const readPurchase = async (id: string) => {
   const headers = await authConfig();
-  
+
   try {
     const response = await fetch(`${BASE_URL}/purchases/${id}`, {
       headers,
@@ -90,10 +96,10 @@ export const readPurchase = async (id:string) => {
     if (response.ok) {
       return data;
     } else {
-      throw new Error( data.message || "Something went wrong, Please try again!");
+      throw new Error(data.message || "Something went wrong, Please try again!");
     }
 
-  } catch (error:any) {
+  } catch (error: any) {
     return { error: error.message };
   }
 
@@ -122,7 +128,7 @@ export const addPurchase = async (purchaseData: Object) => {
   }
 };
 
-interface updateData{
+interface updateData {
   id: string | number,
   MaterialId: string | number,
   FirmId: string | number,
@@ -144,7 +150,7 @@ export const updatePurchase = async (purchaseData: updateData) => {
     if (response.ok && data.isUpdated) {
       return { message: "Successfully Updated!" };
     } else {
-      throw new Error( data.message || "Something went wrong, Please try again!" );
+      throw new Error(data.message || "Something went wrong, Please try again!");
     }
   } catch (error: any) {
     return { error: error.message };

@@ -49,14 +49,14 @@ export interface Purchase {
   createdAt: string,
   updatedAt: string,
   Material: {
-    name: string | null,
-    unitType: string | null,
+    name: string ,
+    unitType: string ,
   },
   Firm: {
-    name: string | null,
-    address: string | null,
-    phoneNo: string | null,
-    email: string | null
+    name: string ,
+    address: string ,
+    phoneNo: string ,
+    email: string 
   },
   creatorId: number | null,
   updatorId: number | null

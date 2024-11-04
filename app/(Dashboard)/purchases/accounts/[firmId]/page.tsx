@@ -1,7 +1,18 @@
 import React from 'react'
+import PurchaseAccFirmInfoInfoTable from './_components/PurchaseAccFirmInfoTable'
+import BreadCrumb from '@/app/components/common/BreadCrumb'
+import { getAllPurchases } from '@/lib/features/purchase/purchaseActions'
 
-export default function PurchaseAccFirmPage({ params }: { params: { firmId: string } }) {
+export default async function PurchaseAccFirmPage({ params }: { params: { firmId: { firmId?: string | undefined } } }) {
+    
+    
+    const rowData = await getAllPurchases(params.firmId)
+    
+
     return (
-        <div>PurchaseAccFirmPage {params.firmId}</div>
+        <>
+            <BreadCrumb />
+            <PurchaseAccFirmInfoInfoTable rowData={rowData.data} />
+        </>
     )
 }
