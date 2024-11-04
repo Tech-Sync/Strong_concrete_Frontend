@@ -17,11 +17,13 @@ import { deleteMultiSale, deleteSale } from "@/lib/features/sale/saleActions";
 
 export default function SaleTable() {
 
+    const { deleteToast, multiDeleteToast } = useDeleteToasts();
+    const isDark = useAppSelector(selectIsDarkMode);
+    const sales = useAppSelector(selectSales);
     const dispatch = useAppDispatch();
     const router = useRouter()
-    const { deleteToast, multiDeleteToast } = useDeleteToasts();
-    const sales = useAppSelector(selectSales);
-    const isDark = useAppSelector(selectIsDarkMode);
+
+    console.log(sales.data);
 
     useEffect(() => {
         dispatch(getAllSaleAsync({}));
@@ -32,7 +34,7 @@ export default function SaleTable() {
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-    const [initialRecords, setInitialRecords] = useState(sortBy(sales, "id"));
+    const [initialRecords, setInitialRecords] = useState(sortBy(sales?.data, "id"));
     const [records, setRecords] = useState(initialRecords);
     const [selectedRecords, setSelectedRecords] = useState<any>([]);
     const [search, setSearch] = useState("");
@@ -42,8 +44,8 @@ export default function SaleTable() {
     });
 
     useEffect(() => {
-        setRecords(sales);
-        setInitialRecords(sales);
+        setRecords(sales?.data);
+        setInitialRecords(sales?.data);
     }, [sales]);
 
     useEffect(() => {
@@ -57,9 +59,9 @@ export default function SaleTable() {
     }, [page, pageSize, initialRecords]);
 
     useEffect(() => {
-        if (sales) {
+        if (sales?.data) {
             setInitialRecords(() => {
-                return sales?.filter((sale) => {
+                return sales?.data?.filter((sale) => {
                     const firmName = sale?.Firm?.name;
                     const productName = sale.Product?.name;
                     const quantity = sale.quantity.toString();
@@ -278,7 +280,7 @@ export default function SaleTable() {
                             },
                         ]}
                         highlightOnHover={true}
-                        totalRecords={initialRecords?.length}
+                        totalRecords={sales.details.totalRecords}
                         recordsPerPage={pageSize}
                         page={page}
                         onPageChange={(p) => setPage(p)}

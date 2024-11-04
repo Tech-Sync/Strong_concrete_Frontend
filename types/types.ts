@@ -9,6 +9,29 @@ export interface Register {
   password: string;
 }
 
+/* Pagination */
+export type Pagination<T> = {
+  details: Details;
+  data: T[];
+}
+
+export interface Details {
+  search?: { [key: string]: string };
+  sort?: { [key: string]: string };
+  offset: number;
+  limit: number;
+  page: number;
+  pages: boolean | {
+    previous: boolean,
+    current: number,
+    next: number,
+    total: number
+  },
+  totalRecords: number;
+  showDeleted: boolean;
+}
+
+/* Material */
 export interface Material {
   id: number;
   name: string;
@@ -49,14 +72,14 @@ export interface Purchase {
   createdAt: string,
   updatedAt: string,
   Material: {
-    name: string ,
-    unitType: string ,
+    name: string,
+    unitType: string,
   },
   Firm: {
-    name: string ,
-    address: string ,
-    phoneNo: string ,
-    email: string 
+    name: string,
+    address: string,
+    phoneNo: string,
+    email: string
   },
   creatorId: number | null,
   updatorId: number | null

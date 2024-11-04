@@ -1,12 +1,12 @@
 import { createAppSlice } from "@/lib/createAppSlice";
-import { Sale, WeeklySale } from "@/types/types";
+import { Pagination, Sale, WeeklySale } from "@/types/types";
 
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { getAllSales, getWeeklySale } from "./saleActions";
 
 
 interface SalesSliceState {
-    sales: Sale[];
+    sales: Pagination<Sale>;
     weeklySales: WeeklySale[]
     sale: Sale | null;
     loading: boolean;
@@ -15,7 +15,17 @@ interface SalesSliceState {
 }
 
 const initialState: SalesSliceState = {
-    sales: [],
+    sales: {
+        details: {
+            offset: 0,
+            limit: 20,
+            page: 0,
+            pages: false,
+            totalRecords: 0,
+            showDeleted: false
+        },
+        data: []
+    },
     weeklySales: [],
     loading: false,
     error: null,
@@ -41,7 +51,7 @@ export const saleSlice = createAppSlice({
 
         updateSales: reducer((state, action: PayloadAction<Sale[]>) => {
             state.status = 'idle';
-            state.sales = action.payload;
+            state.sales.data = action.payload;
         }),
 
         updateSaleState: reducer((state, action: PayloadAction<Sale | null>) => {
@@ -61,7 +71,7 @@ export const saleSlice = createAppSlice({
                     if (response.error) {
                         throw new Error(response.error);
                     }
-                    return response.data
+                    return response
                 } catch (error) {
                     throw new Error("Data fetch failed: " + (error as Error).message);
                 }
