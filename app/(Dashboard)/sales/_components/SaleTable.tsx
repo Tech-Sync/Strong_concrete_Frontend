@@ -7,7 +7,7 @@ import { DeleteIcon, EditIcon, PlusIcon, PreviewIcon } from "@/app/icons";
 import { formatDate } from "@/utils/helperFunctions";
 import { coloredToast } from "@/utils/sweetAlerts";
 import useDeleteToasts from "@/hooks/useDeleteToasts";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { saleStatuses } from "@/app/constraints/roles&status";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { getAllSaleAsync, selectSales, updateSales, updateSaleState } from "@/lib/features/sale/saleSlice";
@@ -23,17 +23,20 @@ export default function SaleTable() {
     const dispatch = useAppDispatch();
     const router = useRouter()
 
-    console.log(sales.data);
+    // search params for pagination
+    const searchParams = useSearchParams();
+    const page = (searchParams.get('page') || 1) as string;
+    const limit = (searchParams.get('limit') || 20) as string;
 
     useEffect(() => {
-        dispatch(getAllSaleAsync({}));
+        dispatch(getAllSaleAsync({ page, limit }));
         dispatch(updateSaleState(null))
     }, []);
 
 
-    const [page, setPage] = useState(1);
+    // const [page, setPage] = useState(1);
+    // const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
-    const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
     const [initialRecords, setInitialRecords] = useState(sortBy(sales?.data, "id"));
     const [records, setRecords] = useState(initialRecords);
     const [selectedRecords, setSelectedRecords] = useState<any>([]);
@@ -48,15 +51,18 @@ export default function SaleTable() {
         setInitialRecords(sales?.data);
     }, [sales]);
 
-    useEffect(() => {
-        setPage(1);
-    }, [pageSize]);
+    // useEffect(() => {
+    //     setPage(1);
+    // }, [pageSize]);
 
     useEffect(() => {
-        const from = (page - 1) * pageSize;
-        const to = from + pageSize;
-        setRecords([...(Array.isArray(initialRecords) ? initialRecords.slice(from, to) : [])]);
-    }, [page, pageSize, initialRecords]);
+        // const from = (page - 1) * pageSize;
+        // const to = from + pageSize;
+        // setRecords([...(Array.isArray(initialRecords) ? initialRecords.slice(from, to) : [])]);
+
+        router.push(`?${new URLSearchParams({ page: page.toString(), limit: limit.toString() })}`, { scroll: false });
+        dispatch(getAllSaleAsync({ page, limit }));
+    }, [page, limit]);
 
     useEffect(() => {
         if (sales?.data) {
@@ -87,7 +93,7 @@ export default function SaleTable() {
     useEffect(() => {
         const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
         setRecords(sortStatus.direction === "desc" ? data2.reverse() : data2);
-        setPage(1);
+        // setPage(1);
     }, [initialRecords, sortStatus]);
 
     const deleteRow = async (id: any = null) => {
@@ -108,7 +114,8 @@ export default function SaleTable() {
             if (deletionSuccess) {
                 setSelectedRecords([]);
                 setSearch("");
-                setPage(1);
+                // setPage(1);
+                router.push(`?${new URLSearchParams({ page: '1', limit: limit.toString() })}`, { scroll: false });
             }
         }
     };
@@ -281,11 +288,11 @@ export default function SaleTable() {
                         ]}
                         highlightOnHover={true}
                         totalRecords={sales.details.totalRecords}
-                        recordsPerPage={pageSize}
-                        page={page}
-                        onPageChange={(p) => setPage(p)}
+                        recordsPerPage={Number(limit)}
+                        page={Number(page)}
+                        onPageChange={(p) => router.push(`?${new URLSearchParams({ page: p.toString(), limit: limit.toString() })}`, { scroll: false })}
+                        onRecordsPerPageChange={(ps) => router.push(`?${new URLSearchParams({ page: page.toString(), limit: ps.toString() })}`, { scroll: false })}
                         recordsPerPageOptions={PAGE_SIZES}
-                        onRecordsPerPageChange={setPageSize}
                         sortStatus={sortStatus}
                         onSortStatusChange={setSortStatus}
                         selectedRecords={selectedRecords}

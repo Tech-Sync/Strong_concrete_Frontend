@@ -33,7 +33,7 @@ const DeliveryTable = () => {
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-    const [initialRecords, setInitialRecords] = useState(sortBy(deliveries, 'createdAt'));
+    const [initialRecords, setInitialRecords] = useState(sortBy(deliveries.data, 'createdAt'));
     const [records, setRecords] = useState(initialRecords);
     const [selectedRecords, setSelectedRecords] = useState<any>([]);
     const [date3, setDate3] = useState<any>(null);
@@ -56,8 +56,8 @@ const DeliveryTable = () => {
     }
 
     useEffect(() => {
-        setRecords(deliveries);
-        setInitialRecords(deliveries);
+        setRecords(deliveries.data);
+        setInitialRecords(deliveries.data);
     }, [deliveries]);
 
     useEffect(() => {
@@ -74,7 +74,7 @@ const DeliveryTable = () => {
     useEffect(() => {
         const [startDate, endDate] = date3 ? date3.map((date: string | number | Date) => new Date(date)) : [null, null];
         setInitialRecords(() => {
-            return deliveries.filter((delivery) => {
+            return deliveries.data.filter((delivery) => {
                 const deliveryDate = delivery.Production.Sale.orderDate ? new Date(delivery.Production.Sale.orderDate) : null;
                 const isInDateRange = startDate && endDate ? (deliveryDate && deliveryDate >= startDate && deliveryDate <= endDate) : true;
                 const matchesSearch = (

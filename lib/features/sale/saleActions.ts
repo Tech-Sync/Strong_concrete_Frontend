@@ -14,10 +14,19 @@ const authConfig = async () => {
   };
 };
 
-export const getAllSales = async () => {
+export const getAllSales = async (page?: string, limit?: string) => {
   const headers = await authConfig();
+
+  let url = `${BASE_URL}/sales`;
+
+  const params = new URLSearchParams();
+  if (page) params.append("page", page);
+  if (limit) params.append("limit", limit);
+
+  if (params.toString()) url += `?${params.toString()}`;
+
   try {
-    const response = await fetch(`${BASE_URL}/sales`, {
+    const response = await fetch(url, {
       cache: "no-cache",
       headers,
     });
@@ -171,7 +180,7 @@ export const updateOrder = async (orderId: string, updateOrderBody: object) => {
 
 
 
-export const updateSale = async (saleData:any) => {
+export const updateSale = async (saleData: any) => {
   const headers = await authConfig();
   try {
     const response = await fetch(`${BASE_URL}/sales/${saleData.id}`, {

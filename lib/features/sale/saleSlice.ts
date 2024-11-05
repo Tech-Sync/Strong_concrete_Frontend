@@ -65,9 +65,10 @@ export const saleSlice = createAppSlice({
         }),
 
         getAllSaleAsync: asyncThunk(
-            async () => {
+            async (params: { page?: string, limit?: string }) => {
+                const { page, limit } = params
                 try {
-                    const response = await getAllSales();
+                    const response = await getAllSales(page, limit);
                     if (response.error) {
                         throw new Error(response.error);
                     }
