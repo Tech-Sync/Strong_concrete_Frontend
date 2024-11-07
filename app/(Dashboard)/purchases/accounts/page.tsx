@@ -1,6 +1,5 @@
 import React from 'react'
 import PurchaseAccHeaderBtns from './_components/PurchaseAccHeaderBtns'
-import PurchaseAccCard from './_components/PurchaseAccCard'
 import BreadCrumb from '@/app/components/common/BreadCrumb'
 import { getAllPurchaseAccAccs } from '@/lib/features/purchaseAccount/purchaseAccActions'
 import { PurchaseAccountList } from '@/types/types'

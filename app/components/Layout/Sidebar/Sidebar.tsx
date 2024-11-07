@@ -77,7 +77,7 @@ const Sidebar = () => {
             icon: <SiderbarSaleIcon />,
             subMenu: [
                 { name: 'Sale List', path: '/sales' },
-                { name: 'Sale Accounts', path: '/sales/accounts' },
+                // { name: 'Sale Accounts', path: '/sales/accounts' },
             ]
         },
         {

@@ -7,7 +7,7 @@ import { coloredToast } from '@/utils/sweetAlerts';
 import { Dialog, Transition } from '@headlessui/react';
 import { useState, Fragment } from 'react';
 
-export default function PurchaseAccPayModal({ purchaseAccInfo }: { purchaseAccInfo: Transaction }) {
+export default function PurchaseAccPayModal({ purchaseAccInfo, updatePurchaseList }: { purchaseAccInfo: Transaction, updatePurchaseList: (value: any) => void }) {
     const [modal11, setModal11] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -20,6 +20,9 @@ export default function PurchaseAccPayModal({ purchaseAccInfo }: { purchaseAccIn
         } else {
             coloredToast('success', res?.message || 'Operation successful');
             // await getAllPurchaseAccAccs()
+            updatePurchaseList((prev: any) => {
+                return prev.map((item: any) => item.id === res.data.id ? { ...item, ...res.data } : item)
+            });
             setModal11(false);
         }
     }

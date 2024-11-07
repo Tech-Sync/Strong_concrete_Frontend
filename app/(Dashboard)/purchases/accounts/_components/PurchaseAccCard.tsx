@@ -1,5 +1,4 @@
 'use client'
-import Image from 'next/image'
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import React from 'react'
 import Link from 'next/link';
@@ -7,7 +6,7 @@ import { PurchaseAccountList } from '@/types/types';
 import { formatDate } from '@/utils/helperFunctions';
 import PurchaseAccPayModal from './PurchaseAccPayModal';
 
-export default function PurchaseAccCard({ firmInfo }: { firmInfo: PurchaseAccountList }) {
+export default function PurchaseAccCard({ firmInfo, updatePurchaseList }: { firmInfo: PurchaseAccountList, updatePurchaseList: (value: any) => void }) {
     return (
         <div className="panel h-full overflow-hidden border-0 p-0">
             <div className="min-h-[190px] bg-gradient-to-r from-[#4361ee] to-[#160f6b] p-6">
@@ -77,10 +76,10 @@ export default function PurchaseAccCard({ firmInfo }: { firmInfo: PurchaseAccoun
 
                                     {
                                         transaction.balance > 0 && (
-                                            <PurchaseAccPayModal purchaseAccInfo={transaction} />
+                                            <PurchaseAccPayModal purchaseAccInfo={transaction} updatePurchaseList={updatePurchaseList} />
                                         )
                                     }
-                                   
+
 
                                 </div>
                             ))

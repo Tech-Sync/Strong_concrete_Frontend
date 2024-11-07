@@ -50,7 +50,7 @@ export const updatePurchaseAcc = async (purchaseAccData: updateData) => {
     const data = await response.json();
 
     if (response.ok && data.isUpdated) {
-      return { message: "Successfully Updated!" };
+      return { message: "Successfully Updated!", data };
     } else {
       throw new Error(data.message || "Something went wrong, Please try again!");
     }
