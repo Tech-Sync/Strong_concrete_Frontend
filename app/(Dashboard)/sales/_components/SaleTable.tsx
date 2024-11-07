@@ -62,7 +62,7 @@ export default function SaleTable() {
 
         router.push(`?${new URLSearchParams({ page: page.toString(), limit: limit.toString() })}`, { scroll: false });
         dispatch(getAllSaleAsync({ page, limit }));
-    }, [page, limit]);
+    }, [page, limit, router, dispatch]);
 
     useEffect(() => {
         if (sales?.data) {

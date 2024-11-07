@@ -1,6 +1,6 @@
 import { createAppSlice } from "@/lib/createAppSlice";
 import type { AppThunk, RootState } from "@/lib/store";
-import { Firm } from "@/types/types";
+import { Firm, Pagination } from "@/types/types";
 
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { getAllFirms } from "./firmActions";
@@ -18,7 +18,7 @@ interface defaultParams {
 }
 
 export interface FirmSliceState {
-    firms: Firm[];
+    firms: Pagination<Firm>;
     loading: boolean;
     error: string | null;
     status: "idle" | "loading" | "failed" | "succeeded";
@@ -27,7 +27,17 @@ export interface FirmSliceState {
 }
 
 const initialState: FirmSliceState = {
-    firms: [],
+    firms: {
+        details: {
+            offset: 0,
+            limit: 20,
+            page: 0,
+            pages: false,
+            totalRecords: 0,
+            showDeleted: false
+        },
+        data: []
+    },
     loading: false,
     error: null,
     status: "idle",
@@ -59,7 +69,7 @@ export const firmSlice = createAppSlice({
 
         updateFirm: reducer((state, action: PayloadAction<Firm[]>) => {
             state.status = 'idle';
-            state.firms = action.payload;
+            state.firms.data = action.payload;
         }),
 
         setFirmModal: reducer((state, action: PayloadAction<boolean>) => {
@@ -73,13 +83,14 @@ export const firmSlice = createAppSlice({
         }),
 
         getAllFirmAsync: asyncThunk(
-            async () => {
+            async (params: { page?: string, limit?: string }) => {
+                const { page, limit } = params
                 try {
-                    const response = await getAllFirms();
+                    const response = await getAllFirms(page, limit);
                     if (response.error) {
                         throw new Error(response.error);
                     }
-                    return response.data
+                    return response
                 } catch (error) {
                     throw new Error("Data fetch failed: " + (error as Error).message);
                 }

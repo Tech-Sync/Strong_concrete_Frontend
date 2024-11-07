@@ -14,10 +14,19 @@ const authConfig = async () => {
   };
 };
 
-export const getAllProducts = async () => {
+export const getAllProducts = async (page?: string, limit?: string) => {
   const headers = await authConfig();
+
+  let url = `${BASE_URL}/products`;
+
+  const params = new URLSearchParams();
+  if (page) params.append("page", page);
+  if (limit) params.append("limit", limit);
+
+  if (params.toString()) url += `?${params.toString()}`;
+
   try {
-    const response = await fetch(`${BASE_URL}/products`, {
+    const response = await fetch(url, {
       cache: "no-cache",
       headers,
     });
@@ -27,9 +36,7 @@ export const getAllProducts = async () => {
     if (response.ok) {
       return data;
     } else {
-      throw new Error(
-        data.message || "Something went wrong, Please try again!"
-      );
+      throw new Error(data.message || "Something went wrong, Please try again!");
     }
   } catch (error: any) {
     return { error: error.message };
@@ -49,7 +56,7 @@ export const deleteProduct = async (id: any) => {
     if (!data.error && response.status === 202) {
       return { message: data.message, remainingData: data.data };
     } else {
-      throw new Error( data.message ?? "Something went wrong, Please try again!");
+      throw new Error(data.message ?? "Something went wrong, Please try again!");
     }
 
   } catch (error: any) {
@@ -71,9 +78,9 @@ export const deleteMultiProduct = async (ids: any) => {
     if (!data.error && response.status === 202) {
       return { message: data.message, remainingData: data.data };
     } else {
-      throw new Error( data.message ?? "Something went wrong, Please try again!");
+      throw new Error(data.message ?? "Something went wrong, Please try again!");
     }
-    
+
   } catch (error: any) {
     return { error: error.message };
   }

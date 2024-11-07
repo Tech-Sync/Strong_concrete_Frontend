@@ -14,10 +14,19 @@ const authConfig = async () => {
     };
 };
 
-export const getAllDeliveries = async () => {
+export const getAllDeliveries = async (page?: string, limit?: string) => {
     const headers = await authConfig();
+
+    let url = `${BASE_URL}/deliveries`;
+
+    const params = new URLSearchParams();
+    if (page) params.append("page", page);
+    if (limit) params.append("limit", limit);
+
+    if (params.toString()) url += `?${params.toString()}`;
+
     try {
-        const response = await fetch(`${BASE_URL}/deliveries`, {
+        const response = await fetch(url, {
             cache: "no-cache",
             headers,
         });

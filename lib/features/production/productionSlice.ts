@@ -1,5 +1,5 @@
 import { createAppSlice } from "@/lib/createAppSlice";
-import { Production } from "@/types/types";
+import { Pagination, Production } from "@/types/types";
 
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { getAllProductions } from "./productionActions";
@@ -13,7 +13,7 @@ interface defaultParams {
 }
 
 export interface ProductionSliceState {
-    productions: Production[];
+    productions: Pagination<Production>;
     loading: boolean;
     error: string | null;
     status: "idle" | "loading" | "failed" | "succeeded";
@@ -22,7 +22,17 @@ export interface ProductionSliceState {
 }
 
 const initialState: ProductionSliceState = {
-    productions: [],
+    productions: {
+        details: {
+            offset: 0,
+            limit: 20,
+            page: 0,
+            pages: false,
+            totalRecords: 0,
+            showDeleted: false
+        },
+        data: []
+    },
     loading: false,
     error: null,
     status: "idle",
@@ -52,7 +62,7 @@ export const productionSlice = createAppSlice({
 
         updateProduction: reducer((state, action: PayloadAction<Production[]>) => {
             state.status = 'idle';
-            state.productions = action.payload;
+            state.productions.data = action.payload;
         }),
 
         updateProductionState: reducer((state, action: PayloadAction<Production | defaultParams>) => {
@@ -65,16 +75,19 @@ export const productionSlice = createAppSlice({
         }),
 
         getAllProductionAsync: asyncThunk(
-            async () => {
+            async (params: { page?: string, limit?: string }) => {
+                const { page, limit } = params
+
                 try {
-                    const response = await getAllProductions();
+                    const response = await getAllProductions(page, limit);
                     if (response.error) {
                         throw new Error(response.error);
                     }
-                    return response.data
+                    return response
                 } catch (error) {
                     throw new Error("Data fetch failed: " + (error as Error).message);
                 }
+
             }, {
             pending: (state) => { state.status = "loading"; },
             fulfilled: (state, action) => { state.status = "idle"; state.productions = action.payload; },
@@ -82,7 +95,7 @@ export const productionSlice = createAppSlice({
         }
         )
     }),
-    
+
     selectors: {
         selectProductions: (production) => production.productions,
         selectProductionStatus: (production) => production.status,

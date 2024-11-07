@@ -13,13 +13,20 @@ const authConfig = async () => {
   };
 };
 
-export const getAllPurchases = async (firmId: { firmId?: string }) => {
+export const getAllPurchases = async (firmId?: string | null, page?: string, limit?: string) => {
   const headers = await authConfig();
 
 
-  let url = `${BASE_URL}/purchases`
+  let url = `${BASE_URL}/purchases`;
 
-  if (firmId) url = `${BASE_URL}/purchases/?search[FirmId]=${firmId}`
+  if (firmId) url = `${BASE_URL}/purchases/?search[FirmId]=${firmId}`;
+
+  const params = new URLSearchParams();
+  if (page) params.append("page", page);
+  if (limit) params.append("limit", limit);
+
+  if (params.toString()) url += `?${params.toString()}`;
+
 
   try {
     const response = await fetch(url, {

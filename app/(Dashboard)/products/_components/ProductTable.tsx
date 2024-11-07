@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { getAllProductAsync, selectProducts, updateProductState } from "@/lib/features/product/productSlice";
 import { selectIsDarkMode } from "@/lib/features/themeConfig/themeConfigSlice";
 import { deleteMultiProduct, deleteProduct } from "@/lib/features/product/productActions";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function ProductTable() {
   const dispatch = useAppDispatch();
@@ -19,14 +20,21 @@ export default function ProductTable() {
   const products = useAppSelector(selectProducts);
   const isDark = useAppSelector(selectIsDarkMode);
 
-  useEffect(() => {
-    dispatch(getAllProductAsync({}));
-  }, []);
+  const router = useRouter()
 
-  const [page, setPage] = useState(1);
+  // search params for pagination
+  const searchParams = useSearchParams();
+  const page = (searchParams.get('page') || 1) as string;
+  const limit = (searchParams.get('limit') || 20) as string;
+
+  useEffect(() => {
+    dispatch(getAllProductAsync({ page, limit }));
+  }, [page, limit, dispatch]);
+
+  // const [page, setPage] = useState(1);
+  // const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const PAGE_SIZES = [10, 20, 30, 40, 50];
-  const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-  const [initialRecords, setInitialRecords] = useState(sortBy(products, "id"));
+  const [initialRecords, setInitialRecords] = useState(sortBy(products.data, "id"));
   const [records, setRecords] = useState(initialRecords);
   const [selectedRecords, setSelectedRecords] = useState<any>([]);
   const [search, setSearch] = useState("");
@@ -44,24 +52,26 @@ export default function ProductTable() {
   });
 
   useEffect(() => {
-    setRecords(products);
-    setInitialRecords(products);
+    setRecords(products.data);
+    setInitialRecords(products.data);
   }, [products]);
 
-  useEffect(() => {
-    setPage(1);
-  }, [pageSize]);
+  // useEffect(() => {
+  //   setPage(1);
+  // }, [pageSize]);
 
   useEffect(() => {
-    const from = (page - 1) * pageSize;
-    const to = from + pageSize;
-    // setRecords([...initialRecords?.slice(from, to)]);
-    setRecords([...(Array.isArray(initialRecords) ? initialRecords.slice(from, to) : [])]);
-  }, [page, pageSize, initialRecords]);
+    // const from = (page - 1) * pageSize;
+    // const to = from + pageSize;
+    // setRecords([...(Array.isArray(initialRecords) ? initialRecords.slice(from, to) : [])]);
+
+    router.push(`?${new URLSearchParams({ page: page.toString(), limit: limit.toString() })}`, { scroll: false });
+    dispatch(getAllProductAsync({ page, limit }));
+  }, [page, limit, router, dispatch]);
 
   useEffect(() => {
     setInitialRecords(() => {
-      return products?.filter((product) => {
+      return products?.data.filter((product) => {
         const price = product.price.toString()
         return (
           price.toLowerCase().includes(search.toLowerCase()) ||
@@ -74,7 +84,7 @@ export default function ProductTable() {
   useEffect(() => {
     const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
     setRecords(sortStatus.direction === "desc" ? data2.reverse() : data2);
-    setPage(1);
+    // setPage(1);
   }, [initialRecords, sortStatus]);
 
   const deleteRow = async (id: any = null) => {
@@ -97,7 +107,8 @@ export default function ProductTable() {
       if (deletionSuccess) {
         setSelectedRecords([]);
         setSearch("");
-        setPage(1);
+        // setPage(1);
+        router.push(`?${new URLSearchParams({ page: '1', limit: limit.toString() })}`, { scroll: false });
       }
     }
   };
@@ -169,7 +180,7 @@ export default function ProductTable() {
                       let unit = 'kg';
                       if (key === 'STONE' || key === 'SAND') {
                         unit = 'ton';
-                      }else if (key === 'WATER') {
+                      } else if (key === 'WATER') {
                         unit = 'lt';
                       }
                       return <span key={key}>{`${key.toLowerCase()}: ${value} ${unit}`}</span>;
@@ -214,12 +225,12 @@ export default function ProductTable() {
               },
             ]}
             highlightOnHover={true}
-            totalRecords={initialRecords?.length}
-            recordsPerPage={pageSize}
-            page={page}
-            onPageChange={(p) => setPage(p)}
+            totalRecords={products.details.totalRecords}
+            recordsPerPage={Number(limit)}
+            page={Number(page)}
+            onPageChange={(p) => router.push(`?${new URLSearchParams({ page: p.toString(), limit: limit.toString() })}`, { scroll: false })}
+            onRecordsPerPageChange={(ps) => router.push(`?${new URLSearchParams({ page: page.toString(), limit: ps.toString() })}`, { scroll: false })}
             recordsPerPageOptions={PAGE_SIZES}
-            onRecordsPerPageChange={setPageSize}
             sortStatus={sortStatus}
             onSortStatusChange={setSortStatus}
             selectedRecords={selectedRecords}

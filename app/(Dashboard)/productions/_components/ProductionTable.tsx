@@ -13,6 +13,7 @@ import { getAllProductionAsync, selectProductions, setProductionModal, updatePro
 import { selectIsDarkMode } from "@/lib/features/themeConfig/themeConfigSlice";
 import { deleteMultiProduction, deleteProduction, updateProductionStatus } from "@/lib/features/production/productionActions";
 import Dropdown from "@/app/components/Layout/Dropdown";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function ProductionTable() {
   const dispatch = useAppDispatch();
@@ -20,37 +21,47 @@ export default function ProductionTable() {
   const productions = useAppSelector(selectProductions);
   const isDark = useAppSelector(selectIsDarkMode);
 
-  useEffect(() => {
-    dispatch(getAllProductionAsync({}));
-  }, []);
+  const router = useRouter()
 
-  const [page, setPage] = useState(1);
+  // search params for pagination
+  const searchParams = useSearchParams();
+  const page = (searchParams.get('page') || 1) as string;
+  const limit = (searchParams.get('limit') || 20) as string;
+
+  useEffect(() => {
+    dispatch(getAllProductionAsync({ page, limit }));
+  }, [page, limit, dispatch]);
+
+  // const [page, setPage] = useState(1);
+  // const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const PAGE_SIZES = [10, 20, 30, 40, 50];
-  const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-  const [initialRecords, setInitialRecords] = useState(sortBy(productions, "id"));
+  const [initialRecords, setInitialRecords] = useState(sortBy(productions.data, "id"));
   const [records, setRecords] = useState(initialRecords);
   const [selectedRecords, setSelectedRecords] = useState<any>([]);
   const [search, setSearch] = useState("");
   const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({ columnAccessor: "id", direction: "asc" });
 
   useEffect(() => {
-    setRecords(productions);
-    setInitialRecords(productions);
+    setRecords(productions.data);
+    setInitialRecords(productions.data);
   }, [productions]);
 
-  useEffect(() => {
-    setPage(1);
-  }, [pageSize]);
+  // useEffect(() => {
+  //   setPage(1);
+  // }, [pageSize]);
 
   useEffect(() => {
-    const from = (page - 1) * pageSize;
-    const to = from + pageSize;
-    setRecords([...(Array.isArray(initialRecords) ? initialRecords.slice(from, to) : [])]);
-  }, [page, pageSize, initialRecords]);
+    // const from = (page - 1) * pageSize;
+    // const to = from + pageSize;
+    // setRecords([...(Array.isArray(initialRecords) ? initialRecords.slice(from, to) : [])]);
+
+    router.push(`?${new URLSearchParams({ page: page.toString(), limit: limit.toString() })}`, { scroll: false });
+    dispatch(getAllProductionAsync({ page, limit }));
+  }, [page, limit, router, dispatch]);
 
   useEffect(() => {
     setInitialRecords(() => {
-      return productions?.filter((production) => {
+      return productions?.data.filter((production) => {
         return (
           production.Sale?.Product?.name.toLowerCase().includes(search.toLowerCase()) ||
           production.Sale?.orderDate.toLowerCase().includes(search.toLowerCase())
@@ -62,7 +73,7 @@ export default function ProductionTable() {
   useEffect(() => {
     const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
     setRecords(sortStatus.direction === "desc" ? data2.reverse() : data2);
-    setPage(1);
+    // setPage(1);
   }, [initialRecords, sortStatus]);
 
   const deleteRow = async (id: any = null) => {
@@ -85,7 +96,8 @@ export default function ProductionTable() {
       if (deletionSuccess) {
         setSelectedRecords([]);
         setSearch("");
-        setPage(1);
+        // setPage(1);
+        router.push(`?${new URLSearchParams({ page: '1', limit: limit.toString() })}`, { scroll: false });
       }
     }
   };
@@ -298,12 +310,12 @@ export default function ProductionTable() {
               },
             ]}
             highlightOnHover={true}
-            totalRecords={initialRecords?.length}
-            recordsPerPage={pageSize}
-            page={page}
-            onPageChange={(p) => setPage(p)}
+            totalRecords={productions.details.totalRecords}
+            recordsPerPage={Number(limit)}
+            page={Number(page)}
+            onPageChange={(p) => router.push(`?${new URLSearchParams({ page: p.toString(), limit: limit.toString() })}`, { scroll: false })}
+            onRecordsPerPageChange={(ps) => router.push(`?${new URLSearchParams({ page: page.toString(), limit: ps.toString() })}`, { scroll: false })}
             recordsPerPageOptions={PAGE_SIZES}
-            onRecordsPerPageChange={setPageSize}
             sortStatus={sortStatus}
             onSortStatusChange={setSortStatus}
             selectedRecords={selectedRecords}

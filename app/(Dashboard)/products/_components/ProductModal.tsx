@@ -63,7 +63,7 @@ export default function ProductModal({ modal, setModal, productInitials, setProd
 
   const materials = useAppSelector(selectMaterials);
 
-  const materialOptions = materials?.map(material => ({ value: material.id, label: material.name, }))
+  const materialOptions = materials?.data.map(material => ({ value: material.id, label: material.name, }))
 
   const addItem = () => {
     let maxId = 0;
