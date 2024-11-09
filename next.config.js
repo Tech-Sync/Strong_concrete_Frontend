@@ -8,10 +8,10 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'http',
-        hostname: 'localhost',
-        // protocol: 'https',
-        // hostname: 'strong-concrete-backend-220e.onrender.com',
+        // protocol: 'http',
+        // hostname: 'localhost',
+        protocol: 'https',
+        hostname: 'strong-concrete-backend-220e.onrender.com',
         pathname: '/image/**',
       },
     ],
