@@ -1,7 +1,7 @@
 'use client'
 import { ModalCloseIcon } from '@/app/icons';
 import { getAllPurchaseAccAccs, updatePurchaseAcc } from '@/lib/features/purchaseAccount/purchaseAccActions';
-import { Transaction } from '@/types/types';
+import { PurchaseAccountList, Transaction } from '@/types/types';
 import { formatDate } from '@/utils/helperFunctions';
 import { coloredToast } from '@/utils/sweetAlerts';
 import { Dialog, Transition } from '@headlessui/react';
@@ -19,10 +19,25 @@ export default function PurchaseAccPayModal({ purchaseAccInfo, updatePurchaseLis
             coloredToast('danger', res.error);
         } else {
             coloredToast('success', res?.message || 'Operation successful');
-            // await getAllPurchaseAccAccs()
-            updatePurchaseList((prev: any) => {
-                return prev.map((item: any) => item.id === res.data.id ? { ...item, ...res.data } : item)
+
+            updatePurchaseList((prev: PurchaseAccountList[]) => {
+                return prev.map((item: PurchaseAccountList) => {
+                    const transactionIndex = item.transactions.findIndex(transaction => transaction.id === res.data.data.id);
+                    if (transactionIndex !== -1) {
+                        const updatedTransactions = [...item.transactions];
+                        updatedTransactions[transactionIndex] = { ...updatedTransactions[transactionIndex], ...res.data.data };
+
+                        const totalCredit = updatedTransactions.reduce((sum, transaction) => sum + transaction.credit, 0);
+                        const totalDebit = updatedTransactions.reduce((sum, transaction) => sum + transaction.debit, 0);
+
+                        return { ...item, transactions: updatedTransactions, totalCredit, totalDebit };
+                    }
+                    return item;
+                });
             });
+
+
+
             setModal11(false);
         }
     }

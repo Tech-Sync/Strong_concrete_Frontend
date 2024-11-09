@@ -11,7 +11,7 @@ export default function PurchaseAccCards({ purchaseAccInfo }: { purchaseAccInfo:
     const firmName = searchParams.get('firmName') || ''
 
     const [purchaseAccList, setPurchaseAccList] = useState<PurchaseAccountList[]>(purchaseAccInfo)
-    console.log(purchaseAccList);
+    console.log('state---',purchaseAccList);
 
     return (
         <div className="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">

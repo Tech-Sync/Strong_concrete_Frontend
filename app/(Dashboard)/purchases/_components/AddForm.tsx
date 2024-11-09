@@ -27,11 +27,11 @@ const AddForm = () => {
     const materials = useAppSelector(selectMaterials);
 
 
-    const firmOptions = firms?.filter(firm => firm.status === 2)?.map(firm => ({
+    const firmOptions = firms?.data?.filter(firm => firm.status === 2)?.map(firm => ({
         value: firm.id,
         label: firm.name
     }))
-    const materialOptions = materials?.map(material => ({
+    const materialOptions = materials?.data?.map(material => ({
         value: material.id,
         label: material.name,
     }))
