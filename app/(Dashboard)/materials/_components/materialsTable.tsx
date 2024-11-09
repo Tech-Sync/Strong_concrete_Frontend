@@ -8,26 +8,32 @@ import { coloredToast } from "@/utils/sweetAlerts";
 import MaterialModal from './MaterialModal';
 import useDeleteToasts from '@/hooks/useDeleteToasts';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { getAllMaterialAsync, selectMaterials, selectMaterialStatus, updateMaterial } from '@/lib/features/material/materialSlice';
+import { getAllMaterialAsync, selectMaterials, updateMaterial } from '@/lib/features/material/materialSlice';
 import { selectIsDarkMode } from '@/lib/features/themeConfig/themeConfigSlice';
 import { deleteMaterial, deleteMultiMaterial } from '@/lib/features/material/materialActions';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const MaterialsTable = () => {
     const dispatch = useAppDispatch();
     const { deleteToast, multiDeleteToast } = useDeleteToasts();
     const materials = useAppSelector(selectMaterials);
-    const materialStatus = useAppSelector(selectMaterialStatus);
     const isDark = useAppSelector(selectIsDarkMode);
 
+    const router = useRouter()
+
+    // search params for pagination
+    const searchParams = useSearchParams();
+    const page = (searchParams.get('page') || 1) as string;
+    const limit = (searchParams.get('limit') || 20) as string;
 
     useEffect(() => {
-        dispatch(getAllMaterialAsync({}));
-    }, []);
+        dispatch(getAllMaterialAsync({ page, limit }));
+    }, [page, limit, dispatch]);
 
-    const [page, setPage] = useState(1);
+    // const [page, setPage] = useState(1);
+    // const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
     const PAGE_SIZES = [5, 10, 15, 20, 25];
-    const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-    const [initialRecords, setInitialRecords] = useState(sortBy(materials, 'id'));
+    const [initialRecords, setInitialRecords] = useState(sortBy(materials.data, 'id'));
     const [records, setRecords] = useState(initialRecords);
     const [selectedRecords, setSelectedRecords] = useState<any>([]);
 
@@ -45,23 +51,26 @@ const MaterialsTable = () => {
     });
 
     useEffect(() => {
-        setRecords(materials);
-        setInitialRecords(materials);
+        setRecords(materials.data);
+        setInitialRecords(materials.data);
     }, [materials]);
 
-    useEffect(() => {
-        setPage(1);
-    }, [pageSize]);
+    // useEffect(() => {
+    //     setPage(1);
+    // }, [pageSize]);
 
     useEffect(() => {
-        const from = (page - 1) * pageSize;
-        const to = from + pageSize;
-        setRecords([...(Array.isArray(initialRecords) ? initialRecords.slice(from, to) : [])]);
-    }, [page, pageSize, initialRecords]);
+        // const from = (page - 1) * pageSize;
+        // const to = from + pageSize;
+        // setRecords([...(Array.isArray(initialRecords) ? initialRecords.slice(from, to) : [])]);
+
+        router.push(`?${new URLSearchParams({ page: page.toString(), limit: limit.toString() })}`, { scroll: false });
+        dispatch(getAllMaterialAsync({ page, limit }));
+    }, [page, limit, router, dispatch]);
 
     useEffect(() => {
         setInitialRecords(() => {
-            return materials?.filter((material) => {
+            return materials?.data.filter((material) => {
                 return (
                     material.name.toLowerCase().includes(search.toLowerCase()) ||
                     material.unitType.toLowerCase().includes(search.toLowerCase())
@@ -73,8 +82,8 @@ const MaterialsTable = () => {
     useEffect(() => {
         const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
         setRecords(sortStatus.direction === 'desc' ? data2.reverse() : data2);
-        setPage(1);
-    }, [sortStatus,initialRecords]);
+        // setPage(1);
+    }, [sortStatus, initialRecords]);
 
 
     const deleteRow = async (id: any = null) => {
@@ -98,7 +107,8 @@ const MaterialsTable = () => {
             if (deletionSuccess) {
                 setSelectedRecords([]);
                 setSearch("");
-                setPage(1);
+                // setPage(1);
+                router.push(`?${new URLSearchParams({ page: '1', limit: limit.toString() })}`, { scroll: false });
             }
         }
 
@@ -195,12 +205,12 @@ const MaterialsTable = () => {
                         },
                     ]}
                     highlightOnHover={true}
-                    totalRecords={initialRecords?.length}
-                    recordsPerPage={pageSize}
-                    page={page}
-                    onPageChange={(p) => setPage(p)}
+                    totalRecords={materials.details.totalRecords}
+                    recordsPerPage={Number(limit)}
+                    page={Number(page)}
+                    onPageChange={(p) => router.push(`?${new URLSearchParams({ page: p.toString(), limit: limit.toString() })}`, { scroll: false })}
+                    onRecordsPerPageChange={(ps) => router.push(`?${new URLSearchParams({ page: page.toString(), limit: ps.toString() })}`, { scroll: false })}
                     recordsPerPageOptions={PAGE_SIZES}
-                    onRecordsPerPageChange={setPageSize}
                     sortStatus={sortStatus}
                     onSortStatusChange={setSortStatus}
                     selectedRecords={selectedRecords}

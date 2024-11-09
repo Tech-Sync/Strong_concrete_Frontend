@@ -8,7 +8,7 @@ import { DeleteIcon, EditIcon, PlusIcon, PreviewIcon } from "@/app/icons";
 import { formatDate } from "@/utils/helperFunctions";
 import { coloredToast } from "@/utils/sweetAlerts";
 import useDeleteToasts from "@/hooks/useDeleteToasts";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { getAllPurchaseAsync, selectPurchases, updatePurchase, updatePurchaseState } from "@/lib/features/purchase/purchaseSlice";
 import { selectIsDarkMode } from "@/lib/features/themeConfig/themeConfigSlice";
@@ -23,16 +23,22 @@ export default function PurchaseTable() {
   const purchases = useAppSelector(selectPurchases);
   const isDark = useAppSelector(selectIsDarkMode);
 
+
+  // search params for pagination
+  const searchParams = useSearchParams();
+  const page = (searchParams.get('page') || 1) as string;
+  const limit = (searchParams.get('limit') || 20) as string;
+
   useEffect(() => {
-    dispatch(getAllPurchaseAsync({}));
+    dispatch(getAllPurchaseAsync({ page, limit }));
     dispatch(updatePurchaseState(null))
-  }, []);
+  }, [dispatch, page, limit]);
 
 
-  const [page, setPage] = useState(1);
+  // const [page, setPage] = useState(1);
+  // const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const PAGE_SIZES = [10, 20, 30, 50, 100];
-  const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-  const [initialRecords, setInitialRecords] = useState(sortBy(purchases, "id"));
+  const [initialRecords, setInitialRecords] = useState(sortBy(purchases.data, "id"));
   const [records, setRecords] = useState(initialRecords);
   const [selectedRecords, setSelectedRecords] = useState<any>([]);
   const [search, setSearch] = useState("");
@@ -43,24 +49,27 @@ export default function PurchaseTable() {
 
 
   useEffect(() => {
-    setRecords(purchases);
-    setInitialRecords(purchases);
+    setRecords(purchases.data);
+    setInitialRecords(purchases.data);
   }, [purchases]);
 
-  useEffect(() => {
-    setPage(1);
-  }, [pageSize]);
+  // useEffect(() => {
+  //   setPage(1);
+  // }, [pageSize]);
 
   useEffect(() => {
-    const from = (page - 1) * pageSize;
-    const to = from + pageSize;
-    setRecords([...(Array.isArray(initialRecords) ? initialRecords.slice(from, to) : [])]);
-  }, [page, pageSize, initialRecords]);
+    // const from = (page - 1) * pageSize;
+    // const to = from + pageSize;
+    // setRecords([...(Array.isArray(initialRecords) ? initialRecords.slice(from, to) : [])]);
+
+    router.push(`?${new URLSearchParams({ page: page.toString(), limit: limit.toString() })}`, { scroll: false });
+    dispatch(getAllPurchaseAsync({ page, limit }));
+  }, [page, limit, router, dispatch]);
 
   useEffect(() => {
     if (purchases) {
       setInitialRecords(() => {
-        return purchases?.filter((purchase) => {
+        return purchases?.data.filter((purchase) => {
           const materialName = purchase?.Material?.name;
           const firmName = purchase.Firm?.name;
           const createdAt = purchase.createdAt;
@@ -78,7 +87,7 @@ export default function PurchaseTable() {
   useEffect(() => {
     const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
     setRecords(sortStatus.direction === "desc" ? data2.reverse() : data2);
-    setPage(1);
+    // setPage(1);
   }, [initialRecords, sortStatus]);
 
   const deleteRow = async (id: any = null) => {
@@ -99,7 +108,8 @@ export default function PurchaseTable() {
       if (deletionSuccess) {
         setSelectedRecords([]);
         setSearch("");
-        setPage(1);
+        // setPage(1);
+        router.push(`?${new URLSearchParams({ page: '1', limit: limit.toString() })}`, { scroll: false });
       }
     }
   };
@@ -149,9 +159,9 @@ export default function PurchaseTable() {
                 accessor: "Firm",
                 sortable: true,
                 render: ({ Firm, id }) => (
-                  <div className="flex items-center font-semibold">
+                  <Link href={`/purchases/accounts?${new URLSearchParams({ firmName: Firm.name?.toLocaleLowerCase() ?? '' })}`} className="flex items-center font-semibold">
                     <div className={Firm.name ? "" : "text-red-800"}>{Firm.name ?? 'Data Deleted'}</div>
-                  </div>
+                  </Link>
                 ),
               },
               {
@@ -223,12 +233,12 @@ export default function PurchaseTable() {
               },
             ]}
             highlightOnHover={true}
-            totalRecords={initialRecords?.length}
-            recordsPerPage={pageSize}
-            page={page}
-            onPageChange={(p) => setPage(p)}
+            totalRecords={purchases.details.totalRecords}
+            recordsPerPage={Number(limit)}
+            page={Number(page)}
+            onPageChange={(p) => router.push(`?${new URLSearchParams({ page: p.toString(), limit: limit.toString() })}`, { scroll: false })}
+            onRecordsPerPageChange={(ps) => router.push(`?${new URLSearchParams({ page: page.toString(), limit: ps.toString() })}`, { scroll: false })}
             recordsPerPageOptions={PAGE_SIZES}
-            onRecordsPerPageChange={setPageSize}
             sortStatus={sortStatus}
             onSortStatusChange={setSortStatus}
             selectedRecords={selectedRecords}

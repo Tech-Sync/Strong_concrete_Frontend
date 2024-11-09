@@ -1,19 +1,29 @@
 import { createAppSlice } from "@/lib/createAppSlice";
-import { Product } from "@/types/types";
+import { Pagination, Product } from "@/types/types";
 
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { getAllProducts } from "./productActions";
 
 
 export interface ProductSliceState {
-    products: Product[];
+    products: Pagination<Product>;
     loading: boolean;
     error: string | null;
     status: "idle" | "loading" | "failed" | "succeeded";
 }
 
 const initialState: ProductSliceState = {
-    products: [],
+    products: {
+        details: {
+            offset: 0,
+            limit: 20,
+            page: 0,
+            pages: false,
+            totalRecords: 0,
+            showDeleted: false
+        },
+        data: []
+    },
     loading: false,
     error: null,
     status: "idle",
@@ -37,18 +47,23 @@ export const productSlice = createAppSlice({
 
         updateProductState: reducer((state, action: PayloadAction<Product[]>) => {
             state.status = 'idle';
-            state.products = action.payload;
+            state.products.data = action.payload;
         }),
 
 
         getAllProductAsync: asyncThunk(
-            async () => {
+            async (params: { page?: string, limit?: string }) => {
+                const { page, limit } = params
+
                 try {
-                    const response = await getAllProducts();
+                    const response = await getAllProducts(page, limit);
+                    
                     if (response.error) {
                         throw new Error(response.error);
                     }
-                    return response.data
+
+                    return response
+                    
                 } catch (error) {
                     throw new Error("Data fetch failed: " + (error as Error).message);
                 }

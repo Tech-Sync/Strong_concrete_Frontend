@@ -1,19 +1,29 @@
 import { createAppSlice } from "@/lib/createAppSlice";
-import { Material } from "@/types/types";
+import { Material, Pagination } from "@/types/types";
 
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { getAllMaterials } from "./materialActions";
 
 
 export interface MaterialSliceState {
-    materials: Material[];
+    materials: Pagination<Material>;
     loading: boolean;
     error: string | null;
     status: "idle" | "loading" | "failed" | "succeeded";
 }
 
 const initialState: MaterialSliceState = {
-    materials: [],
+    materials: {
+        details: {
+            offset: 0,
+            limit: 20,
+            page: 0,
+            pages: false,
+            totalRecords: 0,
+            showDeleted: false
+        },
+        data: []
+    },
     loading: false,
     error: null,
     status: "idle",
@@ -36,17 +46,21 @@ export const materialSlice = createAppSlice({
 
         updateMaterial: reducer((state, action: PayloadAction<Material[]>) => {
             state.status = 'idle';
-            state.materials = action.payload;
+            state.materials.data = action.payload;
         }),
 
         getAllMaterialAsync: asyncThunk(
-            async () => {
+            async (params: { page?: string, limit?: string }) => {
+                const { page, limit } = params
+                
                 try {
-                    const response = await getAllMaterials();
+                    const response = await getAllMaterials(page, limit);
+
                     if (response.error) {
                         throw new Error(response.error);
                     }
-                    return response.data
+
+                    return response
                 } catch (error) {
                     throw new Error("Data fetch failed: " + (error as Error).message);
                 }
@@ -63,5 +77,5 @@ export const materialSlice = createAppSlice({
     }
 })
 
-export const { fetchStartMaterial,fetchFailMaterial, updateMaterial,getAllMaterialAsync } = materialSlice.actions
+export const { fetchStartMaterial, fetchFailMaterial, updateMaterial, getAllMaterialAsync } = materialSlice.actions
 export const { selectMaterials, selectMaterialStatus, } = materialSlice.selectors

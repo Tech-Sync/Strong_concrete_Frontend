@@ -24,11 +24,11 @@ export const SocketProvider: React.FC<{ url: string | undefined, children: React
         setSocket(socketInstance);
 
         socketInstance.on('connect', () => {
-            console.log('Connected to server');
+            // console.log('Connected to server');
         });
 
         socketInstance.on('disconnect', () => {
-            console.log('Disconnected from server');
+            // console.log('Disconnected from server');
         });
 
         return () => {

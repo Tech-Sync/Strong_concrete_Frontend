@@ -7,9 +7,11 @@ import UserModal from './UserModal';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { getAllUserAsync, selectUsers, updateUsers } from '@/lib/features/user/userSlice';
 import { deleteUser } from '@/lib/features/user/userActions';
+import { useRouter } from 'next/navigation';
 
 const UserTable = () => {
     const dispatch = useAppDispatch()
+    const router = useRouter();
     const { deleteToast } = useDeleteToasts();
 
     const users = useAppSelector(selectUsers);
@@ -177,7 +179,7 @@ const UserTable = () => {
                             <tbody>
                                 {filteredItems?.map((user: any) => {
                                     return (
-                                        <tr key={user.id}>
+                                        <tr key={user.id} className='cursor-pointer' onClick={()=>router.push(`/users/${user.id}`)}>
                                             <td>
                                                 <div className="flex w-max items-center">
                                                     {user.profilePic ? (
@@ -233,7 +235,7 @@ const UserTable = () => {
 
 
                                     </div>
-                                    <div className="relative -mt-10 px-6 pb-24">
+                                    <div className="relative -mt-10 px-6 pb-24" >
                                         <div className="rounded-md bg-white px-2 py-4 shadow-md dark:bg-gray-900">
                                             <div className="text-xl">{`${user.firstName} ${user.lastName}`}</div>
                                             <div className="text-white-dark">{userRoles[user.role]}</div>

@@ -14,10 +14,19 @@ const authConfig = async () => {
   };
 };
 
-export const getAllProductions = async () => {
+export const getAllProductions = async (page?: string, limit?: string) => {
   const headers = await authConfig();
+
+  let url = `${BASE_URL}/productions`;
+
+  const params = new URLSearchParams();
+  if (page) params.append("page", page);
+  if (limit) params.append("limit", limit);
+
+  if (params.toString()) url += `?${params.toString()}`;
+
   try {
-    const response = await fetch(`${BASE_URL}/productions`, {
+    const response = await fetch(url, {
       cache: "no-cache",
       headers,
     });
@@ -26,9 +35,7 @@ export const getAllProductions = async () => {
     if (response.ok) {
       return data;
     } else {
-      throw new Error(
-        data.message || "Something went wrong, Please try again!"
-      );
+      throw new Error(data.message || "Something went wrong, Please try again!");
     }
   } catch (error: any) {
     return { error: error.message };
@@ -48,7 +55,7 @@ export const deleteProduction = async (id: any) => {
     if (!data.error && response.status === 202) {
       return { message: data.message, remainingData: data.data };
     } else {
-      throw new Error( data.message ?? "Something went wrong, Please try again!");
+      throw new Error(data.message ?? "Something went wrong, Please try again!");
     }
 
   } catch (error: any) {
@@ -70,9 +77,9 @@ export const deleteMultiProduction = async (ids: any) => {
     if (!data.error && response.status === 202) {
       return { message: data.message, remainingData: data.data };
     } else {
-      throw new Error( data.message ?? "Something went wrong, Please try again!");
+      throw new Error(data.message ?? "Something went wrong, Please try again!");
     }
-    
+
   } catch (error: any) {
     return { error: error.message };
   }
@@ -101,7 +108,7 @@ export const addProduction = async (productionData: Object) => {
     return { error: error.message };
   }
 };
-export const updateProduction = async (productionData:any) => {
+export const updateProduction = async (productionData: any) => {
   const headers = await authConfig();
   try {
     const response = await fetch(`${BASE_URL}/productions/${productionData?.id}`, {
@@ -122,13 +129,13 @@ export const updateProduction = async (productionData:any) => {
     return { error: error.message };
   }
 };
-export const updateProductionStatus = async (productionId:number, statusId:number) => {
+export const updateProductionStatus = async (productionId: number, statusId: number) => {
   const headers = await authConfig();
   try {
     const response = await fetch(`${BASE_URL}/productions/${productionId}`, {
       method: "PUT",
       headers,
-      body: JSON.stringify({status: statusId}),
+      body: JSON.stringify({ status: statusId }),
     });
 
     const data = await response.json();

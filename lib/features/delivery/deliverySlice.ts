@@ -1,6 +1,6 @@
 import { createAppSlice } from "@/lib/createAppSlice";
 import type { AppThunk } from "@/lib/store";
-import { Delivery } from "@/types/types";
+import { Delivery, Pagination } from "@/types/types";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { getAllDeliveries } from "./deliveryActions";
 
@@ -11,7 +11,7 @@ interface defaultParams {
 }
 
 export interface DeliverySliceState {
-    deliveries: Delivery[];
+    deliveries: Pagination<Delivery>;
     loading: boolean;
     error: string | null;
     status: "idle" | "loading" | "failed" | "succeeded";
@@ -20,7 +20,17 @@ export interface DeliverySliceState {
 }
 
 const initialState: DeliverySliceState = {
-    deliveries: [],
+    deliveries: {
+        details: {
+            offset: 0,
+            limit: 20,
+            page: 0,
+            pages: false,
+            totalRecords: 0,
+            showDeleted: false
+        },
+        data: []
+    },
     loading: false,
     error: null,
     status: "idle",
@@ -32,21 +42,26 @@ export const deliverySlice = createAppSlice({
     name: 'delivery',
     initialState,
     reducers: ({ reducer, asyncThunk }) => ({
+
         updateDelivery: reducer((state, action: PayloadAction<[]>) => {
             state.status = 'idle';
-            state.deliveries = action.payload;
+            state.deliveries.data = action.payload;
         }),
+
         getAllDeliveryAsync: asyncThunk(
-            async () => {
+            async (params: { page?: string, limit?: string }) => {
+                const { page, limit } = params
+
                 try {
-                    const response = await getAllDeliveries();
+                    const response = await getAllDeliveries(page,limit);
                     if (response.error) {
                         throw new Error(response.error);
                     }
-                    return response.data
+                    return response
                 } catch (error) {
                     throw new Error("Data fetch failed: " + (error as Error).message);
                 }
+
             }, {
             pending: (state) => { state.status = "loading"; },
             fulfilled: (state, action) => { state.status = "idle"; state.deliveries = action.payload; },
@@ -54,6 +69,7 @@ export const deliverySlice = createAppSlice({
         }
         )
     }),
+
     selectors: {
         selectdeliveries: (delivery) => delivery.deliveries,
         selectdeliveryState: (delivery) => delivery,
