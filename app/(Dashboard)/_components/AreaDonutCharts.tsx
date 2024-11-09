@@ -258,7 +258,7 @@ const AreaDonutCharts = ({ isDark, isMounted, isRtl, revenueChartData, salesByCa
 
     return (
         <div className="mb-6 grid gap-6 xl:grid-cols-3">
-            <div className="panel h-full xl:col-span-2">
+            <div className="panel h-full xl:col-span-3">
                 <div className="mb-5 flex items-center justify-between dark:text-white-light">
                     <h5 className="text-lg font-semibold">Revenue</h5>
                     <div className="dropdown">
@@ -303,11 +303,11 @@ const AreaDonutCharts = ({ isDark, isMounted, isRtl, revenueChartData, salesByCa
                 </div>
             </div>
 
-            <div className="panel h-full">
+            {/* <div className="panel h-full">
                 <div className="mb-5 flex items-center">
                     <h5 className="text-lg font-semibold dark:text-white-light">Sales By Category</h5>
                 </div>
-                {/* <div>
+                <div>
                     <div className="rounded-lg bg-white dark:bg-black">
                         {isMounted ? (
                             <ReactApexChart series={salesByCategory.series} options={salesByCategory.options} type="donut" height={460} width={'100%'} />
@@ -317,8 +317,8 @@ const AreaDonutCharts = ({ isDark, isMounted, isRtl, revenueChartData, salesByCa
                             </div>
                         )}
                     </div>
-                </div> */}
-            </div>
+                </div>
+            </div> */}
         </div>
     )
 }

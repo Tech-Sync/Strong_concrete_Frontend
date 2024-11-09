@@ -4,7 +4,6 @@ import { PropsWithChildren, useEffect, useState } from 'react';
 import Footer from './Footer';
 import Header from './Header/Header';
 import Sidebar from './Sidebar/Sidebar';
-import Setting from './Setting';
 import Portals from './Portals';
 import { usePathname } from 'next/navigation'
 import AppContainer from '@/container/AppContainer';
@@ -19,7 +18,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
     const dispatch = useAppDispatch();
 
     const themeConfig = useAppSelector(selectThemeConfig)
-	const { userInfo } = useCurrentUser()
+    const { userInfo } = useCurrentUser()
     const [animation, setAnimation] = useState(themeConfig.animation);
     const [showLoader, setShowLoader] = useState(true);
     const [showTopButton, setShowTopButton] = useState(false);
@@ -137,9 +136,6 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                         </button>
                     )}
                 </div>
-                {/* BEGIN APP SETTING LAUNCHER */}
-                <Setting />
-                {/* END APP SETTING LAUNCHER */}
                 <div className={`${themeConfig.navbar} main-container min-h-screen text-black dark:text-white-dark`}>
                     {/* BEGIN SIDEBAR */}
                     <Sidebar />

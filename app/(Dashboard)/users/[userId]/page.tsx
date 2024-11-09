@@ -1,31 +1,26 @@
-import Link from 'next/link';
-import { useEffect } from 'react';
-import Dropdown from '../../../components/Layout/Dropdown';
-import { useAppSelector } from '@/lib/hooks';
-import { selectRtlClass } from '@/lib/features/themeConfig/themeConfigSlice';
+import React from 'react'
+import Dropdown from '@/app/components/Layout/Dropdown'
+import Link from 'next/link'
+import { readUser } from '@/lib/features/user/userActions'
+import Image from 'next/image'
+import { User } from '@/types/types'
+import BreadCrumb from '@/app/components/common/BreadCrumb'
 
-const UserProfile = () => {
-  
+export default async function UserProfilePage({ params }: { params: { userId: string } }) {
 
-    const isRtl = useAppSelector(selectRtlClass) === 'rtl' ? true : false;
+    const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL || ''
+
+    const userInfo: User = await readUser(params.userId)
+
     return (
         <div>
-            <ul className="flex space-x-2 rtl:space-x-reverse">
-                <li>
-                    <Link href="#" className="text-primary hover:underline">
-                        Users
-                    </Link>
-                </li>
-                <li className="before:content-['/'] ltr:before:mr-2 rtl:before:ml-2">
-                    <span>Profile</span>
-                </li>
-            </ul>
+            <BreadCrumb />
             <div className="pt-5">
                 <div className="mb-5 grid grid-cols-1 gap-5 lg:grid-cols-3 xl:grid-cols-4">
                     <div className="panel">
                         <div className="mb-5 flex items-center justify-between">
                             <h5 className="text-lg font-semibold dark:text-white-light">Profile</h5>
-                            <Link href="/users/user-account-settings" className="btn btn-primary rounded-full p-2 ltr:ml-auto rtl:mr-auto">
+                            <Link href="/users/update" className="btn btn-primary rounded-full p-2 ltr:ml-auto rtl:mr-auto">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-5 w-5">
                                     <path opacity="0.5" d="M4 22H20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                                     <path
@@ -44,8 +39,8 @@ const UserProfile = () => {
                         </div>
                         <div className="mb-5">
                             <div className="flex flex-col items-center justify-center">
-                                <img src="/assets/images/profile-34.jpeg" alt="img" className="mb-5 h-24 w-24 rounded-full  object-cover" />
-                                <p className="text-xl font-semibold text-primary">Jimmy Turner</p>
+                                <Image width={96} height={96} src={BASE_URL + '/image/' + userInfo.profilePic} alt="img" className="mb-5 h-24 w-24 rounded-full  object-cover" />
+                                <p className="text-xl font-semibold text-primary">{userInfo.firstName} {userInfo.lastName}</p>
                             </div>
                             <ul className="m-auto mt-5 flex max-w-[160px] flex-col space-y-4 font-semibold text-white-dark">
                                 <li className="flex items-center gap-2">
@@ -79,7 +74,7 @@ const UserProfile = () => {
                                             strokeLinejoin="round"
                                         />
                                     </svg>{' '}
-                                    Web Developer
+                                    {userInfo.role}
                                 </li>
                                 <li className="flex items-center gap-2">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-5 w-5">
@@ -92,7 +87,7 @@ const UserProfile = () => {
                                         <path opacity="0.5" d="M17 4V2.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                                         <path opacity="0.5" d="M2 9H22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                                     </svg>
-                                    Jan 20, 1989
+                                    {userInfo.nrcNo}
                                 </li>
                                 <li className="flex items-center gap-2">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-5 w-5">
@@ -114,7 +109,7 @@ const UserProfile = () => {
                                             strokeLinecap="round"
                                         />
                                     </svg>
-                                    New York, USA
+                                    {userInfo.address}
                                 </li>
                                 <li>
                                     <button className="flex items-center gap-2">
@@ -132,7 +127,9 @@ const UserProfile = () => {
                                                 strokeLinecap="round"
                                             />
                                         </svg>
-                                        <span className="text-primary">Jimmy@gmail.com</span>
+                                        <span className="text-primary">
+                                            {userInfo.email}
+                                        </span>
                                     </button>
                                 </li>
                                 <li className="flex items-center gap-2">
@@ -150,11 +147,11 @@ const UserProfile = () => {
                                         />
                                     </svg>
                                     <span className="whitespace-nowrap" dir="ltr">
-                                        +1 (530) 555-12121
+                                        {userInfo.phoneNo}
                                     </span>
                                 </li>
                             </ul>
-                            <ul className="mt-7 flex items-center justify-center gap-2">
+                            {/* <ul className="mt-7 flex items-center justify-center gap-2">
                                 <li>
                                     <button className="btn btn-info flex h-10 w-10 items-center justify-center rounded-full p-0">
                                         <svg
@@ -209,108 +206,64 @@ const UserProfile = () => {
                                         </svg>
                                     </button>
                                 </li>
-                            </ul>
+                            </ul> */}
                         </div>
                     </div>
                     <div className="panel lg:col-span-2 xl:col-span-3">
                         <div className="mb-5">
-                            <h5 className="text-lg font-semibold dark:text-white-light">Task</h5>
+                            <h5 className="text-lg font-semibold dark:text-white-light">Info</h5>
                         </div>
-                        <div className="mb-5">
-                            <div className="table-responsive font-semibold text-[#515365] dark:text-white-light">
-                                <table className="whitespace-nowrap">
-                                    <thead>
-                                        <tr>
-                                            <th>Projects</th>
-                                            <th>Progress</th>
-                                            <th>Task Done</th>
-                                            <th className="text-center">Time</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="dark:text-white-dark">
-                                        <tr>
-                                            <td>Figma Design</td>
-                                            <td>
-                                                <div className="flex h-1.5 w-full rounded-full bg-[#ebedf2] dark:bg-dark/40">
-                                                    <div className="w-[29.56%] rounded-full bg-danger"></div>
-                                                </div>
-                                            </td>
-                                            <td className="text-danger">29.56%</td>
-                                            <td className="text-center">2 mins ago</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Vue Migration</td>
-                                            <td>
-                                                <div className="flex h-1.5 w-full rounded-full bg-[#ebedf2] dark:bg-dark/40">
-                                                    <div className="w-1/2 rounded-full bg-info"></div>
-                                                </div>
-                                            </td>
-                                            <td className="text-success">50%</td>
-                                            <td className="text-center">4 hrs ago</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Flutter App</td>
-                                            <td>
-                                                <div className="flex h-1.5 w-full rounded-full bg-[#ebedf2] dark:bg-dark/40">
-                                                    <div className="w-[39%] rounded-full  bg-warning"></div>
-                                                </div>
-                                            </td>
-                                            <td className="text-danger">39%</td>
-                                            <td className="text-center">a min ago</td>
-                                        </tr>
-                                        <tr>
-                                            <td>API Integration</td>
-                                            <td>
-                                                <div className="flex h-1.5 w-full rounded-full bg-[#ebedf2] dark:bg-dark/40">
-                                                    <div className="w-[78.03%] rounded-full  bg-success"></div>
-                                                </div>
-                                            </td>
-                                            <td className="text-success">78.03%</td>
-                                            <td className="text-center">2 weeks ago</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>Blog Update</td>
-                                            <td>
-                                                <div className="flex h-1.5 w-full rounded-full bg-[#ebedf2] dark:bg-dark/40">
-                                                    <div className="w-full  rounded-full  bg-secondary"></div>
-                                                </div>
-                                            </td>
-                                            <td className="text-success">100%</td>
-                                            <td className="text-center">18 hrs ago</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Landing Page</td>
-                                            <td>
-                                                <div className="flex h-1.5 w-full rounded-full bg-[#ebedf2] dark:bg-dark/40">
-                                                    <div className="w-[19.15%] rounded-full  bg-danger"></div>
-                                                </div>
-                                            </td>
-                                            <td className="text-danger">19.15%</td>
-                                            <td className="text-center">5 days ago</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Shopify Dev</td>
-                                            <td>
-                                                <div className="flex h-1.5 w-full rounded-full bg-[#ebedf2] dark:bg-dark/40">
-                                                    <div className="w-[60.55%] rounded-full bg-primary"></div>
-                                                </div>
-                                            </td>
-                                            <td className="text-success">60.55%</td>
-                                            <td className="text-center">8 days ago</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                        <form className="space-y-5">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label htmlFor="nrcNO">Nrc No</label>
+                                    <input id="nrcNO" type="text" value={userInfo.nrcNo} placeholder="Enter Nrc Number" className="form-input" readOnly />
+                                </div>
+                                <div>
+                                    <label htmlFor="gridPassword">Password</label>
+                                    <input id="gridPassword" type="Password" placeholder="Enter Password" value={userInfo.password.slice(0, 10)} className="form-input" readOnly />
+                                </div>
                             </div>
-                        </div>
+                            <div>
+                                <label htmlFor="gridAddress1">Address</label>
+                                <input id="gridAddress1" type="text" placeholder="Enter Address" value={userInfo.address} defaultValue="1234 Main St" className="form-input" readOnly />
+                            </div>
+                            <div>
+                                <label htmlFor="gridAddress2">Address2</label>
+                                <input id="gridAddress2" type="text" placeholder="Enter Address2" defaultValue="Apartment, studio, or floor" className="form-input" readOnly />
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                <div className="md:col-span-2">
+                                    <label htmlFor="gridCity">City</label>
+                                    <input id="gridCity" type="text" placeholder="Enter City" className="form-input" readOnly />
+                                </div>
+                                <div>
+                                    <label htmlFor="gridState">Is Active</label>
+                                    <select id="gridState" className="form-select text-white-dark" value={userInfo.isActive ? 'True' : 'False'} disabled>
+                                        <option>Choose...</option>
+                                        <option>True</option>
+                                        <option>False</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label htmlFor="gridState">Is Verified</label>
+                                    <select id="gridState" className="form-select text-white-dark" value={userInfo.isVerified ? 'True' : 'False'} disabled>
+                                        <option>Choose...</option>
+                                        <option>True</option>
+                                        <option>False</option>
+                                    </select>
+                                </div>
+
+                            </div>
+                        </form>
                     </div>
                 </div>
                 <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                     <div className="panel">
                         <div className="mb-5">
-                            <h5 className="text-lg font-semibold dark:text-white-light">Summary</h5>
+                            <h5 className="text-lg font-semibold dark:text-white-light">--</h5>
                         </div>
-                        <div className="space-y-4">
+                        {/* <div className="space-y-4">
                             <div className="rounded border border-[#ebedf2] dark:border-0 dark:bg-[#1b2e4b]">
                                 <div className="flex items-center justify-between p-4 py-2">
                                     <div className="grid h-9 w-9 place-content-center rounded-md bg-secondary-light text-secondary dark:bg-secondary dark:text-secondary-light">
@@ -378,146 +331,26 @@ const UserProfile = () => {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                     <div className="panel">
                         <div className="mb-10 flex items-center justify-between">
-                            <h5 className="text-lg font-semibold dark:text-white-light">Pro Plan</h5>
-                            <button className="btn btn-primary">Renew Now</button>
+                            <h5 className="text-lg font-semibold dark:text-white-light">--</h5>
+                            {/* <button className="btn btn-primary">Renew Now</button> */}
                         </div>
-                        <div className="group">
-                            <ul className="mb-7 list-inside list-disc space-y-2 font-semibold text-white-dark">
-                                <li>10,000 Monthly Visitors</li>
-                                <li>Unlimited Reports</li>
-                                <li>2 Years Data Storage</li>
-                            </ul>
-                            <div className="mb-4 flex items-center justify-between font-semibold">
-                                <p className="flex items-center rounded-full bg-dark px-2 py-1 text-xs font-semibold text-white-light">
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="ltr:mr-1 rtl:ml-1">
-                                        <circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
-                                        <path d="M12 8V12L14.5 14.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                    5 Days Left
-                                </p>
-                                <p className="text-info">$25 / month</p>
-                            </div>
-                            <div className="mb-5 h-2.5 overflow-hidden rounded-full bg-dark-light p-0.5 dark:bg-dark-light/10">
-                                <div className="relative h-full w-full rounded-full bg-gradient-to-r from-[#f67062] to-[#fc5296]" style={{ width: '65%' }}></div>
-                            </div>
-                        </div>
+                        {/* --------- */}
                     </div>
                     <div className="panel">
                         <div className="mb-5 flex items-center justify-between">
-                            <h5 className="text-lg font-semibold dark:text-white-light">Payment History</h5>
+                            <h5 className="text-lg font-semibold dark:text-white-light">--</h5>
                         </div>
-                        <div>
-                            <div className="border-b border-[#ebedf2] dark:border-[#1b2e4b]">
-                                <div className="flex items-center justify-between py-2">
-                                    <h6 className="font-semibold text-[#515365] dark:text-white-dark">
-                                        March
-                                        <span className="block text-white-dark dark:text-white-light">Pro Membership</span>
-                                    </h6>
-                                    <div className="flex items-start justify-between ltr:ml-auto rtl:mr-auto">
-                                        <p className="font-semibold">90%</p>
-                                        <div className="dropdown ltr:ml-4 rtl:mr-4">
-                                            <Dropdown
-                                                offset={[0, 5]}
-                                                placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
-                                                btnClassName="hover:text-primary"
-                                                button={
-                                                    <svg className="h-5 w-5 text-black/70 hover:!text-primary dark:text-white/70" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <circle cx="5" cy="12" r="2" stroke="currentColor" strokeWidth="1.5" />
-                                                        <circle opacity="0.5" cx="12" cy="12" r="2" stroke="currentColor" strokeWidth="1.5" />
-                                                        <circle cx="19" cy="12" r="2" stroke="currentColor" strokeWidth="1.5" />
-                                                    </svg>
-                                                }
-                                            >
-                                                <ul className="!min-w-[150px]">
-                                                    <li>
-                                                        <button type="button">View Invoice</button>
-                                                    </li>
-                                                    <li>
-                                                        <button type="button">Download Invoice</button>
-                                                    </li>
-                                                </ul>
-                                            </Dropdown>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="border-b border-[#ebedf2] dark:border-[#1b2e4b]">
-                                <div className="flex items-center justify-between py-2">
-                                    <h6 className="font-semibold text-[#515365] dark:text-white-dark">
-                                        February
-                                        <span className="block text-white-dark dark:text-white-light">Pro Membership</span>
-                                    </h6>
-                                    <div className="flex items-start justify-between ltr:ml-auto rtl:mr-auto">
-                                        <p className="font-semibold">90%</p>
-                                        <div className="dropdown ltr:ml-4 rtl:mr-4">
-                                            <Dropdown
-                                                offset={[0, 5]}
-                                                placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
-                                                button={
-                                                    <svg className="h-5 w-5 text-black/70 hover:!text-primary dark:text-white/70" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <circle cx="5" cy="12" r="2" stroke="currentColor" strokeWidth="1.5" />
-                                                        <circle opacity="0.5" cx="12" cy="12" r="2" stroke="currentColor" strokeWidth="1.5" />
-                                                        <circle cx="19" cy="12" r="2" stroke="currentColor" strokeWidth="1.5" />
-                                                    </svg>
-                                                }
-                                            >
-                                                <ul className="!min-w-[150px]">
-                                                    <li>
-                                                        <button type="button">View Invoice</button>
-                                                    </li>
-                                                    <li>
-                                                        <button type="button">Download Invoice</button>
-                                                    </li>
-                                                </ul>
-                                            </Dropdown>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div className="flex items-center justify-between py-2">
-                                    <h6 className="font-semibold text-[#515365] dark:text-white-dark">
-                                        January
-                                        <span className="block text-white-dark dark:text-white-light">Pro Membership</span>
-                                    </h6>
-                                    <div className="flex items-start justify-between ltr:ml-auto rtl:mr-auto">
-                                        <p className="font-semibold">90%</p>
-                                        <div className="dropdown ltr:ml-4 rtl:mr-4">
-                                            <Dropdown
-                                                offset={[0, 5]}
-                                                placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
-                                                button={
-                                                    <svg className="h-5 w-5 text-black/70 hover:!text-primary dark:text-white/70" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <circle cx="5" cy="12" r="2" stroke="currentColor" strokeWidth="1.5" />
-                                                        <circle opacity="0.5" cx="12" cy="12" r="2" stroke="currentColor" strokeWidth="1.5" />
-                                                        <circle cx="19" cy="12" r="2" stroke="currentColor" strokeWidth="1.5" />
-                                                    </svg>
-                                                }
-                                            >
-                                                <ul className="!min-w-[150px]">
-                                                    <li>
-                                                        <button type="button">View Invoice</button>
-                                                    </li>
-                                                    <li>
-                                                        <button type="button">Download Invoice</button>
-                                                    </li>
-                                                </ul>
-                                            </Dropdown>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        {/* -------- */}
                     </div>
                     <div className="panel">
                         <div className="mb-5 flex items-center justify-between">
-                            <h5 className="text-lg font-semibold dark:text-white-light">Card Details</h5>
+                            <h5 className="text-lg font-semibold dark:text-white-light">--</h5>
                         </div>
-                        <div>
+                        {/* <div>
                             <div className="border-b border-[#ebedf2] dark:border-[#1b2e4b]">
                                 <div className="flex items-center justify-between py-2">
                                     <div className="flex-none">
@@ -558,12 +391,10 @@ const UserProfile = () => {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>
         </div>
-    );
-};
-
-export default UserProfile;
+    )
+}

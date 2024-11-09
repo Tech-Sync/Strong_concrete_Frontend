@@ -64,8 +64,8 @@ const Sidebar = () => {
         icon: <SiderbarDashboardIcon />,
         subMenu: [
             { name: 'Owerview', path: '/' },
-            { name: 'Analytics', path: '/analytics' },
-            { name: 'Finance', path: '/finance' },
+            // { name: 'Analytics', path: '/analytics' },
+            // { name: 'Finance', path: '/finance' },
 
         ]
     }

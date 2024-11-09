@@ -60,7 +60,7 @@ const NavbarProfileDrop = () => {
             </div>
           </li>
           <li>
-            <Link href="/#" className="dark:hover:text-white">
+            <Link href={`/users/${userInfo?.id}`} className="dark:hover:text-white">
               <UserProfileIcon />
               Profile
             </Link>

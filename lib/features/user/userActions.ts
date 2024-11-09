@@ -158,4 +158,23 @@ export const getFilteredUsers = async (filter: string) => {
     return { error: error.message };
   }
 };
+export const readUser = async (userId: string) => {
+  const headers = await authConfig();
+  try {
+    const response = await fetch(`${BASE_URL}/users/${userId}`, {
+      cache: "no-cache",
+      headers,
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return data;
+    } else {
+      throw new Error(data.message || "Something went wrong, Please try again!");
+    }
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};
 
