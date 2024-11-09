@@ -11,12 +11,11 @@ export default function PurchaseAccCards({ purchaseAccInfo }: { purchaseAccInfo:
     const firmName = searchParams.get('firmName') || ''
 
     const [purchaseAccList, setPurchaseAccList] = useState<PurchaseAccountList[]>(purchaseAccInfo)
-    console.log('state---',purchaseAccList);
 
     return (
         <div className="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {
-                purchaseAccList.filter(firm => firm.firmName.toLocaleLowerCase().includes(firmName)).map((firmInfo, i) => (
+                purchaseAccList?.filter(firm => firm.firmName.toLocaleLowerCase().includes(firmName)).map((firmInfo, i) => (
                     <PurchaseAccCard
                         firmInfo={firmInfo} key={i}
                         updatePurchaseList={setPurchaseAccList} />

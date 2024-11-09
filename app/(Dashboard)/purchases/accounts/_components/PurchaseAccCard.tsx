@@ -30,7 +30,7 @@ export default function PurchaseAccCard({ firmInfo, updatePurchaseList }: { firm
                 <div className="flex items-center justify-between text-white">
                     <p className="text-xl">Purchase Balance</p>
                     <h5 className="text-2xl ltr:ml-auto rtl:mr-auto">
-                        <span className="text-white-light">K</span>{firmInfo.totalDebit - firmInfo.totalCredit}
+                        <span className="text-white-light">K</span>{(firmInfo.totalDebit - firmInfo.totalCredit).toFixed(2)}
                     </h5>
                 </div>
             </div>
@@ -42,7 +42,7 @@ export default function PurchaseAccCard({ firmInfo, updatePurchaseList }: { firm
                             <path d="M19 15L12 9L5 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                     </span>
-                    <div className="btn w-full  border-0 bg-[#ebedf2] py-1 text-base text-[#515365] shadow-none dark:bg-black dark:text-[#bfc9d4]">K{firmInfo.totalDebit}</div>
+                    <div className="btn w-full  border-0 bg-[#ebedf2] py-1 text-base text-[#515365] shadow-none dark:bg-black dark:text-[#bfc9d4]">K{firmInfo.totalDebit.toFixed(2)}</div>
                 </div>
                 <div className="rounded-md bg-white px-4 py-2.5 shadow dark:bg-[#060818]">
                     <span className="mb-4 flex items-center justify-between dark:text-white">
@@ -51,7 +51,7 @@ export default function PurchaseAccCard({ firmInfo, updatePurchaseList }: { firm
                             <path d="M19 9L12 15L5 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                     </span>
-                    <div className="btn w-full  border-0 bg-[#ebedf2] py-1 text-base text-[#515365] shadow-none dark:bg-black dark:text-[#bfc9d4]">K{firmInfo.totalCredit}</div>
+                    <div className="btn w-full  border-0 bg-[#ebedf2] py-1 text-base text-[#515365] shadow-none dark:bg-black dark:text-[#bfc9d4]">K{firmInfo.totalCredit.toFixed(2)}</div>
                 </div>
             </div>
             <div className="p-5">
