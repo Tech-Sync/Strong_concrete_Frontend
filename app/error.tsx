@@ -15,7 +15,7 @@ export default function Error({ error, reset, }: {
     }, [error])
 
     return (
-        <div className=" min-h-[calc(100vh-125px)] bg-cover bg-center" style={{ backgroundImage: "url('/assets/images/errorPage.png')" }}>
+        <div className=" h-dvh bg-cover bg-center" style={{ backgroundImage: "url('/assets/images/errorPage.png')" }}>
             <div className="mx-auto max-w-7xl px-6 py-32 text-center sm:py-40 lg:px-8">
                 <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-5xl">Something went wrong!</h1>
                 <p className="mt-4 text-base text-white/100 sm:mt-6">Sorry, Refresh the page or getting touch with IT support.</p>

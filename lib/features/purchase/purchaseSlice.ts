@@ -1,12 +1,12 @@
 import { createAppSlice } from "@/lib/createAppSlice";
-import { Purchase } from "@/types/types";
+import { Pagination, Purchase } from "@/types/types";
 
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { getAllPurchases } from "./purchaseActions";
 
 
 interface PurchaseSliceState {
-    purchases: Purchase[];
+    purchases: Pagination<Purchase>;
     purchase: Purchase | null;
     loading: boolean;
     error: string | null;
@@ -14,7 +14,17 @@ interface PurchaseSliceState {
 }
 
 const initialState: PurchaseSliceState = {
-    purchases: [],
+    purchases: {
+        details: {
+            offset: 0,
+            limit: 20,
+            page: 0,
+            pages: false,
+            totalRecords: 0,
+            showDeleted: false
+        },
+        data: []
+    },
     loading: false,
     error: null,
     status: "idle",
@@ -39,7 +49,7 @@ export const purchaseSlice = createAppSlice({
 
         updatePurchase: reducer((state, action: PayloadAction<Purchase[]>) => {
             state.status = 'idle';
-            state.purchases = action.payload;
+            state.purchases.data = action.payload;
         }),
 
         updatePurchaseState: reducer((state, action: PayloadAction<Purchase | null>) => {
@@ -48,16 +58,22 @@ export const purchaseSlice = createAppSlice({
         }),
 
         getAllPurchaseAsync: asyncThunk(
-            async () => {
+            async (params: { page?: string, limit?: string }) => {
+                const { page, limit } = params
+
                 try {
-                    const response = await getAllPurchases();
+                    const response = await getAllPurchases(null, page, limit);
+
                     if (response.error) {
                         throw new Error(response.error);
                     }
-                    return response.data
+
+                    return response;
+
                 } catch (error) {
                     throw new Error("Data fetch failed: " + (error as Error).message);
                 }
+
             }, {
             pending: (state) => { state.status = "loading"; },
             fulfilled: (state, action) => { state.status = "idle"; state.purchases = action.payload; },

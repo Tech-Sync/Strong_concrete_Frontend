@@ -14,10 +14,19 @@ const authConfig = async () => {
   };
 };
 
-export const getAllFirms = async () => {
+export const getAllFirms = async (page?: string, limit?: string) => {
   const headers = await authConfig();
+
+  let url = `${BASE_URL}/firms`;
+
+  const params = new URLSearchParams();
+  if (page) params.append("page", page);
+  if (limit) params.append("limit", limit);
+
+  if (params.toString()) url += `?${params.toString()}`;
+
   try {
-    const response = await fetch(`${BASE_URL}/firms`, {
+    const response = await fetch(url, {
       cache: "no-cache",
       headers,
     });
@@ -49,7 +58,7 @@ export const deleteFirm = async (id: any) => {
     if (!data.error && response.status === 202) {
       return { message: data.message, remainingData: data.data };
     } else {
-      throw new Error( data.message ?? "Something went wrong, Please try again!");
+      throw new Error(data.message ?? "Something went wrong, Please try again!");
     }
 
   } catch (error: any) {
@@ -71,9 +80,9 @@ export const deleteMultiFirm = async (ids: any) => {
     if (!data.error && response.status === 202) {
       return { message: data.message, remainingData: data.data };
     } else {
-      throw new Error( data.message ?? "Something went wrong, Please try again!");
+      throw new Error(data.message ?? "Something went wrong, Please try again!");
     }
-    
+
   } catch (error: any) {
     return { error: error.message };
   }

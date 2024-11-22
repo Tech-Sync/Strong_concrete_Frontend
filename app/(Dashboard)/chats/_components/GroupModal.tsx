@@ -90,6 +90,8 @@ export default function GroupModal({ onClose, isOpen }: GroupModalProps) {
 
         if (chatPicture) formData.append('chatPicture', chatPicture);
 
+        console.log('formData--', Array.from(formData.entries()));
+
         const res = await postGroup(formData);
         if (!res.error) {
             dispatch(updateChatsState(res.group))

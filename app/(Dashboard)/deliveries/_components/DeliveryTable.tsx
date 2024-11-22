@@ -15,6 +15,7 @@ import { deleteDelivery, deleteMultiDelivery, updateDeliveryStatus } from '@/lib
 import Dropdown from '@/app/components/Layout/Dropdown';
 import { coloredToast } from '@/utils/sweetAlerts';
 import { formatDate } from '@/utils/helperFunctions';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 
 
@@ -25,56 +26,55 @@ const DeliveryTable = () => {
     const deliveries = useAppSelector(selectdeliveries);
     const delivertStatus = useAppSelector(selectdeliveryState);
     const isDark = useAppSelector(selectIsDarkMode);
+    const router = useRouter()
+
+    // search params for pagination
+    const searchParams = useSearchParams();
+    const page = (searchParams.get('page') || 1) as string;
+    const limit = (searchParams.get('limit') || 20) as string;
 
     useEffect(() => {
         dispatch(getAllDeliveryAsync({}));
     }, []);
 
-    const [page, setPage] = useState(1);
+    // const [page, setPage] = useState(1);
+    // const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
-    const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-    const [initialRecords, setInitialRecords] = useState(sortBy(deliveries, 'createdAt'));
+    const [initialRecords, setInitialRecords] = useState(sortBy(deliveries.data, 'createdAt'));
     const [records, setRecords] = useState(initialRecords);
     const [selectedRecords, setSelectedRecords] = useState<any>([]);
     const [date3, setDate3] = useState<any>(null);
     const [activeFilter, setActiveFilter] = useState<any>(false);
     const [search, setSearch] = useState('');
-    const [addContactModal, setAddContactModal] = useState<any>(false);
     const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
         columnAccessor: 'id',
         direction: 'asc',
     });
 
-    const defaultParams = {
-        "title": "",
-        "description": "",
-        "client_phonenumber": 0,
-        "flag": "",
-        "cat": 0,
-        "priority": "Medium",
-        "status": "Active"
-    }
 
     useEffect(() => {
-        setRecords(deliveries);
-        setInitialRecords(deliveries);
+        setRecords(deliveries.data);
+        setInitialRecords(deliveries.data);
     }, [deliveries]);
 
-    useEffect(() => {
-        setPage(1);
-    }, [pageSize]);
+    // useEffect(() => {
+    //     setPage(1);
+    // }, [pageSize]);
 
     useEffect(() => {
-        const from = (page - 1) * pageSize;
-        const to = from + pageSize;
-        setRecords([...(Array.isArray(initialRecords) ? initialRecords.slice(from, to) : [])]);
-    }, [page, pageSize, initialRecords]);
+        // const from = (page - 1) * pageSize;
+        // const to = from + pageSize;
+        // setRecords([...(Array.isArray(initialRecords) ? initialRecords.slice(from, to) : [])]);
+
+        router.push(`?${new URLSearchParams({ page: page.toString(), limit: limit.toString() })}`, { scroll: false });
+        dispatch(getAllDeliveryAsync({ page, limit }));
+    }, [page, limit, router, dispatch]);
 
 
     useEffect(() => {
         const [startDate, endDate] = date3 ? date3.map((date: string | number | Date) => new Date(date)) : [null, null];
         setInitialRecords(() => {
-            return deliveries.filter((delivery) => {
+            return deliveries.data.filter((delivery) => {
                 const deliveryDate = delivery.Production.Sale.orderDate ? new Date(delivery.Production.Sale.orderDate) : null;
                 const isInDateRange = startDate && endDate ? (deliveryDate && deliveryDate >= startDate && deliveryDate <= endDate) : true;
                 const matchesSearch = (
@@ -95,7 +95,7 @@ const DeliveryTable = () => {
     useEffect(() => {
         const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
         setRecords(sortStatus.direction === 'desc' ? data2.reverse() : data2);
-        setPage(1);
+        // setPage(1);
     }, [sortStatus]);
 
     const deleteRow = async (id: any = null) => {
@@ -116,7 +116,8 @@ const DeliveryTable = () => {
             if (deletionSuccess) {
                 setSelectedRecords([]);
                 setSearch("");
-                setPage(1);
+                // setPage(1);
+                router.push(`?${new URLSearchParams({ page: '1', limit: limit.toString() })}`, { scroll: false });
             }
         }
 
@@ -150,7 +151,6 @@ const DeliveryTable = () => {
         [Status.Status3]: 'badge-outline-danger',
         [Status.Status4]: 'badge-outline-warning',
     };
-
 
 
     return (
@@ -225,13 +225,13 @@ const DeliveryTable = () => {
                                 title: 'Plate Number',
                                 accessor: 'Plate Number',
                                 sortable: true,
-                                render: ({ Vehicle }) => <div >{Vehicle.plateNumber}</div>
+                                render: ({ Vehicle }) => <div >{Vehicle?.plateNumber}</div>
                             },
                             {
                                 title: 'Product Name',
                                 accessor: 'Product Name',
                                 sortable: true,
-                                render: ({ Production }) => <div >{Production.Sale.Product.name}</div>
+                                render: ({ Production }) => <div >{Production?.Sale?.Product?.name}</div>
                             },
                             {
                                 accessor: 'Delivery Location',
@@ -239,7 +239,7 @@ const DeliveryTable = () => {
                                 sortable: true,
                                 render: ({ Production }) =>
                                     <div className=" font-medium  text-white-dark ">
-                                        <span>{Production.Sale.location}</span>
+                                        <span>{Production?.Sale?.location}</span>
                                     </div>,
                             },
                             {
@@ -248,14 +248,14 @@ const DeliveryTable = () => {
                                 sortable: true,
                                 render: ({ Production }) =>
                                     <div className=" font-medium  text-white-dark ">
-                                        <span>{Production.Sale.sideContact}</span>
+                                        <span>{Production?.Sale?.sideContact}</span>
                                     </div>,
                             },
                             {
                                 accessor: 'Delivery Date',
                                 title: 'Delivery Date',
                                 sortable: true,
-                                render: ({ Production }) => <span >{formatDate(Production.Sale.orderDate)}</span>,
+                                render: ({ Production }) => <span >{formatDate(Production?.Sale?.orderDate)}</span>,
                             },
                             // {
                             //     accessor: 'status',
@@ -317,7 +317,7 @@ const DeliveryTable = () => {
                                          
                                          */}
 
-                                      {/*   <Link href={`/delivery/${delivery.id}`} className="flex hover:text-primary">
+                                        {/*   <Link href={`/delivery/${delivery.id}`} className="flex hover:text-primary">
                                             <PreviewIcon />
                                         </Link> */}
                                         <button type="button" className="flex hover:text-danger" onClick={(e) => deleteRow(delivery?.id)}>
@@ -328,12 +328,12 @@ const DeliveryTable = () => {
                             },
                         ]}
                         highlightOnHover
-                        totalRecords={initialRecords.length}
-                        recordsPerPage={pageSize}
-                        page={page}
-                        onPageChange={(p) => setPage(p)}
+                        totalRecords={deliveries.details.totalRecords}
+                        recordsPerPage={Number(limit)}
+                        page={Number(page)}
+                        onPageChange={(p) => router.push(`?${new URLSearchParams({ page: p.toString(), limit: limit.toString() })}`, { scroll: false })}
+                        onRecordsPerPageChange={(ps) => router.push(`?${new URLSearchParams({ page: page.toString(), limit: ps.toString() })}`, { scroll: false })}
                         recordsPerPageOptions={PAGE_SIZES}
-                        onRecordsPerPageChange={setPageSize}
                         sortStatus={sortStatus}
                         onSortStatusChange={setSortStatus}
                         selectedRecords={selectedRecords}

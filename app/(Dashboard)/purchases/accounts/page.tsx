@@ -1,10 +1,26 @@
-import Image from 'next/image'
 import React from 'react'
+import PurchaseAccHeaderBtns from './_components/PurchaseAccHeaderBtns'
+import BreadCrumb from '@/app/components/common/BreadCrumb'
+import { getAllPurchaseAccAccs } from '@/lib/features/purchaseAccount/purchaseAccActions'
+import { PurchaseAccountList } from '@/types/types'
+import PurchaseAccCards from './_components/PurchaseAccCards'
 
-export default function PurchaseAccountPage() {
+type SearchParams = { [key: string]: string | string[] | undefined }
+
+export default async function PurchaseAccountPage({ searchParams }: { searchParams: SearchParams }) {
+
+    const purchaseAccInfo: PurchaseAccountList[] = await getAllPurchaseAccAccs()
+
+    // const firmName = (searchParams.firmName) as string || ''
+    // console.log(firmName);
+
+
     return (
-        <div className='w-full h-[calc(100vh-110px)]'>
-            <Image src="/assets/images/undercons.jpg" alt="working on it" className="object-cover h-full w-full" width={500} height={500} />
-        </div>
+        <>
+            <BreadCrumb />
+            <PurchaseAccHeaderBtns />
+            <PurchaseAccCards purchaseAccInfo={purchaseAccInfo} />
+        </>
+
     )
 }

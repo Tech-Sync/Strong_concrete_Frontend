@@ -12,21 +12,21 @@ const NavbarNotificationDrop = () => {
 
 
   const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      profile: 'user-profile.jpeg',
-      message: '<strong class="text-sm mr-1">John Doe</strong>invite you to <strong>Prototyping</strong>',
-      time: '45 min ago',
-    },
-    {
-      id: 3,
-      profile: 'user-profile.jpeg',
-      message: '<strong class="text-sm mr-1">Anna</strong> made a new <strong>sale</strong>',
-      time: '9h Ago',
-    },
+    // {
+    //   id: 1,
+    //   profile: 'user-profile.jpeg',
+    //   message: '<strong class="text-sm mr-1">John Doe</strong>invite you to <strong>Prototyping</strong>',
+    //   time: '45 min ago',
+    // },
+    // {
+    //   id: 3,
+    //   profile: 'user-profile.jpeg',
+    //   message: '<strong class="text-sm mr-1">Anna</strong> made a new <strong>sale</strong>',
+    //   time: '9h Ago',
+    // },
   ]);
   const removeNotification = (value: number) => {
-    setNotifications(notifications?.filter((user) => user.id !== value));
+    setNotifications(notifications?.filter((user: any) => user.id !== value));
   };
 
   return (
@@ -39,8 +39,8 @@ const NavbarNotificationDrop = () => {
           <span>
             <NotificationIcon />
             <span className="absolute top-0 flex h-3 w-3 ltr:right-0 rtl:left-0">
-              <span className="absolute -top-[3px] inline-flex h-full w-full animate-ping rounded-full bg-success/50 opacity-75 ltr:-left-[3px] rtl:-right-[3px]"></span>
-              <span className="relative inline-flex h-[6px] w-[6px] rounded-full bg-success"></span>
+              {/* <span className="absolute -top-[3px] inline-flex h-full w-full animate-ping rounded-full bg-success/50 opacity-75 ltr:-left-[3px] rtl:-right-[3px]"></span> */}
+              {/* <span className="relative inline-flex h-[6px] w-[6px] rounded-full bg-success"></span> */}
             </span>
           </span>
         }
@@ -54,7 +54,7 @@ const NavbarNotificationDrop = () => {
           </li>
           {notifications.length > 0 ? (
             <>
-              {notifications?.map((notification) => {
+              {notifications?.map((notification:any) => {
                 return (
                   <li key={notification.id} className="dark:text-white-light/90" onClick={(e) => e.stopPropagation()}>
                     <div className="group flex items-center px-4 py-2">

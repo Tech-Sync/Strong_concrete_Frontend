@@ -13,22 +13,30 @@ import { getAllFirmAsync, selectFirms, setFirmModal, updateFirm, updateFirmState
 import { selectIsDarkMode } from "@/lib/features/themeConfig/themeConfigSlice";
 import { getAllProductionAsync } from "@/lib/features/production/productionSlice";
 import { deleteFirm, deleteMultiFirm } from "@/lib/features/firm/firmActions";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function FirmTable() {
   const dispatch = useAppDispatch();
   const { deleteToast, multiDeleteToast } = useDeleteToasts();
   const firms = useAppSelector(selectFirms);
   const isDark = useAppSelector(selectIsDarkMode);
+  const router = useRouter()
+
+
+  // search params for pagination
+  const searchParams = useSearchParams();
+  const page = (searchParams.get('page') || 1) as string;
+  const limit = (searchParams.get('limit') || 20) as string;
 
   useEffect(() => {
-    dispatch(getAllFirmAsync({}));
+    dispatch(getAllFirmAsync({ page, limit }));
     dispatch(getAllProductionAsync({}));
   }, []);
 
-  const [page, setPage] = useState(1);
+  // const [page, setPage] = useState(1);
+  // const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
   const PAGE_SIZES = [10, 20, 30, 40, 50];
-  const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-  const [initialRecords, setInitialRecords] = useState(sortBy(firms, "id"));
+  const [initialRecords, setInitialRecords] = useState(sortBy(firms.data, "id"));
   const [records, setRecords] = useState(initialRecords);
   const [selectedRecords, setSelectedRecords] = useState<any>([]);
   const [search, setSearch] = useState("");
@@ -38,23 +46,25 @@ export default function FirmTable() {
   });
 
   useEffect(() => {
-    setRecords(firms);
-    setInitialRecords(firms);
+    setRecords(firms.data);
+    setInitialRecords(firms.data);
   }, [firms]);
 
-  useEffect(() => {
-    setPage(1);
-  }, [pageSize]);
+  // useEffect(() => {
+  //   setPage(1);
+  // }, [pageSize]);
 
   useEffect(() => {
-    const from = (page - 1) * pageSize;
-    const to = from + pageSize;
-    setRecords([...(Array.isArray(initialRecords) ? initialRecords.slice(from, to) : [])]);
-  }, [page, pageSize, initialRecords]);
+    // const from = (page - 1) * pageSize;
+    // const to = from + pageSize;
+    // setRecords([...(Array.isArray(initialRecords) ? initialRecords.slice(from, to) : [])]);
+    router.push(`?${new URLSearchParams({ page: page.toString(), limit: limit.toString() })}`, { scroll: false });
+    dispatch(getAllFirmAsync({ page, limit }));
+  }, [page, limit, router, dispatch]);
 
   useEffect(() => {
     setInitialRecords(() => {
-      return firms?.filter((firm) => {
+      return firms?.data.filter((firm) => {
         return (
           firm.address.toLowerCase().includes(search.toLowerCase()) ||
           firm.email.toLowerCase().includes(search.toLowerCase()) ||
@@ -69,7 +79,7 @@ export default function FirmTable() {
   useEffect(() => {
     const data2 = sortBy(initialRecords, sortStatus.columnAccessor);
     setRecords(sortStatus.direction === "desc" ? data2.reverse() : data2);
-    setPage(1);
+    // setPage(1);
   }, [initialRecords, sortStatus]);
 
   const deleteRow = async (id: any = null) => {
@@ -92,7 +102,8 @@ export default function FirmTable() {
       if (deletionSuccess) {
         setSelectedRecords([]);
         setSearch("");
-        setPage(1);
+        // setPage(1);
+        router.push(`?${new URLSearchParams({ page: '1', limit: limit.toString() })}`, { scroll: false });
       }
     }
   };
@@ -224,12 +235,12 @@ export default function FirmTable() {
               },
             ]}
             highlightOnHover={true}
-            totalRecords={initialRecords?.length}
-            recordsPerPage={pageSize}
-            page={page}
-            onPageChange={(p) => setPage(p)}
+            totalRecords={firms.details.totalRecords}
+            recordsPerPage={Number(limit)}
+            page={Number(page)}
+            onPageChange={(p) => router.push(`?${new URLSearchParams({ page: p.toString(), limit: limit.toString() })}`, { scroll: false })}
+            onRecordsPerPageChange={(ps) => router.push(`?${new URLSearchParams({ page: page.toString(), limit: ps.toString() })}`, { scroll: false })}
             recordsPerPageOptions={PAGE_SIZES}
-            onRecordsPerPageChange={setPageSize}
             sortStatus={sortStatus}
             onSortStatusChange={setSortStatus}
             selectedRecords={selectedRecords}

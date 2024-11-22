@@ -9,6 +9,29 @@ export interface Register {
   password: string;
 }
 
+/* Pagination */
+export type Pagination<T> = {
+  details: Details;
+  data: T[];
+}
+
+export interface Details {
+  search?: { [key: string]: string };
+  sort?: { [key: string]: string };
+  offset: number;
+  limit: number;
+  page: number;
+  pages: boolean | {
+    previous: boolean,
+    current: number,
+    next: number,
+    total: number
+  },
+  totalRecords: number;
+  showDeleted: boolean;
+}
+
+/* Material */
 export interface Material {
   id: number;
   name: string;
@@ -49,21 +72,52 @@ export interface Purchase {
   createdAt: string,
   updatedAt: string,
   Material: {
-    name: string | null,
-    unitType: string | null,
+    name: string,
+    unitType: string,
   },
   Firm: {
-    name: string | null,
-    address: string | null,
-    phoneNo: string | null,
-    email: string | null
+    name: string,
+    address: string,
+    phoneNo: string,
+    email: string
   },
   creatorId: number | null,
   updatorId: number | null
   deletedAt: string | null,
 }
 
+/* PURCHASE ACCOUNT */
+export interface PurchaseAccountList {
+  firmName: string;
+  transactions: Transaction[];
+  totalCredit: number;
+  totalDebit: number;
+}
 
+export interface Transaction {
+  id: number;
+  debit: number;
+  credit: number;
+  balance: number;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: null;
+  creatorId: number;
+  updaterId: null;
+  PurchaseId: number;
+  FirmId: number;
+  Purchase: {
+    id: number;
+    Material: {
+      name: string | null;
+      unitType: string | null;
+    };
+  };
+  Firm: { name: string }
+}
+
+
+/* PRODUCT */
 export interface Product {
   id: number;
   name: string;

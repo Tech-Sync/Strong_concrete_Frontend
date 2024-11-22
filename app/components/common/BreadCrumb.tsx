@@ -17,6 +17,7 @@ const BreadCrumb = () => {
 
     const subbTitle = useMemo(() => pathName.split('/')[1] || '', [pathName]);
     const minititle = useMemo(() => pathName.split('/')[2] || '', [pathName]);
+    const minititle2 = useMemo(() => pathName.split('/')[3] || '', [pathName]);
 
     return (
         <ol className="flex pl-1 text-gray-500 font-semibold dark:text-white-dark ">
@@ -32,7 +33,17 @@ const BreadCrumb = () => {
             {
                 minititle &&
                 <li className="before:content-['/'] before:px-1.5 before:inline-block before:relative ">
-                    <button className="text-primary  truncate ">{minititle.slice(0, 90)}</button>
+                    <Link href={`/${subbTitle}/${minititle}`} className={`hover:text-gray-500/70 dark:hover:text-white-dark/70 truncate ${!minititle2 && 'text-primary'}`}>
+                        {minititle.charAt(0).toUpperCase() + minititle.slice(1, 90)}
+                    </Link>
+                </li>
+            }
+            {
+                minititle2 &&
+                <li className="before:content-['/'] before:px-1.5 before:inline-block before:relative ">
+                    <button className="text-primary  truncate ">
+                        {minititle2.charAt(0).toUpperCase() + minititle2.slice(1, 90)}
+                    </button>
                 </li>
             }
 

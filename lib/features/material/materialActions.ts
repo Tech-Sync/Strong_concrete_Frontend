@@ -1,6 +1,6 @@
 "use server";
 import { auth } from "@/auth";
-import {  Material } from "@/types/types";
+import { Material } from "@/types/types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL;
 
@@ -14,10 +14,18 @@ const authConfig = async () => {
   };
 };
 
-export const getAllMaterials = async () => {
+export const getAllMaterials = async (page?: string, limit?: string) => {
   const headers = await authConfig();
+  let url = `${BASE_URL}/materials`;
+
+  const params = new URLSearchParams();
+  if (page) params.append("page", page);
+  if (limit) params.append("limit", limit);
+
+  if (params.toString()) url += `?${params.toString()}`;
+
   try {
-    const response = await fetch(`${BASE_URL}/materials`, {
+    const response = await fetch(url, {
       cache: "no-cache",
       headers,
     });
@@ -27,9 +35,7 @@ export const getAllMaterials = async () => {
     if (response.ok) {
       return data;
     } else {
-      throw new Error(
-        data.message || "Something went wrong, Please try again!"
-      );
+      throw new Error(data.message || "Something went wrong, Please try again!");
     }
   } catch (error: any) {
     return { error: error.message };
@@ -49,7 +55,7 @@ export const deleteMaterial = async (id: any) => {
     if (!data.error && response.status === 202) {
       return { message: data.message, remainingData: data.data };
     } else {
-      throw new Error( data.message ?? "Something went wrong, Please try again!");
+      throw new Error(data.message ?? "Something went wrong, Please try again!");
     }
 
   } catch (error: any) {
@@ -71,9 +77,9 @@ export const deleteMultiMaterial = async (ids: any) => {
     if (!data.error && response.status === 202) {
       return { message: data.message, remainingData: data.data };
     } else {
-      throw new Error( data.message ?? "Something went wrong, Please try again!");
+      throw new Error(data.message ?? "Something went wrong, Please try again!");
     }
-    
+
   } catch (error: any) {
     return { error: error.message };
   }
@@ -82,7 +88,7 @@ export const deleteMultiMaterial = async (ids: any) => {
 
 export const addMaterial = async (materialData: Object) => {
   const headers = await authConfig();
-  
+
   try {
     const response = await fetch(`${BASE_URL}/materials`, {
       method: "POST",

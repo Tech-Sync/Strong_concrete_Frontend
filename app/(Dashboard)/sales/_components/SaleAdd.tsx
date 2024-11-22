@@ -49,12 +49,12 @@ const SaleAdd = () => {
         status: "",
     };
 
-    const firmOP = firms.filter(firm => firm.status === 1).map((firm) => ({
+    const firmOP = firms.data.filter(firm => firm.status === 1).map((firm) => ({
         label: firm.name,
         value: firm.id
     }))
 
-    const productOP = products.map((product) => ({
+    const productOP = products.data.map((product) => ({
         label: product.name,
         value: product.id,
         price: product.price
@@ -78,7 +78,7 @@ const SaleAdd = () => {
         return `${year}-${month}-${day}`;
     };
 
-    const initialValueCustomer = firms.find(firm => firm.id === sale?.FirmId);
+    const initialValueCustomer = firms.data.find(firm => firm.id === sale?.FirmId);
 
 
     const [selectedCustomer, setSelectedCustomer] = useState(initialValueCustomer);
@@ -247,7 +247,7 @@ const SaleAdd = () => {
                                                                 value={firmOP.find(option => option.value === values.FirmId)}
                                                                 onChange={option => {
                                                                     setFieldValue('FirmId', option ? option.value : '');
-                                                                    const selectedCustomer = firms.find(firm => firm.id === option?.value);
+                                                                    const selectedCustomer = firms.data.find(firm => firm.id === option?.value);
                                                                     // @ts-ignore
                                                                     setSelectedCustomer(selectedCustomer || null);
                                                                 }}
